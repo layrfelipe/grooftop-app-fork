@@ -1,50 +1,113 @@
-# Welcome to your Expo app 👋
+# Grooftop App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A modern mobile application for managing and booking rooftop spaces. Built with React Native and Expo.
 
-## Get started
+## Features
 
-1. Install dependencies
+- 🏢 Browse available rooftops
+- 🔍 Search rooftops by name and location
+- 📅 Book rooftop spaces
+- 👤 User authentication and profile management
+- ⭐ Review and rating system
+- 🌙 Dark mode support
+- 🎨 Modern UI with smooth animations
 
-   ```bash
-   npm install
-   ```
+## Tech Stack
 
-2. Start the app
+- React Native with Expo
+- TypeScript
+- Zustand for state management
+- React Navigation for routing
+- NestJS backend with Prisma ORM
+- PostgreSQL database
+- Railway for deployment
 
-   ```bash
-    npx expo start
-   ```
+## Prerequisites
 
-In the output, you'll find options to open the app in a
+- Node.js 18 or higher
+- pnpm package manager
+- Expo Go app for mobile testing
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Installation
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1. Clone the repository:
 
 ```bash
-npm run reset-project
+git clone https://github.com/yourusername/grooftop-app.git
+cd grooftop-app
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Install dependencies:
 
-## Learn more
+```bash
+pnpm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. Start the development server:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+pnpm start
+```
 
-## Join the community
+4. Open the app:
+   - 📱 Scan the QR code with Expo Go (Android)
+   - 📱 Scan the QR code with Camera app (iOS)
 
-Join our community of developers creating universal apps.
+## Project Structure
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```
+src/
+├── components/        # Reusable UI components
+├── config/           # App configuration
+├── features/         # Feature-based modules
+│   ├── auth/        # Authentication
+│   ├── rooftops/    # Rooftop management
+│   ├── bookings/    # Booking system
+│   ├── reviews/     # Reviews and ratings
+│   └── profile/     # User profile
+├── services/        # API services
+├── store/          # State management
+├── theme/          # UI theme and styling
+└── utils/          # Utility functions
+```
+
+## Best Practices
+
+- ✨ Follow TypeScript best practices
+- 📱 Use responsive design patterns
+- 🎨 Maintain consistent styling
+- ♻️ Reuse components
+- 🧪 Write clean, maintainable code
+- 🔐 Implement proper error handling
+- 🌐 Support offline functionality
+
+## Available Scripts
+
+- `pnpm start` - Start the Expo development server
+- `pnpm android` - Start Android development build
+- `pnpm ios` - Start iOS development build
+- `pnpm web` - Start web development build
+- `pnpm lint` - Run ESLint
+- `pnpm format` - Format code with Prettier
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support, email support@grooftop.com or join our Slack channel.
+
+## Acknowledgments
+
+- Thanks to all contributors
+- Expo team for the amazing framework
+- React Native community
