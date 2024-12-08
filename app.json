@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
+    "backgroundColor": "#0F172A",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -13,7 +14,10 @@
       "bundleIdentifier": "com.grooftop.app"
     },
     "android": {
-      "package": "com.grooftop.app"
+      "package": "com.grooftop.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0F172A"
+      }
     },
     "plugins": [
       "expo-router"
@@ -22,6 +26,18 @@
     "experiments": {
       "tsconfigPaths": true,
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "716fa185-d84a-40e8-9b79-50a13064ea68"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/716fa185-d84a-40e8-9b79-50a13064ea68"
     }
   }
 }
