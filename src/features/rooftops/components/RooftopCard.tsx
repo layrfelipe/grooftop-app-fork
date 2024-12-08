@@ -72,7 +72,7 @@ export const RooftopCard = ({ rooftop, onPress }: RooftopCardProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: 200,
+    height: 220,
     borderRadius: 16,
     marginBottom: spacing.lg,
     backgroundColor: colors.background.card,
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     padding: spacing.lg,
+    paddingBottom: spacing.xl,
     overflow: 'hidden',
     backgroundColor: 'rgba(0,0,0,0.3)',
   },

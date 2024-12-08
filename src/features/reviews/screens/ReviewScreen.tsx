@@ -1,92 +1,65 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Button } from '../../../components/Button';
-import { Input } from '../../../components/Input';
+import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 
 export const ReviewScreen = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const router = useRouter();
-  const [rating, setRating] = useState('');
-  const [comment, setComment] = useState('');
-
-  const handleSubmit = () => {
-    // TODO: Implement review submission
-    router.back();
-  };
-
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Write Review</Text>
-      </View>
-
-      <View style={styles.content}>
-        <Text style={styles.placeholder}>Rooftop ID: {id}</Text>
-
-        <Input
-          label="Rating (1-5)"
-          value={rating}
-          onChangeText={setRating}
-          placeholder="Enter rating"
-          keyboardType="numeric"
-        />
-
-        <Input
-          label="Comment"
-          value={comment}
-          onChangeText={setComment}
-          placeholder="Write your review"
-          multiline
-          numberOfLines={4}
-        />
-
-        <View style={styles.actions}>
-          <Button 
-            title="Submit Review" 
-            onPress={handleSubmit}
-          />
-          <View style={styles.spacing} />
-          <Button 
-            title="Cancel" 
-            onPress={() => router.back()}
-            variant="secondary"
-          />
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Reviews</Text>
         </View>
+
+        <ScrollView 
+          style={styles.content}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.placeholder}>No reviews yet</Text>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background.primary,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
   },
   header: {
-    padding: spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     color: colors.text.primary,
   },
   content: {
+    flex: 1,
+  },
+  scrollContent: {
     padding: spacing.lg,
   },
   placeholder: {
     fontSize: 16,
     color: colors.text.secondary,
-    marginBottom: spacing.md,
-  },
-  actions: {
+    textAlign: 'center',
     marginTop: spacing.xl,
-  },
-  spacing: {
-    height: spacing.md,
   },
 }); 

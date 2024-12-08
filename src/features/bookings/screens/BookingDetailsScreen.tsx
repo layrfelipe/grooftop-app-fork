@@ -1,73 +1,68 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Button } from '../../../components/Button';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 
 export const BookingDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const router = useRouter();
-
-  const handleCancel = () => {
-    // TODO: Implement booking cancellation
-    router.back();
-  };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Booking Details</Text>
-      </View>
-
-      <View style={styles.content}>
-        <Text style={styles.placeholder}>Booking ID: {id}</Text>
-        <Text style={styles.placeholder}>Details coming soon...</Text>
-
-        <View style={styles.actions}>
-          <Button 
-            title="Cancel Booking" 
-            onPress={handleCancel}
-          />
-          <View style={styles.spacing} />
-          <Button 
-            title="Back" 
-            onPress={() => router.back()}
-            variant="secondary"
-          />
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Booking Details</Text>
         </View>
+
+        <ScrollView 
+          style={styles.content}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <Text style={styles.placeholder}>Booking ID: {id}</Text>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background.primary,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
   },
   header: {
-    padding: spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     color: colors.text.primary,
   },
   content: {
+    flex: 1,
+  },
+  scrollContent: {
     padding: spacing.lg,
   },
   placeholder: {
     fontSize: 16,
     color: colors.text.secondary,
-    marginBottom: spacing.md,
-  },
-  actions: {
+    textAlign: 'center',
     marginTop: spacing.xl,
-  },
-  spacing: {
-    height: spacing.md,
   },
 }); 

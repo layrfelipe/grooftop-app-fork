@@ -1,22 +1,37 @@
 import { Stack } from 'expo-router';
+import { View } from 'react-native';
+import { colors } from '../../src/theme/colors';
 
 export default function AuthLayout() {
   return (
-    <Stack>
-      <Stack.Screen
-        name="login"
-        options={{
-          title: 'Sign In',
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="register"
-        options={{
-          title: 'Create Account',
-          headerShown: false,
-        }}
-      />
-    </Stack>
+    <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: colors.background.primary,
+          },
+          headerTintColor: colors.text.primary,
+          contentStyle: {
+            backgroundColor: colors.background.primary,
+          },
+          animation: 'fade',
+          animationDuration: 200,
+        }}>
+        <Stack.Screen
+          name="login"
+          options={{
+            title: 'Sign In',
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="register"
+          options={{
+            title: 'Create Account',
+            headerShown: false,
+          }}
+        />
+      </Stack>
+    </View>
   );
 } 

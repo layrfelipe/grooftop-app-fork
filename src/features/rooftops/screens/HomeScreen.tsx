@@ -4,193 +4,108 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  FlatList,
-  ActivityIndicator,
-  Dimensions,
+  ScrollView,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useRooftopStore } from '../store/rooftop.store';
 import { RooftopCard } from '../components/RooftopCard';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 
-const { width } = Dimensions.get('window');
-
 export const HomeScreen = () => {
   const router = useRouter();
-  const { rooftops, isLoading, error, fetchRooftops } = useRooftopStore();
-  const [searchQuery, setSearchQuery] = useState('');
+  const { rooftops, fetchRooftops, setFilters } = useRooftopStore();
 
   useEffect(() => {
     fetchRooftops();
-  }, []);
+  }, [fetchRooftops]);
 
   const handleSearch = (text: string) => {
-    setSearchQuery(text);
-    fetchRooftops({ city: text });
-  };
-
-  const handleClearSearch = () => {
-    setSearchQuery('');
-    fetchRooftops();
+    setFilters({ city: text });
   };
 
   const handleRooftopPress = (id: string) => {
     router.push(`/rooftop/${id}`);
   };
 
-  if (error) {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{error}</Text>
-        <Text 
-          style={styles.retryText}
-          onPress={() => fetchRooftops()}
-        >
-          Tap to retry
-        </Text>
-      </View>
-    );
-  }
-
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={[colors.background.primary, colors.background.secondary]}
-        style={styles.gradient}
-      >
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
+      <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Find Your Perfect</Text>
-          <Text style={styles.headerSubtitle}>Rooftop Space</Text>
-
-          <View style={styles.searchContainer}>
-            <MaterialIcons 
-              name="search" 
-              size={24} 
-              color={colors.text.secondary}
-            />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search by city..."
-              placeholderTextColor={colors.text.secondary}
-              value={searchQuery}
-              onChangeText={handleSearch}
-            />
-            {searchQuery ? (
-              <MaterialIcons
-                name="close"
-                size={24}
-                color={colors.text.secondary}
-                onPress={handleClearSearch}
-                style={styles.clearIcon}
-              />
-            ) : null}
-          </View>
+          <Text style={styles.title}>Find Your Perfect</Text>
+          <Text style={styles.subtitle}>Rooftop Space</Text>
+        </View>
+        
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search rooftops..."
+            placeholderTextColor={colors.text.secondary}
+            onChangeText={handleSearch}
+          />
         </View>
 
-        <FlatList
-          data={rooftops}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <RooftopCard
-              rooftop={item}
-              onPress={() => handleRooftopPress(item.id)}
-            />
-          )}
-          contentContainerStyle={styles.listContent}
+        <ScrollView 
+          style={styles.content}
+          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            isLoading ? (
-              <ActivityIndicator 
-                size="large" 
-                color={colors.primary}
-                style={styles.loader}
-              />
-            ) : (
-              <Text style={styles.emptyText}>
-                No rooftops found
-              </Text>
-            )
-          }
-        />
-      </LinearGradient>
-    </View>
+        >
+          {rooftops.map((rooftop) => (
+            <RooftopCard 
+              key={rooftop.id} 
+              rooftop={rooftop} 
+              onPress={() => handleRooftopPress(rooftop.id)}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background.primary,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
   },
-  gradient: {
-    flex: 1,
-  },
   header: {
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.lg,
   },
-  headerTitle: {
+  title: {
     fontSize: 32,
     fontWeight: 'bold',
     color: colors.text.primary,
     marginBottom: spacing.xs,
   },
-  headerSubtitle: {
+  subtitle: {
     fontSize: 32,
     fontWeight: 'bold',
     color: colors.primary,
-    marginBottom: spacing.lg,
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.lg,
+  },
+  searchInput: {
     backgroundColor: colors.background.secondary,
     borderRadius: 12,
     padding: spacing.md,
-    marginBottom: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.border.light,
-  },
-  searchInput: {
-    flex: 1,
-    marginLeft: spacing.md,
-    fontSize: 16,
     color: colors.text.primary,
-    height: 24,
+    fontSize: 16,
   },
-  clearIcon: {
-    marginLeft: spacing.sm,
-  },
-  listContent: {
-    padding: spacing.lg,
-  },
-  errorContainer: {
+  content: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  },
+  scrollContent: {
     padding: spacing.lg,
-    backgroundColor: colors.background.primary,
-  },
-  errorText: {
-    fontSize: 16,
-    color: colors.text.secondary,
-    textAlign: 'center',
-    marginBottom: spacing.md,
-  },
-  retryText: {
-    fontSize: 16,
-    color: colors.primary,
-    textDecorationLine: 'underline',
-  },
-  loader: {
-    marginTop: spacing.xl * 2,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: colors.text.secondary,
-    textAlign: 'center',
-    marginTop: spacing.xl * 2,
   },
 }); 

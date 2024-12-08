@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+  SafeAreaView,
+  StatusBar,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -47,75 +55,82 @@ export const ProfileScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={colors.background.gradient}
-        style={styles.gradient}
-      >
-        <ScrollView
-          contentContainerStyle={styles.content}
-          showsVerticalScrollIndicator={false}
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
+      <View style={styles.container}>
+        <LinearGradient
+          colors={colors.background.gradient}
+          style={styles.gradient}
         >
-          <Animated.View
-            style={styles.header}
-            entering={FadeInUp.duration(500)}
+          <ScrollView
+            contentContainerStyle={styles.content}
+            showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.greeting}>Welcome back,</Text>
-            <Text style={styles.name}>{user?.name || 'Guest'}</Text>
-          </Animated.View>
+            <Animated.View
+              style={styles.header}
+              entering={FadeInUp.duration(500)}
+            >
+              <Text style={styles.greeting}>Welcome back,</Text>
+              <Text style={styles.name}>{user?.name || 'Guest'}</Text>
+            </Animated.View>
 
-          <View style={styles.menu}>
-            <MenuItem
-              icon="person-outline"
-              title="Edit Profile"
-              subtitle="Update your personal information"
-              onPress={() => router.push('/(app)/profile/edit')}
-              index={0}
-            />
-            <MenuItem
-              icon="calendar-outline"
-              title="My Bookings"
-              subtitle="View your booking history"
-              onPress={() => router.push('/(app)/bookings')}
-              index={1}
-            />
-            <MenuItem
-              icon="heart-outline"
-              title="Favorites"
-              subtitle="Your saved rooftop spaces"
-              onPress={() => {}}
-              index={2}
-            />
-            <MenuItem
-              icon="settings-outline"
-              title="Settings"
-              subtitle="App preferences and account settings"
-              onPress={() => {}}
-              index={3}
-            />
-            <MenuItem
-              icon="help-circle-outline"
-              title="Help & Support"
-              subtitle="Get assistance and FAQs"
-              onPress={() => {}}
-              index={4}
-            />
-            <MenuItem
-              icon="log-out-outline"
-              title="Logout"
-              subtitle="Sign out of your account"
-              onPress={handleLogout}
-              index={5}
-              variant="danger"
-            />
-          </View>
-        </ScrollView>
-      </LinearGradient>
-    </View>
+            <View style={styles.menu}>
+              <MenuItem
+                icon="person-outline"
+                title="Edit Profile"
+                subtitle="Update your personal information"
+                onPress={() => router.push('/(app)/profile/edit')}
+                index={0}
+              />
+              <MenuItem
+                icon="calendar-outline"
+                title="My Bookings"
+                subtitle="View your booking history"
+                onPress={() => router.push('/(app)/bookings')}
+                index={1}
+              />
+              <MenuItem
+                icon="heart-outline"
+                title="Favorites"
+                subtitle="Your saved rooftop spaces"
+                onPress={() => {}}
+                index={2}
+              />
+              <MenuItem
+                icon="settings-outline"
+                title="Settings"
+                subtitle="App preferences and account settings"
+                onPress={() => {}}
+                index={3}
+              />
+              <MenuItem
+                icon="help-circle-outline"
+                title="Help & Support"
+                subtitle="Get assistance and FAQs"
+                onPress={() => {}}
+                index={4}
+              />
+              <MenuItem
+                icon="log-out-outline"
+                title="Logout"
+                subtitle="Sign out of your account"
+                onPress={handleLogout}
+                index={5}
+                variant="danger"
+              />
+            </View>
+          </ScrollView>
+        </LinearGradient>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.background.primary,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
@@ -125,6 +140,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: spacing.lg,
+    paddingTop: spacing.xl,
   },
   header: {
     marginBottom: spacing.xl,

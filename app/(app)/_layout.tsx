@@ -1,11 +1,11 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { Platform, StatusBar } from 'react-native';
+import { Platform, StatusBar, View } from 'react-native';
 import { colors } from '../../src/theme/colors';
 
 export default function AppLayout() {
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
       <StatusBar
         barStyle="light-content"
         backgroundColor={colors.background.primary}
@@ -24,6 +24,8 @@ export default function AppLayout() {
           contentStyle: {
             backgroundColor: colors.background.primary,
           },
+          animation: 'fade',
+          animationDuration: 200,
           ...Platform.select({
             android: {
               headerBackVisible: true,
@@ -72,6 +74,6 @@ export default function AppLayout() {
           }}
         />
       </Stack>
-    </>
+    </View>
   );
 } 
