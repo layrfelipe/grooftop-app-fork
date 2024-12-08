@@ -37,3 +37,7 @@ yarn-error.*
 
 app-example
 pnpm-lock.yaml
+
+# Ignore android and ios directories
+android/
+ios/
