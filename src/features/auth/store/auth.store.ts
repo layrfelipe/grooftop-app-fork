@@ -1,128 +1,111 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api } from '../../../services/api';
 import { authService, UserProfile } from '../services/auth.service';
+import { googleAuthService } from '../services/google-auth.service';
+import { api } from '../../../services/api';
 
 interface AuthState {
-  token: string | null;
+  isAuthenticated: boolean;
   user: UserProfile | null;
+  token: string | null;
   isLoading: boolean;
   error: string | null;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, name: string, password: string) => Promise<void>;
-  logout: () => void;
-  updateProfile: (data: { name?: string; avatarUrl?: string }) => Promise<void>;
   initializeAuth: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: (idToken: string) => Promise<void>;
+  register: (email: string, name: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
+  updateProfile: (data: { name?: string; avatarUrl?: string }) => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set, get) => ({
-      token: null,
-      user: null,
-      isLoading: false,
-      error: null,
-      isAuthenticated: false,
+export const useAuthStore = create<AuthState>((set, get) => ({
+  isAuthenticated: false,
+  user: null,
+  token: null,
+  isLoading: false,
+  error: null,
 
-      initializeAuth: async () => {
-        try {
-          const state = await AsyncStorage.getItem('auth-storage');
-          if (state) {
-            const { state: persistedState } = JSON.parse(state);
-            if (persistedState?.token) {
-              console.log('Initializing with token:', persistedState.token);
-              api.setToken(persistedState.token);
-              set({ token: persistedState.token, isAuthenticated: true });
-              try {
-                const user = await authService.getProfile();
-                set({ user });
-              } catch (error) {
-                console.log('Failed to get profile, logging out');
-                get().logout();
-              }
-            }
-          }
-        } catch (error) {
-          console.error('Error initializing auth:', error);
-          get().logout();
-        }
-      },
-
-      login: async (email: string, password: string) => {
-        try {
-          set({ isLoading: true, error: null });
-          const response = await authService.login({ email, password });
-          console.log('Login response in store:', response);
-          
-          if (!response?.token) {
-            throw new Error('No token received');
-          }
-
-          api.setToken(response.token);
-          set({ 
-            token: response.token, 
-            user: response.user,
-            isAuthenticated: true 
-          });
-        } catch (error) {
-          console.error('Login error:', error);
-          set({ error: error instanceof Error ? error.message : 'Failed to login' });
-          throw error;
-        } finally {
-          set({ isLoading: false });
-        }
-      },
-
-      register: async (email: string, name: string, password: string) => {
-        try {
-          set({ isLoading: true, error: null });
-          const response = await authService.register({ email, name, password });
-          console.log('Register response in store:', response);
-          
-          if (!response?.token) {
-            throw new Error('No token received');
-          }
-
-          api.setToken(response.token);
-          set({ 
-            token: response.token,
-            user: response.user,
-            isAuthenticated: true 
-          });
-        } catch (error) {
-          console.error('Register error:', error);
-          set({ error: error instanceof Error ? error.message : 'Failed to register' });
-          throw error;
-        } finally {
-          set({ isLoading: false });
-        }
-      },
-
-      logout: () => {
-        api.clearToken();
-        set({ token: null, user: null, isAuthenticated: false });
-      },
-
-      updateProfile: async (data) => {
-        try {
-          set({ isLoading: true, error: null });
-          const user = await authService.updateProfile(data);
-          set({ user });
-        } catch (error) {
-          console.error('Update profile error:', error);
-          set({ error: error instanceof Error ? error.message : 'Failed to update profile' });
-          throw error;
-        } finally {
-          set({ isLoading: false });
-        }
-      },
-    }),
-    {
-      name: 'auth-storage',
-      storage: createJSONStorage(() => AsyncStorage),
-      partialize: (state) => ({ token: state.token, user: state.user }),
+  initializeAuth: async () => {
+    try {
+      const token = await AsyncStorage.getItem('@auth_token');
+      if (token) {
+        api.setToken(token);
+        const user = await authService.getProfile();
+        set({ isAuthenticated: true, user, token });
+      }
+    } catch (error) {
+      console.error('Failed to initialize auth:', error);
+      await AsyncStorage.removeItem('@auth_token');
+      api.clearToken();
+      set({ isAuthenticated: false, user: null, token: null });
     }
-  )
-); 
+  },
+
+  login: async (email: string, password: string) => {
+    try {
+      set({ isLoading: true, error: null });
+      const { token, user } = await authService.login({ email, password });
+      await AsyncStorage.setItem('@auth_token', token);
+      api.setToken(token);
+      set({ isAuthenticated: true, user, token, error: null });
+    } catch (error) {
+      console.error('Login failed:', error);
+      set({ error: error instanceof Error ? error.message : 'Login failed' });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  loginWithGoogle: async (idToken: string) => {
+    try {
+      set({ isLoading: true, error: null });
+      const { token, user } = await googleAuthService.loginWithGoogle(idToken);
+      await AsyncStorage.setItem('@auth_token', token);
+      api.setToken(token);
+      set({ isAuthenticated: true, user, token, error: null });
+    } catch (error) {
+      console.error('Google login failed:', error);
+      set({ error: error instanceof Error ? error.message : 'Google login failed' });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  register: async (email: string, name: string, password: string) => {
+    try {
+      set({ isLoading: true, error: null });
+      const { token, user } = await authService.register({ email, name, password });
+      await AsyncStorage.setItem('@auth_token', token);
+      api.setToken(token);
+      set({ isAuthenticated: true, user, token, error: null });
+    } catch (error) {
+      console.error('Registration failed:', error);
+      set({ error: error instanceof Error ? error.message : 'Registration failed' });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  logout: async () => {
+    await AsyncStorage.removeItem('@auth_token');
+    api.clearToken();
+    set({ isAuthenticated: false, user: null, token: null });
+  },
+
+  updateProfile: async (data: { name?: string; avatarUrl?: string }) => {
+    try {
+      set({ isLoading: true, error: null });
+      const updatedUser = await authService.updateProfile(data);
+      set({ user: updatedUser, error: null });
+    } catch (error) {
+      console.error('Profile update failed:', error);
+      set({ error: error instanceof Error ? error.message : 'Profile update failed' });
+      throw error;
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+})); 

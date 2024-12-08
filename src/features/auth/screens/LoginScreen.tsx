@@ -3,9 +3,11 @@ import { View, StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
 import { useAuthStore } from '../store/auth.store';
+import { useGoogleAuth } from '../hooks/useGoogleAuth';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 
@@ -15,7 +17,8 @@ export const LoginScreen = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   
   const router = useRouter();
-  const { login, isLoading, error } = useAuthStore();
+  const { login, loginWithGoogle, isLoading, error } = useAuthStore();
+  const { signIn } = useGoogleAuth();
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -35,7 +38,17 @@ export const LoginScreen = () => {
     
     try {
       await login(email, password);
-      router.replace('/(tabs)');
+      router.replace('/(app)/(tabs)');
+    } catch (err) {
+      // Error is handled by the store
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const idToken = await signIn();
+      await loginWithGoogle(idToken);
+      router.replace('/(app)/(tabs)');
     } catch (err) {
       // Error is handled by the store
     }
@@ -44,7 +57,7 @@ export const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={colors.background.gradient}
+        colors={[colors.background.primary, colors.background.secondary]}
         style={styles.gradient}
       >
         <KeyboardAwareScrollView 
@@ -80,6 +93,20 @@ export const LoginScreen = () => {
                 title="Sign In"
                 onPress={handleLogin}
                 loading={isLoading}
+              />
+
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>or</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
+              <Button
+                title="Continue with Google"
+                onPress={handleGoogleLogin}
+                variant="outline"
+                loading={isLoading}
+                icon={<Ionicons name="logo-google" size={20} color={colors.primary} />}
               />
 
               <Button
@@ -129,5 +156,19 @@ const styles = StyleSheet.create({
   actions: {
     gap: spacing.md,
     marginTop: spacing.lg,
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: spacing.sm,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.border.light,
+  },
+  dividerText: {
+    color: colors.text.secondary,
+    marginHorizontal: spacing.sm,
   },
 }); 
