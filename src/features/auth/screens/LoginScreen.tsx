@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, ImageBackground, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
@@ -56,68 +55,62 @@ export const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={[colors.background.primary, colors.background.secondary]}
-        style={styles.gradient}
+      <ImageBackground
+        source={require('../../../../assets/images/bg-login.png')}
+        style={styles.backgroundImage}
+        resizeMode="cover"
       >
-        <KeyboardAwareScrollView 
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-        >
-          <View style={styles.content}>
-            <Text style={styles.title}>Welcome Back</Text>
-            <Text style={styles.subtitle}>Sign in to your account</Text>
-
-            {error && <Text style={styles.error}>{error}</Text>}
-
-            <Input
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              error={errors.email}
-            />
-
-            <Input
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Enter your password"
-              secureTextEntry
-              error={errors.password}
-            />
-
-            <View style={styles.actions}>
-              <Button
-                title="Sign In"
-                onPress={handleLogin}
-                loading={isLoading}
+        <View style={styles.overlay}>
+          <KeyboardAwareScrollView 
+            contentContainerStyle={styles.content}
+            keyboardShouldPersistTaps="handled"
+            scrollEnabled={false}
+          >
+            <View style={styles.content}>
+              <Image 
+                source={require('../../../../assets/images/logo-with-sub.png')}
+                style={styles.logo}
+                resizeMode="contain"
               />
 
-              <View style={styles.divider}>
-                <View style={styles.dividerLine} />
-                <Text style={styles.dividerText}>or</Text>
-                <View style={styles.dividerLine} />
+              {error && <Text style={styles.error}>{error}</Text>}
+
+              <View style={styles.actions}>
+
+                <Button
+                  title="Start with Facebook"
+                  onPress={handleGoogleLogin}
+                  variant="primary"
+                  loading={isLoading}
+                  icon={<Ionicons name="logo-facebook" size={20} color={colors.text.primary} />}
+                />
+                
+                <Button
+                  title="Start with Google"
+                  onPress={handleGoogleLogin}
+                  variant="secondary"
+                  loading={isLoading}
+                  icon={<Ionicons name="logo-google" size={20} color={colors.text.primary} />}
+                />
+
+                <View style={styles.buttonsWrapper}>
+                  <Button
+                    title="Create Account"
+                    onPress={() => router.push('/register')}
+                    variant="secondary"
+                  />
+
+                  <Button
+                    title="Create Account"
+                    onPress={() => router.push('/register')}
+                    variant="secondary"
+                  /> 
+                </View>
               </View>
-
-              <Button
-                title="Continue with Google"
-                onPress={handleGoogleLogin}
-                variant="outline"
-                loading={isLoading}
-                icon={<Ionicons name="logo-google" size={20} color={colors.primary} />}
-              />
-
-              <Button
-                title="Create Account"
-                onPress={() => router.push('/register')}
-                variant="secondary"
-              />
             </View>
-          </View>
-        </KeyboardAwareScrollView>
-      </LinearGradient>
+          </KeyboardAwareScrollView>
+        </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -125,18 +118,21 @@ export const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background.primary,
   },
-  gradient: {
+  backgroundImage: {
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
-  scrollContent: {
-    flexGrow: 1,
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   content: {
     flex: 1,
-    padding: spacing.lg,
+    padding: spacing.md,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontSize: 32,
@@ -171,4 +167,16 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     marginHorizontal: spacing.sm,
   },
+  logo: {
+    width: 200,
+    height: 80,
+    alignSelf: 'center',
+    marginBottom: spacing.xl,
+  },
+  buttonsWrapper: {
+    flexDirection: 'row',
+    marginTop: spacing.xl,
+    gap: spacing.lg,
+    justifyContent: 'center',
+  }
 }); 

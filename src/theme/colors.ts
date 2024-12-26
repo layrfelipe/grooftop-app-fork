@@ -54,7 +54,9 @@ export const colors = {
   },
 
   // Overlay colors
-  overlay: 'rgba(15, 23, 42, 0.9)',
+  overlay: {
+    login: 'rgba(0, 0, 0, 0.7)',
+  },
   modalBackground: 'rgba(15, 23, 42, 0.95)',
 
   // Shadow colors (for elevation)
@@ -69,5 +71,5 @@ export const colors = {
   glass: {
     background: 'rgba(30, 41, 59, 0.8)',
     border: 'rgba(255, 255, 255, 0.1)',
-  },
-}; 
+  }
+};

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Slot, useRouter, useSegments } from 'expo-router';
 import { useAuthStore } from '../src/features/auth/store/auth.store';
 import * as SplashScreen from 'expo-splash-screen';
-import { CustomSplashScreen } from '../src/components/CustomSplashScreen';
+// import { CustomSplashScreen } from '../src/components/CustomSplashScreen';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
