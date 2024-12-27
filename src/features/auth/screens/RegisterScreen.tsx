@@ -117,7 +117,7 @@ export const RegisterScreen = () => {
               />
 
               <Button
-                title="Registrar"
+                title="Sign up"
                 onPress={handleRegister}
                 loading={isLoading}
                 variant="warn"
