@@ -99,7 +99,7 @@ export const LoginScreen = () => {
               {/* <TouchableOpacity onPress={() => router.push('/forgot-password')}> */}
               <TouchableOpacity onPress={() => router.push('/init')}>
                 <Text style={styles.forgotPassword}>
-                  Forgot your password? <Text style={styles.clickHere}>Click Here.</Text>
+                  Forgot your password? <Text style={styles.clickHere}>Click here</Text>
                 </Text>
               </TouchableOpacity>
 

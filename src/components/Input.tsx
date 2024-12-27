@@ -92,7 +92,7 @@ export const Input = ({
             <MaterialIcons 
               name={isPasswordField ? (secureTextEntry ? 'visibility' : 'visibility-off') : rightIcon!} 
               size={20} 
-              color={colors.text.secondary}
+              color={colors.text.primary}
             />
           </Pressable>
         )}
