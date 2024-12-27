@@ -25,7 +25,7 @@ export default function RootLayout() {
     
     if (!isAuthenticated && !inAuthGroup) {
       // Redirect to the sign-in page.
-      router.replace('/(auth)/login');
+      router.replace('/(auth)/init');
     } else if (isAuthenticated && inAuthGroup) {
       // Redirect to the home page in the app group
       router.replace('/(app)/(tabs)');
