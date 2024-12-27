@@ -6,7 +6,7 @@ import { spacing } from '../theme/spacing';
 interface ButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'warn' | 'outline' | 'facebook' | 'google';
   loading?: boolean;
   disabled?: boolean;
   size?: 'small' | 'medium' | 'large';
@@ -90,7 +90,16 @@ const styles = StyleSheet.create({
   },
   outline: {
     backgroundColor: 'transparent',
-    borderColor: colors.primary,
+    borderColor: 'white',
+  },
+  facebook: {
+    backgroundColor: '#3b5998',
+  },
+  google: {
+    backgroundColor: '#dc3333',
+  },
+  warn: {
+    backgroundColor: '#ff00b8'
   },
   buttonDisabled: {
     opacity: 0.5,
@@ -123,7 +132,16 @@ const styles = StyleSheet.create({
     color: colors.text.inverse,
   },
   outlineText: {
-    color: colors.primary,
+    color: 'white'
+  },
+  facebookText: {
+    color: 'white',
+  },
+  googleText: {
+    color: 'white',
+  },
+  warnText: {
+    color: 'white',
   },
   smallText: {
     fontSize: 14,

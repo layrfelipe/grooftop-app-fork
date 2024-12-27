@@ -3,7 +3,6 @@ import { View, StyleSheet, Text, ImageBackground, Image } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
 import { useAuthStore } from '../store/auth.store';
 import { useGoogleAuth } from '../hooks/useGoogleAuth';
@@ -18,6 +17,7 @@ export const LoginScreen = () => {
   const router = useRouter();
   const { login, loginWithGoogle, isLoading, error } = useAuthStore();
   const { signIn } = useGoogleAuth();
+  // const { loginWithFacebook } = useFacebookAuth();
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -53,6 +53,15 @@ export const LoginScreen = () => {
     }
   };
 
+  const handleFacebookLogin = async () => {
+    try {
+      // await loginWithFacebook();
+      router.replace('/(app)/(tabs)');
+    } catch (err) {
+      // Error is handled by the store
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -79,8 +88,8 @@ export const LoginScreen = () => {
 
                 <Button
                   title="Start with Facebook"
-                  onPress={handleGoogleLogin}
-                  variant="primary"
+                  onPress={handleFacebookLogin}
+                  variant="facebook"
                   loading={isLoading}
                   icon={<Ionicons name="logo-facebook" size={20} color={colors.text.primary} />}
                 />
@@ -88,22 +97,22 @@ export const LoginScreen = () => {
                 <Button
                   title="Start with Google"
                   onPress={handleGoogleLogin}
-                  variant="secondary"
+                  variant="google"
                   loading={isLoading}
                   icon={<Ionicons name="logo-google" size={20} color={colors.text.primary} />}
                 />
 
                 <View style={styles.buttonsWrapper}>
                   <Button
-                    title="Create Account"
+                    title="Login"
                     onPress={() => router.push('/register')}
-                    variant="secondary"
+                    variant="warn"
                   />
 
                   <Button
-                    title="Create Account"
+                    title="Registrar"
                     onPress={() => router.push('/register')}
-                    variant="secondary"
+                    variant="outline"
                   /> 
                 </View>
               </View>
@@ -126,7 +135,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   content: {
     flex: 1,
@@ -151,7 +160,7 @@ const styles = StyleSheet.create({
   },
   actions: {
     gap: spacing.md,
-    marginTop: spacing.lg,
+    marginTop: spacing.xxxl,
   },
   divider: {
     flexDirection: 'row',
