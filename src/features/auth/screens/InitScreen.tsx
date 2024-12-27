@@ -105,7 +105,7 @@ export const InitScreen = () => {
                 <View style={styles.buttonsWrapper}>
                   <Button
                     title="Login"
-                    onPress={() => router.push('/register')}
+                    onPress={() => router.push('/login')}
                     variant="warn"
                   />
 

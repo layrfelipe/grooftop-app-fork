@@ -1,33 +1,47 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
 import { useAuthStore } from '../store/auth.store';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
+import { Stack } from 'expo-router';
 
 export const RegisterScreen = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [errors, setErrors] = useState<{
+    name?: string;
+    email?: string;
+    phone?: string;
+    password?: string;
+    passwordConfirmation?: string;
+  }>({});
   
   const router = useRouter();
   const { register, isLoading, error } = useAuthStore();
 
   const validate = () => {
-    const newErrors: { name?: string; email?: string; password?: string } = {};
+    const newErrors: typeof errors = {};
     
     if (!name) newErrors.name = 'Name is required';
     
     if (!email) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Email is invalid';
     
+    if (!phone) newErrors.phone = 'Phone is required';
+    else if (!/^\+?[\d\s-]{8,}$/.test(phone)) newErrors.phone = 'Invalid phone number';
+
     if (!password) newErrors.password = 'Password is required';
     else if (password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+
+    if (!passwordConfirmation) newErrors.passwordConfirmation = 'Password confirmation is required';
+    else if (password !== passwordConfirmation) newErrors.passwordConfirmation = 'Passwords do not match';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -38,108 +52,132 @@ export const RegisterScreen = () => {
     
     try {
       await register(email, name, password);
-      router.replace('/(tabs)');
+      router.replace('/(app)/(tabs)');
     } catch (err) {
       // Error is handled by the store
     }
   };
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={colors.background.gradient}
-        style={styles.gradient}
-      >
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <View style={styles.container}>
         <KeyboardAwareScrollView 
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={styles.content}
           keyboardShouldPersistTaps="handled"
+          scrollEnabled={false}
         >
           <View style={styles.content}>
-            <Text style={styles.title}>Create Account</Text>
-            <Text style={styles.subtitle}>Sign up to get started</Text>
+            <Image 
+              source={require('../../../../assets/images/logo-with-sub.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
 
             {error && <Text style={styles.error}>{error}</Text>}
 
-            <Input
-              label="Name"
-              value={name}
-              onChangeText={setName}
-              placeholder="Enter your name"
-              autoCapitalize="words"
-              error={errors.name}
-            />
+            <View style={styles.formContainer}>
+              <Input
+                value={name}
+                onChangeText={setName}
+                placeholder="name"
+                error={errors.name}
+              />
 
-            <Input
-              label="Email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              error={errors.email}
-            />
+              <Input
+                value={email}
+                onChangeText={setEmail}
+                placeholder="e-mail"
+                keyboardType="email-address"
+                error={errors.email}
+              />
 
-            <Input
-              label="Password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Create a password"
-              secureTextEntry
-              error={errors.password}
-            />
+              <Input
+                value={phone}
+                onChangeText={setPhone}
+                placeholder="phone"
+                keyboardType="phone-pad"
+                error={errors.phone}
+              />
 
-            <View style={styles.actions}>
+              <Input
+                value={password}
+                onChangeText={setPassword}
+                placeholder="password"
+                secureTextEntry
+                error={errors.password}
+              />
+
+              <Input
+                value={passwordConfirmation}
+                onChangeText={setPasswordConfirmation}
+                placeholder="confirm password"
+                secureTextEntry
+                error={errors.passwordConfirmation}
+              />
+
               <Button
-                title="Sign Up"
+                title="Registrar"
                 onPress={handleRegister}
                 loading={isLoading}
+                variant="warn"
               />
 
-              <Button
-                title="Already have an account? Sign In"
-                onPress={() => router.push('/init')}
-                variant="secondary"
-              />
+              {/* <TouchableOpacity onPress={() => router.push('/forgot-password')}> */}
+              <TouchableOpacity onPress={() => router.push('/init')}>
+                <Text style={styles.forgotPassword}>
+                  Already have an account? <Text style={styles.clickHere}>Log in here.</Text>
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </KeyboardAwareScrollView>
-      </LinearGradient>
-    </View>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background.primary,
-  },
-  gradient: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
   },
   content: {
     flex: 1,
-    padding: spacing.lg,
+    padding: spacing.md,
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#222'
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: colors.text.primary,
-    marginBottom: spacing.xs,
+  logo: {
+    width: 250,
+    height: 100,
+    alignSelf: 'center',
+    marginBottom: spacing.xxl,
   },
-  subtitle: {
-    fontSize: 18,
+  formContainer: {
+    width: '100%',
+    gap: spacing.md,
+  },
+  forgotPassword: {
     color: colors.text.secondary,
-    marginBottom: spacing.xl,
+    textAlign: 'center',
+    marginTop: spacing.sm,
+  },
+  clickHere: {
+    color: colors.primary,
+  },
+  signupContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.xl,
+  },
+  signupText: {
+    color: colors.text.secondary,
+    marginBottom: spacing.md,
   },
   error: {
     color: colors.error,
-    marginBottom: spacing.md,
-  },
-  actions: {
-    gap: spacing.md,
-    marginTop: spacing.lg,
+    marginBottom: spacing.sm,
   },
 }); 
