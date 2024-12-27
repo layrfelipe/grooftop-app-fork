@@ -13,6 +13,7 @@ import { useRooftopStore } from '../store/rooftop.store';
 import { RooftopCard } from '../components/RooftopCard';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
+import { Header } from '../../header/Header';
 
 export const HomeScreen = () => {
   const router = useRouter();
@@ -34,20 +35,8 @@ export const HomeScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Find Your Perfect</Text>
-          <Text style={styles.subtitle}>Rooftop Space</Text>
-        </View>
+        <Header onSearch={handleSearch} />
         
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search rooftops..."
-            placeholderTextColor={colors.text.secondary}
-            onChangeText={handleSearch}
-          />
-        </View>
-
         <ScrollView 
           style={styles.content}
           contentContainerStyle={styles.scrollContent}
@@ -74,33 +63,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
-  },
-  header: {
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.lg,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: colors.text.primary,
-    marginBottom: spacing.xs,
-  },
-  subtitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: colors.primary,
-  },
-  searchContainer: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.lg,
-  },
-  searchInput: {
-    backgroundColor: colors.background.secondary,
-    borderRadius: 12,
-    padding: spacing.md,
-    color: colors.text.primary,
-    fontSize: 16,
   },
   content: {
     flex: 1,

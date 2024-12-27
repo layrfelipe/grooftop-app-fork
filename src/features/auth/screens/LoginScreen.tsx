@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
 import { useAuthStore } from '../store/auth.store';
