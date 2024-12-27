@@ -96,7 +96,7 @@ export const RegisterScreen = () => {
 
               <Button
                 title="Already have an account? Sign In"
-                onPress={() => router.push('/login')}
+                onPress={() => router.push('/init')}
                 variant="secondary"
               />
             </View>

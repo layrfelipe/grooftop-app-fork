@@ -51,7 +51,7 @@ export const ProfileScreen = () => {
 
   const handleLogout = () => {
     logout();
-    router.replace('/login');
+    router.replace('/init');
   };
 
   return (
