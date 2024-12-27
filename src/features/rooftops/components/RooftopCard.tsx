@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     height: 220,
     borderRadius: 16,
     marginBottom: spacing.lg,
-    backgroundColor: colors.background.card,
+    backgroundColor: colors.background.primary,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
     shadowRadius: 20,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   priceContainer: {
     alignItems: 'flex-end',
-    backgroundColor: colors.background.overlay,
+    backgroundColor: colors.background.primary,
     padding: spacing.xs,
     borderRadius: 8,
   },

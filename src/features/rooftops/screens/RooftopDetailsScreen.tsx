@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: spacing.lg,
     borderWidth: 1,
-    borderColor: colors.border.default,
+    borderColor: colors.primary,
   },
   section: {
     marginBottom: spacing.lg,

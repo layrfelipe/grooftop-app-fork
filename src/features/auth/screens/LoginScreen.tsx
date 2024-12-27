@@ -103,10 +103,16 @@ export const LoginScreen = () => {
                 </Text>
               </TouchableOpacity>
 
+              <View style={styles.divider}>
+                <View style={styles.dividerLine} />
+                <Text style={styles.dividerText}>or</Text>
+                <View style={styles.dividerLine} />
+              </View>
+
               <View style={styles.signupContainer}>
                 <Text style={styles.signupText}>Don't have an account? </Text>
                 <Button
-                  title="Sign up now."
+                  title="Sign up now"
                   onPress={() => router.push('/register')}
                   variant="outline"
                 />
@@ -140,22 +146,36 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: spacing.md,
   },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.md,
+    marginTop: spacing.lg,
+    marginBottom: spacing.lg
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.text.dark,
+  },
+  dividerText: {
+    color: colors.text.dark,
+  },
   forgotPassword: {
-    color: colors.text.secondary,
+    color: colors.text.primary,
     textAlign: 'center',
-    marginTop: spacing.sm,
   },
   clickHere: {
-    color: colors.primary,
+    color: colors.text.inverse,
   },
   signupContainer: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: spacing.xl,
   },
   signupText: {
-    color: colors.text.secondary,
+    color: colors.text.primary,
     marginBottom: spacing.md,
   },
   error: {

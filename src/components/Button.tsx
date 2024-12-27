@@ -88,18 +88,18 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  warn: {
+    backgroundColor: colors.tertiary,
+  },
   outline: {
     backgroundColor: 'transparent',
-    borderColor: 'white',
+    borderColor: colors.text.primary,
   },
   facebook: {
-    backgroundColor: '#3b5998',
+    backgroundColor: colors.facebook.background,
   },
   google: {
-    backgroundColor: '#dc3333',
-  },
-  warn: {
-    backgroundColor: '#ff00b8'
+    backgroundColor: colors.google.background,
   },
   buttonDisabled: {
     opacity: 0.5,
@@ -126,22 +126,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   primaryText: {
-    color: colors.text.inverse,
+    color: colors.text.primary,
   },
   secondaryText: {
-    color: colors.text.inverse,
+    color: colors.text.secondary,
   },
   outlineText: {
-    color: 'white'
+    color: colors.text.primary,
   },
   facebookText: {
-    color: 'white',
+    color: colors.text.primary,
   },
   googleText: {
-    color: 'white',
+    color: colors.text.primary,
   },
   warnText: {
-    color: 'white',
+    color: colors.text.primary,
   },
   smallText: {
     fontSize: 14,

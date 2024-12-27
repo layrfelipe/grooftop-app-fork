@@ -111,7 +111,7 @@ export const RegisterScreen = () => {
               <Input
                 value={passwordConfirmation}
                 onChangeText={setPasswordConfirmation}
-                placeholder="confirm password"
+                placeholder="password confirmation"
                 secureTextEntry
                 error={errors.passwordConfirmation}
               />
@@ -159,22 +159,12 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   forgotPassword: {
-    color: colors.text.secondary,
+    color: colors.text.primary,
     textAlign: 'center',
     marginTop: spacing.sm,
   },
   clickHere: {
-    color: colors.primary,
-  },
-  signupContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.xl,
-  },
-  signupText: {
-    color: colors.text.secondary,
-    marginBottom: spacing.md,
+    color: colors.text.inverse,
   },
   error: {
     color: colors.error,

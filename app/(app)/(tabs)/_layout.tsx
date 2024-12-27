@@ -13,7 +13,7 @@ export default function TabLayout() {
           tabBarInactiveTintColor: colors.text.tertiary,
           tabBarStyle: {
             backgroundColor: colors.background.secondary,
-            borderTopColor: colors.border.default,
+            borderTopColor: colors.primary,
             elevation: 0,
             shadowOpacity: 0,
             height: Platform.OS === 'android' ? 60 : undefined,
