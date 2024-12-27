@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, ImageBackground, Image } from 'react-native';
+import { View, StyleSheet, Text, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { Input } from '../../../components/Input';
 import { Button } from '../../../components/Button';
 import { useAuthStore } from '../store/auth.store';
 import { useGoogleAuth } from '../hooks/useGoogleAuth';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
+import { Stack } from 'expo-router';
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +19,6 @@ export const LoginScreen = () => {
   const router = useRouter();
   const { login, loginWithGoogle, isLoading, error } = useAuthStore();
   const { signIn } = useGoogleAuth();
-  // const { loginWithFacebook } = useFacebookAuth();
 
   const validate = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -53,74 +54,68 @@ export const LoginScreen = () => {
     }
   };
 
-  const handleFacebookLogin = async () => {
-    try {
-      // await loginWithFacebook();
-      router.replace('/(app)/(tabs)');
-    } catch (err) {
-      // Error is handled by the store
-    }
-  };
-
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../../../../assets/images/bg-login.png')}
-        style={styles.backgroundImage}
-        resizeMode="cover"
-      >
-        <View style={styles.overlay}>
-          <KeyboardAwareScrollView 
-            contentContainerStyle={styles.content}
-            keyboardShouldPersistTaps="handled"
-            scrollEnabled={false}
-          >
-            <View style={styles.content}>
-              <Image 
-                source={require('../../../../assets/images/logo-with-sub.png')}
-                style={styles.logo}
-                resizeMode="contain"
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
+      <View style={styles.container}>
+        <KeyboardAwareScrollView 
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          scrollEnabled={false}
+        >
+          <View style={styles.content}>
+            <Image 
+              source={require('../../../../assets/images/logo-with-sub.png')}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+
+            {error && <Text style={styles.error}>{error}</Text>}
+
+            <View style={styles.formContainer}>
+              <Input
+                value={email}
+                onChangeText={setEmail}
+                placeholder="e-mail"
+                keyboardType="email-address"
+                error={errors.email}
               />
 
-              {error && <Text style={styles.error}>{error}</Text>}
+              <Input
+                value={password}
+                onChangeText={setPassword}
+                placeholder="password"
+                secureTextEntry
+                error={errors.password}
+              />
 
-              <View style={styles.actions}>
+              <Button
+                title="Login"
+                onPress={handleLogin}
+                loading={isLoading}
+                variant="warn"
+              />
 
+              {/* <TouchableOpacity onPress={() => router.push('/forgot-password')}> */}
+              <TouchableOpacity onPress={() => router.push('/init')}>
+                <Text style={styles.forgotPassword}>
+                  Forgot your password? <Text style={styles.clickHere}>Click Here.</Text>
+                </Text>
+              </TouchableOpacity>
+
+              <View style={styles.signupContainer}>
+                <Text style={styles.signupText}>Don't have an account? </Text>
                 <Button
-                  title="Start with Facebook"
-                  onPress={handleFacebookLogin}
-                  variant="facebook"
-                  loading={isLoading}
-                  icon={<Ionicons name="logo-facebook" size={20} color={colors.text.primary} />}
+                  title="Sign up now."
+                  onPress={() => router.push('/register')}
+                  variant="outline"
                 />
-                
-                <Button
-                  title="Start with Google"
-                  onPress={handleGoogleLogin}
-                  variant="google"
-                  loading={isLoading}
-                  icon={<Ionicons name="logo-google" size={20} color={colors.text.primary} />}
-                />
-
-                <View style={styles.buttonsWrapper}>
-                  <Button
-                    title="Login"
-                    onPress={() => router.push('/register')}
-                    variant="warn"
-                  />
-
-                  <Button
-                    title="Registrar"
-                    onPress={() => router.push('/register')}
-                    variant="outline"
-                  /> 
-                </View>
               </View>
             </View>
-          </KeyboardAwareScrollView>
-        </View>
-      </ImageBackground>
-    </View>
+          </View>
+        </KeyboardAwareScrollView>
+      </View>
+    </>
   );
 };
 
@@ -128,64 +123,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  backgroundImage: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-  },
   content: {
     flex: 1,
     padding: spacing.md,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#222'
   },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: colors.text.primary,
-    marginBottom: spacing.xs,
+  logo: {
+    width: 250,
+    height: 100,
+    alignSelf: 'center',
+    marginBottom: spacing.xxl,
   },
-  subtitle: {
-    fontSize: 18,
+  formContainer: {
+    width: '100%',
+    gap: spacing.md,
+  },
+  forgotPassword: {
     color: colors.text.secondary,
-    marginBottom: spacing.xl,
+    textAlign: 'center',
+    marginTop: spacing.sm,
+  },
+  clickHere: {
+    color: colors.primary,
+  },
+  signupContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.xl,
+  },
+  signupText: {
+    color: colors.text.secondary,
+    marginBottom: spacing.md,
   },
   error: {
     color: colors.error,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
-  actions: {
-    gap: spacing.md,
-    marginTop: spacing.xxxl,
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: spacing.sm,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: colors.border.light,
-  },
-  dividerText: {
-    color: colors.text.secondary,
-    marginHorizontal: spacing.sm,
-  },
-  logo: {
-    width: 200,
-    height: 80,
-    alignSelf: 'center',
-    marginBottom: spacing.xl,
-  },
-  buttonsWrapper: {
-    flexDirection: 'row',
-    marginTop: spacing.xl,
-    gap: spacing.lg,
-    justifyContent: 'center',
-  }
 }); 
