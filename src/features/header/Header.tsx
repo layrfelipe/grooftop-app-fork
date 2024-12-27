@@ -7,6 +7,7 @@ import {
   Text,
   Modal,
   TextInput,
+  Pressable,
 } from 'react-native';
 import { colors } from '../../theme/colors';
 import { spacing } from '../../theme/spacing';
@@ -25,11 +26,13 @@ export const Header = ({ onSearch }: HeaderProps) => {
     <>
       <View style={styles.header}>
         <View style={styles.logoContainer}>
-          <Image 
-            source={require('../../../assets/images/logo.png')}
-            resizeMode="contain"
-            style={styles.logo}
-          />
+          <Pressable onPress={() => router.push('/')}>
+            <Image 
+              source={require('../../../assets/images/logo.png')}
+              resizeMode="contain"
+              style={styles.logo}
+            />
+          </Pressable>
           <TouchableOpacity 
             style={styles.menuButton}
             onPress={() => setMenuVisible(true)}
@@ -48,11 +51,13 @@ export const Header = ({ onSearch }: HeaderProps) => {
         <View style={styles.menuModal}>
           <View style={styles.menuContent}>
             <View style={styles.menuHeader}>
-              <Image 
-                source={require('../../../assets/images/logo.png')}
-                style={styles.menuLogo}
-                resizeMode="contain"
-              />
+              <Pressable onPress={() => { setMenuVisible(false); router.push('/') }}>
+                <Image 
+                  source={require('../../../assets/images/logo.png')}
+                  style={styles.menuLogo}
+                  resizeMode="contain"
+                />
+              </Pressable>
               <TouchableOpacity 
                 style={styles.closeButton}
                 onPress={() => setMenuVisible(false)}
