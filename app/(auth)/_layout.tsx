@@ -4,7 +4,7 @@ import { colors } from '../../src/theme/colors';
 
 export default function AuthLayout() {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
+    <View style={{ flex: 1, backgroundColor: colors.background.secondary }}>
       <Stack
         screenOptions={{
           headerStyle: {

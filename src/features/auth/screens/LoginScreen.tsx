@@ -37,7 +37,7 @@ export const LoginScreen = () => {
     
     try {
       await login(email, password);
-      router.replace('/(app)/(tabs)');
+      router.replace('/(app)/(hasHeader)');
     } catch (err) {
       // Error is handled by the store
     }
@@ -47,7 +47,7 @@ export const LoginScreen = () => {
     try {
       const idToken = await signIn();
       await loginWithGoogle(idToken);
-      router.replace('/(app)/(tabs)');
+      router.replace('/(app)/(hasHeader)');
     } catch (err) {
       // Error is handled by the store
     }
@@ -131,8 +131,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: spacing.md,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#222'
+    alignItems: 'center'
   },
   logo: {
     width: 250,

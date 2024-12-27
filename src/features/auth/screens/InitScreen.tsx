@@ -20,7 +20,7 @@ export const InitScreen = () => {
     try {
       const idToken = await signIn();
       await loginWithGoogle(idToken);
-      router.replace('/(app)/(tabs)');
+      router.replace('/(app)/(hasHeader)');
     } catch (err) {
       // Error is handled by the store
     }
@@ -29,7 +29,7 @@ export const InitScreen = () => {
   // const handleFacebookLogin = async () => {
   //   try {
   //     // await loginWithFacebook();
-  //     router.replace('/(app)/(tabs)');
+  //     router.replace('/(app)/(hasHeader)');
   //   } catch (err) {
   //     // Error is handled by the store
   //   }

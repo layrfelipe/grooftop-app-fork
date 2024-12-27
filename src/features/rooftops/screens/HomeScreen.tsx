@@ -35,8 +35,6 @@ export const HomeScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       <View style={styles.container}>
-        <Header onSearch={handleSearch} />
-        
         <ScrollView 
           style={styles.content}
           contentContainerStyle={styles.scrollContent}

@@ -4,9 +4,9 @@ export const colors = {
   tertiary: '#FF00B8',
 
   background: {
-    primary: '#353535',
+    primary: '#222',
     secondary: '#353535',
-    tertiary: '#353535'
+    tertiary: '#505050'
   },
 
   text: {

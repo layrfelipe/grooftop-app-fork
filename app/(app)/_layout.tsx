@@ -6,11 +6,8 @@ import { colors } from '../../src/theme/colors';
 export default function AppLayout() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={colors.background.primary}
-        translucent
-      />
+      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} translucent />
+      
       <Stack
         screenOptions={{
           headerStyle: {
@@ -35,7 +32,7 @@ export default function AppLayout() {
         }}
       >
         <Stack.Screen
-          name="(tabs)"
+          name="(hasHeader)"
           options={{ headerShown: false }}
         />
         <Stack.Screen

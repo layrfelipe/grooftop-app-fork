@@ -62,7 +62,7 @@ export const Header = ({ onSearch }: HeaderProps) => {
             </View>
 
             <View style={styles.menuItems}>
-              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/')}>
+              <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/') }}>
                 <Text style={styles.menuItemText}>Home</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/bookings') }}>
@@ -71,7 +71,7 @@ export const Header = ({ onSearch }: HeaderProps) => {
               <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/create') }}>
                 <Text style={styles.menuItemText}>Add your rooftop</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menuItem} onPress={() => router.push('/profile')}>
+              <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/profile') }}>
                 <Text style={styles.menuItemText}>Account</Text>
               </TouchableOpacity>
             </View>
@@ -153,7 +153,6 @@ const styles = StyleSheet.create({
   menuButton: {
     marginLeft: spacing.md,
     padding: spacing.sm,
-    backgroundColor: colors.background.secondary,
     borderRadius: 12,
   },
   menuModal: {

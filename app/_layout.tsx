@@ -28,7 +28,7 @@ export default function RootLayout() {
       router.replace('/(auth)/init');
     } else if (isAuthenticated && inAuthGroup) {
       // Redirect to the home page in the app group
-      router.replace('/(app)/(tabs)');
+      router.replace('/(app)/(hasHeader)');
     }
   }, [isAuthenticated, segments]);
 

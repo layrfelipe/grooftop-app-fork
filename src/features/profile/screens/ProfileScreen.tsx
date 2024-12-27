@@ -82,7 +82,7 @@ export const ProfileScreen = () => {
               icon="calendar-outline"
               title="My Bookings"
               subtitle="View your booking history"
-              onPress={() => router.push('/(app)/(tabs)/bookings')}
+              onPress={() => router.push('/(app)/(hasHeader)/bookings')}
               index={1}
               variant="default"
             />
