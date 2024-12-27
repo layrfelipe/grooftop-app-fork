@@ -123,9 +123,8 @@ export const RegisterScreen = () => {
                 variant="warn"
               />
 
-              {/* <TouchableOpacity onPress={() => router.push('/forgot-password')}> */}
               <TouchableOpacity onPress={() => router.push('/init')}>
-                <Text style={styles.forgotPassword}>
+                <Text style={styles.hasAccount}>
                   Already have an account? <Text style={styles.clickHere}>Log in here.</Text>
                 </Text>
               </TouchableOpacity>
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: spacing.md,
   },
-  forgotPassword: {
+  hasAccount: {
     color: colors.text.primary,
     textAlign: 'center',
     marginTop: spacing.sm,
