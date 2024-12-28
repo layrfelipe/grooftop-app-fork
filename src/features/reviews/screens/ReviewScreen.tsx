@@ -15,10 +15,6 @@ export const ReviewScreen = () => {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Reviews</Text>
-        </View>
-
         <ScrollView 
           style={styles.content}
           contentContainerStyle={styles.scrollContent}
@@ -44,11 +40,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.xl,
     paddingBottom: spacing.lg,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: colors.text.primary,
   },
   content: {
     flex: 1,
