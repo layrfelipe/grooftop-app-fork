@@ -24,7 +24,7 @@ export const colors = {
   },
 
   overlay: {
-    default: 'rgba(0, 0, 0, 0.4)',
+    default: 'rgba(0, 0, 0, 0.2)',
   },
 
   facebook: {
