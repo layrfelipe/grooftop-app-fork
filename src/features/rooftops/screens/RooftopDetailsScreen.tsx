@@ -88,7 +88,7 @@ export const RooftopDetailsScreen = () => {
 
         <View style={styles.detailsContainer}>
           <View style={styles.detail}>
-            <MaterialIcons name="people" size={20} color={colors.text.secondary} />
+            <MaterialIcons name="people" size={20} color={colors.text.primary} />
             <Text style={styles.detailText}>
               Up to {rooftop.capacity} people
             </Text>
@@ -110,19 +110,20 @@ export const RooftopDetailsScreen = () => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Location</Text>
           <View style={styles.detail}>
-            <MaterialIcons name="location-on" size={20} color={colors.text.secondary} />
+            <MaterialIcons name="location-on" size={20} color={colors.text.primary} />
             <Text style={styles.detailText}>{rooftop.city}</Text>
           </View>
         </View>
 
         <View style={styles.actions}>
           <Button 
-            title="Book Now" 
+            title="Book now" 
             onPress={handleBook}
+            variant="primary"
           />
           <View style={styles.spacing} />
           <Button 
-            title="Write Review" 
+            title="Write review" 
             onPress={handleReview}
             variant="secondary"
           />
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   },
   city: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     marginBottom: spacing.md,
   },
   detailsContainer: {
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     lineHeight: 24,
   },
   detail: {
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
   },
   actions: {
     marginTop: spacing.xl,

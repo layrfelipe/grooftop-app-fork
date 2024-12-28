@@ -74,7 +74,7 @@ export const Header = ({ onSearch }: HeaderProps) => {
                 <Text style={styles.menuItemText}>Bookings</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/create') }}>
-                <Text style={styles.menuItemText}>Add your rooftop</Text>
+                <Text style={styles.menuItemText}>Add a rooftop</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/profile') }}>
                 <Text style={styles.menuItemText}>Account</Text>

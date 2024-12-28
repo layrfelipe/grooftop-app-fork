@@ -39,7 +39,7 @@ const MenuItem = ({ icon, title, subtitle, onPress, index, variant = 'default' }
         ]}>{title}</Text>
         <Text style={styles.menuSubtitle}>{subtitle}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={20} color={colors.text.secondary} />
+      <Ionicons name="chevron-forward" size={20} color={colors.text.primary} />
     </BlurView>
   </AnimatedPressable>
 );
@@ -105,7 +105,7 @@ export const ProfileScreen = () => {
             <MenuItem
               icon="help-circle-outline"
               title="Help & Support"
-              subtitle="Get assistance and FAQs"
+              subtitle="Get help and see and FAQs"
               onPress={() => {}}
               index={4}
               variant="default"
@@ -138,15 +138,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.xl,
   },
   header: {
     marginBottom: spacing.xl,
   },
   greeting: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     marginBottom: spacing.xs,
   },
   name: {
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     marginBottom: spacing.sm,
+    backgroundColor: colors.background.secondary,
   },
   menuItemContent: {
     flexDirection: 'row',
@@ -172,9 +173,10 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.background.secondary,
+    backgroundColor: colors.background.tertiary,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: spacing.lg,
   },
   menuIconDanger: {
     backgroundColor: colors.error + '20',
@@ -194,6 +196,6 @@ const styles = StyleSheet.create({
   },
   menuSubtitle: {
     fontSize: 14,
-    color: colors.text.secondary,
+    color: colors.text.primary,
   },
 }); 

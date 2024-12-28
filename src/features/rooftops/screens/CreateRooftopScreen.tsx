@@ -20,6 +20,7 @@ export const CreateRooftopScreen = () => {
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
   const [pricePerHour, setPricePerHour] = useState('');
+  const [capacity, setCapacity] = useState('');
   const [images] = useState(['https://picsum.photos/800/600']);
 
   const handleCreate = async () => {
@@ -29,7 +30,8 @@ export const CreateRooftopScreen = () => {
         description,
         city,
         pricePerHour: Number(pricePerHour),
-        images,
+        capacity: Number(capacity),
+        images
       });
       router.back();
     } catch (error) {
@@ -42,7 +44,7 @@ export const CreateRooftopScreen = () => {
       <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Create Rooftop</Text>
+          <Text style={styles.title}>Add a rooftop</Text>
         </View>
 
         <ScrollView 
@@ -50,39 +52,57 @@ export const CreateRooftopScreen = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <Input
-            label="Title"
-            value={title}
-            onChangeText={setTitle}
-            placeholder="Enter rooftop title"
-          />
-          <Input
-            label="Description"
-            value={description}
-            onChangeText={setDescription}
-            placeholder="Enter rooftop description"
-            multiline
-            numberOfLines={4}
-          />
-          <Input
-            label="City"
-            value={city}
-            onChangeText={setCity}
-            placeholder="Enter city"
-          />
-          <Input
-            label="Price per hour"
-            value={pricePerHour}
-            onChangeText={setPricePerHour}
-            placeholder="Enter price per hour"
-            keyboardType="numeric"
-          />
-          
+          <View style={styles.inputContainer}>
+            <Input
+              label="Title"
+              value={title}
+              onChangeText={setTitle}
+              placeholder="Enter rooftop title"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Input
+              label="Description"
+              value={description}
+              onChangeText={setDescription}
+              placeholder="Enter rooftop description"
+              multiline
+              numberOfLines={4}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Input
+              label="City"
+              value={city}
+              onChangeText={setCity}
+              placeholder="Enter city"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Input
+              label="Price per hour"
+              value={pricePerHour}
+              onChangeText={setPricePerHour}
+              placeholder="Enter price per hour"
+              keyboardType="numeric"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Input
+              label="Capacity"
+              value={capacity}
+              onChangeText={setCapacity}
+              placeholder="Enter capacity"
+              keyboardType="numeric"
+            />
+          </View>
+
           <View style={styles.actions}>
             <Button 
-              title="Create Rooftop" 
+              title="Add rooftop" 
               onPress={handleCreate}
-              disabled={!title || !description || !city || !pricePerHour}
+              disabled={!title || !description || !city || !pricePerHour || !capacity}
+              variant="warn"
             />
           </View>
         </ScrollView>
@@ -102,11 +122,10 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.lg,
+    paddingBottom: spacing.md,
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.text.primary,
   },
@@ -116,7 +135,10 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: spacing.lg,
   },
-  actions: {
-    marginTop: spacing.xl,
+  inputContainer: {
+    marginBottom: spacing.md,
   },
+  actions: {
+    marginTop: spacing.sm,
+  }
 }); 

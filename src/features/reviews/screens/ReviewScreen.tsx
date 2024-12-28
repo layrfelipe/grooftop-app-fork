@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     textAlign: 'center',
     marginTop: spacing.xl,
   },

@@ -16,7 +16,7 @@ export const BookingsScreen = () => {
       <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Your Bookings</Text>
+          <Text style={styles.title}>My Bookings</Text>
         </View>
 
         <ScrollView 
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     textAlign: 'center',
     marginTop: spacing.xl,
   },

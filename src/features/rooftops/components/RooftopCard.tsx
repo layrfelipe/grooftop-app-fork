@@ -56,7 +56,7 @@ export const RooftopCard = ({ rooftop, onPress }: RooftopCardProps) => {
           <View style={styles.textContainer}>
             <Text style={styles.title} numberOfLines={1}>{rooftop.title}</Text>
             <Text style={styles.location}>
-              <MaterialIcons name="location-on" size={14} color={colors.text.secondary} />
+              <MaterialIcons name="location-on" size={14} color={colors.text.primary} />
               {' '}{rooftop.city}
             </Text>
           </View>
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 14,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -132,6 +132,6 @@ const styles = StyleSheet.create({
   },
   priceUnit: {
     fontSize: 12,
-    color: colors.text.secondary,
+    color: colors.text.primary,
   },
 }); 
