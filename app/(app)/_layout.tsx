@@ -38,35 +38,35 @@ export default function AppLayout() {
         <Stack.Screen
           name="rooftop/[id]"
           options={{
-            title: 'Rooftop Details',
+            title: 'Rooftop details',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
         <Stack.Screen
           name="rooftop/[id]/edit"
           options={{
-            title: 'Edit Rooftop',
+            title: 'Edit rooftop',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
         <Stack.Screen
           name="rooftop/[id]/review"
           options={{
-            title: 'Write Review',
+            title: 'Write review',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
         <Stack.Screen
           name="booking/[id]"
           options={{
-            title: 'Booking Details',
+            title: 'Booking details',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
         <Stack.Screen
           name="profile/edit"
           options={{
-            title: 'Edit Profile',
+            title: 'Edit profile',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />

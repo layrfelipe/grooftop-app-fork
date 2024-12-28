@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
   },
   actions: {
-    marginTop: spacing.xl,
+    marginTop: spacing.lg,
   },
   spacing: {
     height: spacing.md,
