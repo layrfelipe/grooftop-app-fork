@@ -6,7 +6,6 @@ import {
   ScrollView,
   Pressable,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -55,7 +54,6 @@ export const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       <View style={styles.container}>
         <ScrollView
           contentContainerStyle={styles.content}
@@ -139,7 +137,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xl,
+    paddingVertical: spacing.md,
   },
   header: {
     marginBottom: spacing.xl,

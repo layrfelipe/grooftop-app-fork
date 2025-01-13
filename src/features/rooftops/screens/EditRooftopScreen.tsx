@@ -3,9 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
+  ScrollView
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Button } from '../../../components/Button';
@@ -53,56 +51,53 @@ export const EditRooftopScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Edit Rooftop</Text>
-        </View>
-
-        <ScrollView 
-          style={styles.content}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <Input
-            label="Title"
-            value={title}
-            onChangeText={setTitle}
-            placeholder="Enter rooftop title"
-          />
-          <Input
-            label="Description"
-            value={description}
-            onChangeText={setDescription}
-            placeholder="Enter rooftop description"
-            multiline
-            numberOfLines={4}
-          />
-          <Input
-            label="City"
-            value={city}
-            onChangeText={setCity}
-            placeholder="Enter city"
-          />
-          <Input
-            label="Price per hour"
-            value={pricePerHour}
-            onChangeText={setPricePerHour}
-            placeholder="Enter price per hour"
-            keyboardType="numeric"
-          />
-          
-          <View style={styles.actions}>
-            <Button 
-              title="Update Rooftop" 
-              onPress={handleUpdate}
-              disabled={!title || !description || !city || !pricePerHour}
-            />
-          </View>
-        </ScrollView>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Edit Rooftop</Text>
       </View>
-    </SafeAreaView>
+
+      <ScrollView 
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Input
+          label="Title"
+          value={title}
+          onChangeText={setTitle}
+          placeholder="Enter rooftop title"
+        />
+        <Input
+          label="Description"
+          value={description}
+          onChangeText={setDescription}
+          placeholder="Enter rooftop description"
+          multiline
+          numberOfLines={4}
+        />
+        <Input
+          label="City"
+          value={city}
+          onChangeText={setCity}
+          placeholder="Enter city"
+        />
+        <Input
+          label="Price per hour"
+          value={pricePerHour}
+          onChangeText={setPricePerHour}
+          placeholder="Enter price per hour"
+          keyboardType="numeric"
+        />
+        
+        <View style={styles.actions}>
+          <Button 
+            title="Update Rooftop" 
+            onPress={handleUpdate}
+            disabled={!title || !description || !city || !pricePerHour}
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 

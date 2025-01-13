@@ -3,9 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
+  ScrollView
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button } from '../../../components/Button';
@@ -40,85 +38,79 @@ export const CreateRooftopScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Add a rooftop</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Add a rooftop</Text>
+      </View>
+
+      <ScrollView 
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.inputContainer}>
+          <Input
+            label="Title"
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Enter rooftop title"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Input
+            label="Description"
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Enter rooftop description"
+            multiline
+            numberOfLines={4}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Input
+            label="City"
+            value={city}
+            onChangeText={setCity}
+            placeholder="Enter city"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Input
+            label="Price per hour"
+            value={pricePerHour}
+            onChangeText={setPricePerHour}
+            placeholder="Enter price per hour"
+            keyboardType="numeric"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Input
+            label="Capacity"
+            value={capacity}
+            onChangeText={setCapacity}
+            placeholder="Enter capacity"
+            keyboardType="numeric"
+          />
         </View>
 
-        <ScrollView 
-          style={styles.content}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <View style={styles.inputContainer}>
-            <Input
-              label="Title"
-              value={title}
-              onChangeText={setTitle}
-              placeholder="Enter rooftop title"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label="Description"
-              value={description}
-              onChangeText={setDescription}
-              placeholder="Enter rooftop description"
-              multiline
-              numberOfLines={4}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label="City"
-              value={city}
-              onChangeText={setCity}
-              placeholder="Enter city"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label="Price per hour"
-              value={pricePerHour}
-              onChangeText={setPricePerHour}
-              placeholder="Enter price per hour"
-              keyboardType="numeric"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Input
-              label="Capacity"
-              value={capacity}
-              onChangeText={setCapacity}
-              placeholder="Enter capacity"
-              keyboardType="numeric"
-            />
-          </View>
-
-          <View style={styles.actions}>
-            <Button 
-              title="Add rooftop" 
-              onPress={handleCreate}
-              disabled={!title || !description || !city || !pricePerHour || !capacity}
-              variant="warn"
-            />
-          </View>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+        <View style={styles.actions}>
+          <Button 
+            title="Add rooftop" 
+            onPress={handleCreate}
+            disabled={!title || !description || !city || !pricePerHour || !capacity}
+            variant="warn"
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.background.primary,
-  },
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
+    paddingTop: spacing.md
   },
   header: {
     paddingHorizontal: spacing.lg,

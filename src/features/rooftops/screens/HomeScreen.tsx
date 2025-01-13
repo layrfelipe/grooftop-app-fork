@@ -3,10 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
   ScrollView,
-  SafeAreaView,
-  StatusBar,
   Pressable,
   Image,
   FlatList,
@@ -102,10 +99,8 @@ export const HomeScreen = () => {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       <ScrollView 
-        style={styles.container}
+        style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.section}>
@@ -143,16 +138,11 @@ export const HomeScreen = () => {
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.background.primary,
-  },
-  container: {
+  scrollContainer: {
     flex: 1,
     backgroundColor: colors.background.primary,
   },

@@ -3,9 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
+  ScrollView
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { colors } from '../../../theme/colors';
@@ -15,30 +13,23 @@ export const BookingDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Booking Details</Text>
-        </View>
-
-        <ScrollView 
-          style={styles.content}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          <Text style={styles.placeholder}>Booking ID: {id}</Text>
-        </ScrollView>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Booking Details</Text>
       </View>
-    </SafeAreaView>
+
+      <ScrollView 
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.placeholder}>Booking ID: {id}</Text>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.background.primary,
-  },
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,

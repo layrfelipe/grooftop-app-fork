@@ -5,8 +5,6 @@ import {
   Image,
   TouchableOpacity,
   Text,
-  Modal,
-  TextInput,
   Pressable,
 } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -35,38 +33,21 @@ export const Header = ({ onSearch }: HeaderProps) => {
           </Pressable>
           <TouchableOpacity 
             style={styles.menuButton}
-            onPress={() => setMenuVisible(true)}
+            onPress={() => setMenuVisible(!menuVisible)}
           >
-            <Ionicons name="menu" size={32} color={colors.text.inverse} />
+            <Ionicons 
+              name={menuVisible ? "close" : "menu"} 
+              size={32} 
+              color={colors.text.inverse} 
+            />
           </TouchableOpacity>
         </View>
       </View>
 
-      <Modal
-        visible={menuVisible}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setMenuVisible(false)}
-      >
-        <View style={styles.menuModal}>
+      {menuVisible && (
+        <View style={styles.menuOverlay}>
           <View style={styles.menuContent}>
-            <View style={styles.menuHeader}>
-              <Pressable onPress={() => { setMenuVisible(false); router.push('/') }}>
-                <Image 
-                  source={require('../../../assets/images/logo.png')}
-                  style={styles.menuLogo}
-                  resizeMode="contain"
-                />
-              </Pressable>
-              <TouchableOpacity 
-                style={styles.closeButton}
-                onPress={() => setMenuVisible(false)}
-              >
-                <Ionicons name="close" size={24} color={colors.text.inverse} />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.menuItems}>
+            <View>
               <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/') }}>
                 <Text style={styles.menuItemText}>Home</Text>
               </TouchableOpacity>
@@ -80,43 +61,9 @@ export const Header = ({ onSearch }: HeaderProps) => {
                 <Text style={styles.menuItemText}>Account</Text>
               </TouchableOpacity>
             </View>
-
-            {/* <View style={styles.actionButtons}>
-              <TouchableOpacity style={[styles.actionButton, styles.primaryButton]}>
-                <Ionicons name="home" size={24} color="#000" />
-                <View>
-                  <Text style={styles.actionButtonTitle}>Become a Grooftopper</Text>
-                  <Text style={styles.actionButtonSubtitle}>make your space available</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.actionButton, styles.secondaryButton]}>
-                <Ionicons name="calendar" size={24} color="#000" />
-                <View>
-                  <Text style={styles.actionButtonTitle}>Organize an Event</Text>
-                  <Text style={styles.actionButtonSubtitle}>gather folks on a rooftop</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.actionButton, styles.darkButton]}>
-                <Ionicons name="camera" size={24} color="#fff" />
-                <View>
-                  <Text style={[styles.actionButtonTitle, styles.darkButtonText]}>Become a topographer</Text>
-                  <Text style={[styles.actionButtonSubtitle, styles.darkButtonText]}>take photos of grooftop (events)</Text>
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={[styles.actionButton, styles.darkButton]}>
-                <Ionicons name="happy" size={24} color="#fff" />
-                <View>
-                  <Text style={[styles.actionButtonTitle, styles.darkButtonText]}>Become a GroofArtist</Text>
-                  <Text style={[styles.actionButtonSubtitle, styles.darkButtonText]}>share your art or skills from a height</Text>
-                </View>
-              </TouchableOpacity>
-            </View> */}
           </View>
         </View>
-      </Modal>
+      )}
     </>
   );
 };
@@ -124,7 +71,6 @@ export const Header = ({ onSearch }: HeaderProps) => {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.background.primary,
-    paddingVertical: spacing.lg,
   },
   logoContainer: {
     paddingHorizontal: spacing.lg,
@@ -136,66 +82,20 @@ const styles = StyleSheet.create({
     height: 48,
     alignSelf: 'flex-start',
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
-  },
-  searchInput: {
-    flex: 1,
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    color: '#000',
-  },
-  searchIcon: {
-    position: 'absolute',
-    right: 70,
-    padding: spacing.sm,
-  },
   menuButton: {
     marginLeft: spacing.md,
     padding: spacing.sm,
     borderRadius: 12,
   },
-  menuModal: {
-    flex: 1,
+  menuOverlay: {
     backgroundColor: colors.background.primary,
+    padding: 0,
+    margin: 0,
+    height: '100%',
   },
   menuContent: {
-    flex: 1,
-    padding: spacing.lg,
-  },
-  menuHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.xl,
-  },
-  menuLogo: {
-    width: 120,
-    height: 40,
-  },
-  closeButton: {
-    padding: spacing.sm,
-  },
-  searchWrapper: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginBottom: spacing.xl,
-  },
-  filterButton: {
-    backgroundColor: '#333',
-    padding: spacing.sm,
-    borderRadius: 8,
-    aspectRatio: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuItems: {
-    marginBottom: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
   menuItem: {
     paddingVertical: spacing.md,
@@ -203,36 +103,5 @@ const styles = StyleSheet.create({
   menuItemText: {
     color: '#fff',
     fontSize: 18,
-  },
-  actionButtons: {
-    gap: spacing.md,
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: spacing.md,
-    borderRadius: 12,
-    gap: spacing.md,
-  },
-  primaryButton: {
-    backgroundColor: '#E6FF00',
-  },
-  secondaryButton: {
-    backgroundColor: '#00E5FF',
-  },
-  darkButton: {
-    backgroundColor: '#333',
-  },
-  actionButtonTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  actionButtonSubtitle: {
-    fontSize: 12,
-    color: '#333',
-  },
-  darkButtonText: {
-    color: '#fff',
-  },
+  }
 }); 

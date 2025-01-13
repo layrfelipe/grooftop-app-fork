@@ -1,12 +1,13 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { Platform, StatusBar, View } from 'react-native';
+import { Platform, StatusBar, SafeAreaView } from 'react-native';
 import { colors } from '../../src/theme/colors';
+import { spacing } from '@/src/theme/spacing';
 
 export default function AppLayout() {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} translucent />
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background.primary }}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       
       <Stack
         screenOptions={{
@@ -20,9 +21,8 @@ export default function AppLayout() {
           headerShadowVisible: false,
           contentStyle: {
             backgroundColor: colors.background.primary,
+            paddingTop: spacing.sm,
           },
-          animation: 'fade',
-          animationDuration: 200,
           ...Platform.select({
             android: {
               headerBackVisible: true,
@@ -71,6 +71,6 @@ export default function AppLayout() {
           }}
         />
       </Stack>
-    </View>
+    </SafeAreaView>
   );
 } 

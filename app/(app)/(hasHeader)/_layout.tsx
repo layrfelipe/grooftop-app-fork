@@ -12,7 +12,7 @@ export default function AppLayout() {
         screenOptions={{
           headerShown: false,
           contentStyle: {
-            backgroundColor: colors.background.secondary
+            backgroundColor: colors.background.secondary,
           }
         }}
       />
