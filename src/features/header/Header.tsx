@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   logo: {
     width: 120,
