@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Button } from '../../../components/Button';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 import { rooftopService } from '../services/rooftop.service';
 import { Rooftop } from '../types/rooftop.types';
-
-const { width } = Dimensions.get('window');
+import MapView, { Marker } from 'react-native-maps';
+import ReviewCard from '../../reviewDetailCard';
 
 export const RooftopDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -40,7 +40,7 @@ export const RooftopDetailsScreen = () => {
   };
 
   const handleReview = () => {
-    router.push(`/(app)/rooftop/${id}/review`);
+    router.push(`/(app)/(hasHeader)/rooftop/${id}/review`);
   };
 
   if (isLoading) {
@@ -71,27 +71,38 @@ export const RooftopDetailsScreen = () => {
         showsVerticalScrollIndicator={false}
         bounces={false}
       >
-        <ScrollView 
-          horizontal 
-          pagingEnabled 
-          showsHorizontalScrollIndicator={false}
-          style={styles.imageContainer}
-        >
-          {rooftop.images.map((image, index) => (
+        <View style={styles.rooftopBasicInfo}>
+          <Text style={styles.rooftopTitle}>{rooftop.title}</Text>
+          {/* TODO: Add height as API's response */}
+          <Text style={styles.rooftopCity}>Location: {rooftop.city}, Height: 1000m</Text>
+          <Text style={styles.rooftopRating}>
+            <Ionicons name="star" size={16} color={'yellow'} />
+            <Ionicons name="star" size={16} color={'yellow'} />
+            <Ionicons name="star" size={16} color={'yellow'} />
+            <Ionicons name="star" size={16} color={'yellow'} />
+            <Ionicons name="star" size={16} color={'yellow'}/>
+          </Text>
+        </View>
+
+        <View style={styles.imageContainer}>
+          {/* {rooftop.images.map((image, index) => (
             <Image 
               key={index}
               source={{ uri: image }} 
               style={styles.image}
               resizeMode="cover"
             />
-          ))}
-        </ScrollView>
+          ))} */}
+
+          <Image 
+            source={{ uri: rooftop.images[0] }} 
+            style={styles.image}
+            resizeMode="cover"
+          />
+        </View>
 
         <View style={styles.content}>
-          <Text style={styles.title}>{rooftop.title}</Text>
-          <Text style={styles.city}>{rooftop.city}</Text>
-
-          <View style={styles.detailsContainer}>
+          {/* <View style={styles.detailsContainer}>
             <View style={styles.detail}>
               <MaterialIcons name="people" size={20} color={colors.text.primary} />
               <Text style={styles.detailText}>
@@ -132,6 +143,102 @@ export const RooftopDetailsScreen = () => {
               onPress={handleReview}
               variant="secondary"
             />
+          </View> */}
+
+          <View style={styles.actionsContainer}>
+            <Button 
+              title="Add to My Tops" 
+              onPress={handleBook}
+              variant="primary"
+              size='small'
+              icon={<MaterialIcons name="favorite" size={16} color={colors.text.secondary} />}
+            />
+
+            <Button 
+              title="Book" 
+              onPress={handleReview}
+              variant="secondary"
+              size='small'
+              icon={<MaterialIcons name="monetization-on" size={16} color={colors.text.secondary} />}
+            />
+          </View>
+
+          <View style={styles.vibesContainer}>
+            <Text style={styles.vibesTitle}>Vibes</Text>
+            <View style={styles.vibes}>
+              <Text style={styles.vibe}>public</Text>
+              <Text style={styles.vibe}>private</Text>
+              <Text style={styles.vibe}>relax</Text>
+              <Text style={styles.vibe}>socialize</Text>
+              <Text style={styles.vibe}>sunbathing</Text>
+              <Text style={styles.vibe}>nature view</Text>
+            </View>
+          </View>
+
+          <View style={styles.aboutContainer}>
+            <Text style={styles.aboutTitle}>About</Text>
+            <Text style={styles.aboutText}>{rooftop.description}</Text>
+          </View>
+
+          <View style={styles.mapContainer}>
+            <Text style={styles.mapTitle}>Map</Text>
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: -22.951804,
+                longitude: -43.210760,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
+              }}
+            >
+              <Marker
+                coordinate={{
+                  latitude: -22.951804,
+                  longitude: -43.210760
+                }}
+                title={rooftop.title}
+                description={rooftop.city}
+              />
+            </MapView>
+          </View>
+
+          <View style={styles.viewOnContainer}>
+            <Text style={styles.viewOnTitle}>View on</Text>
+            <View style={styles.imagesViews}>
+              <View style={styles.viewItem}>
+                <Image 
+                  source={{ uri: rooftop.images[0] }} 
+                  style={styles.imageView}
+                  resizeMode="cover"
+                />
+                <Text style={styles.viewDescription}>Lorem Ipsum</Text>
+              </View>
+              <View style={styles.viewItem}>
+                <Image 
+                  source={{ uri: rooftop.images[0] }} 
+                  style={styles.imageView}
+                  resizeMode="cover"
+                />
+                <Text style={styles.viewDescription}>Dolor sit</Text>
+              </View>
+              <View style={styles.viewItem}>
+                <Image 
+                  source={{ uri: rooftop.images[0] }} 
+                  style={styles.imageView}
+                  resizeMode="cover"
+                />
+                <Text style={styles.viewDescription}>Amet conqueous</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.reviewsContainer}>
+            <Text style={styles.reviewsTitle}>Reviews</Text>
+            <View style={styles.reviews}>
+              <ReviewCard />
+              <ReviewCard />
+              <ReviewCard />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -143,6 +250,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
+    paddingTop: spacing.md,
   },
   centered: {
     flex: 1,
@@ -155,27 +263,38 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     textAlign: 'center',
   },
+  rooftopBasicInfo: {
+    paddingHorizontal: spacing.lg,
+    flex: 1,
+  },
+  rooftopTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.primary,
+  },
+  rooftopCity: {
+    fontSize: 12,
+    color: colors.text.primary,
+    marginTop: spacing.xs
+  },
+  rooftopRating: {
+    fontSize: 12,
+    marginVertical: spacing.md,
+  },
   imageContainer: {
-    height: 300,
+    height: 250,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: spacing.lg,
   },
   image: {
-    width,
-    height: 300,
+    width: '100%',
+    height: 250,
+    borderRadius: 12,
   },
   content: {
     padding: spacing.lg,
     backgroundColor: colors.background.primary,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.text.primary,
-    marginBottom: spacing.xs,
-  },
-  city: {
-    fontSize: 16,
-    color: colors.text.primary,
-    marginBottom: spacing.md,
   },
   detailsContainer: {
     flexDirection: 'row',
@@ -220,4 +339,107 @@ const styles = StyleSheet.create({
   contentScrollView: {
     backgroundColor: colors.background.primary,
   },
-}); 
+
+
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+  },
+  vibesContainer: {
+    marginTop: spacing.xl,
+  },
+  vibesTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.md,
+  },
+  vibes: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  vibe: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    backgroundColor: 'white',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 12,
+    marginBottom: spacing.sm,
+    marginRight: spacing.xs,
+  },
+  aboutContainer: {
+    marginTop: spacing.xl,
+  },
+  aboutTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.md,
+  },
+  aboutText: {
+    fontSize: 16,
+    color: colors.text.tertiary,
+    lineHeight: 24,
+  },
+  mapContainer: {
+    marginTop: spacing.xl,
+  },
+  mapTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.md,
+  },
+  map: {
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
+  },
+  viewOnContainer: {
+    marginTop: spacing.xxl,
+  },
+  viewOnTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.md,
+  },
+  imagesViews: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+  },
+  viewItem: {
+    flex: 1,
+  },
+  imageView: {
+    width: '100%',
+    height: 100,
+    borderRadius: 12,
+  },
+  viewDescription: {
+    fontSize: 12,
+    color: colors.text.tertiary,
+    marginTop: spacing.sm,
+    textAlign: 'left',
+  },
+  reviewsContainer: {
+    marginTop: spacing.xxl,
+  },
+  reviewsTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.md,
+  },
+  reviews: {
+    flexDirection: 'column',
+  },
+  review: {
+    fontSize: 16,
+    color: colors.text.primary,
+  },
+});

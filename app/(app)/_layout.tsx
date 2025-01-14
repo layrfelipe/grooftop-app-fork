@@ -36,27 +36,6 @@ export default function AppLayout() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="rooftop/[id]"
-          options={{
-            title: 'Rooftop details',
-            headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
-          }}
-        />
-        <Stack.Screen
-          name="rooftop/[id]/edit"
-          options={{
-            title: 'Edit rooftop',
-            headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
-          }}
-        />
-        <Stack.Screen
-          name="rooftop/[id]/review"
-          options={{
-            title: 'Write review',
-            headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
-          }}
-        />
-        <Stack.Screen
           name="booking/[id]"
           options={{
             title: 'Booking details',
