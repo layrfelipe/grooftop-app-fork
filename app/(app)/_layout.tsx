@@ -19,6 +19,7 @@ export default function AppLayout() {
             color: colors.text.primary,
           },
           headerShadowVisible: false,
+          animation: 'none',
           contentStyle: {
             backgroundColor: colors.background.primary,
             paddingTop: spacing.sm,

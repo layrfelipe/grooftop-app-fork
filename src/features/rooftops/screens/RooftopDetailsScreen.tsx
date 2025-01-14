@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 10,
     marginLeft: 2
   },
   favoriteButton: {

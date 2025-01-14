@@ -14,8 +14,7 @@ export default function AuthLayout() {
           contentStyle: {
             backgroundColor: colors.background.primary,
           },
-          animation: 'fade',
-          animationDuration: 200,
+          animation: 'none'
         }}>
         <Stack.Screen
           name="init"
