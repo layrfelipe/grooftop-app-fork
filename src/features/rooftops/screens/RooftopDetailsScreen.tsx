@@ -240,6 +240,47 @@ export const RooftopDetailsScreen = () => {
               <ReviewCard />
             </View>
           </View>
+
+          <View style={styles.nearbyContainer}>
+            <Text style={styles.sectionTitle}>Grooftops Nearby</Text>
+            <View style={styles.gridContainer}>
+              {[1, 2].map((_, index) => (
+                <View key={`nearby-${index}`} style={styles.gridItem}>
+                  <Image 
+                    source={{ uri: rooftop.images[0] }}
+                    style={styles.gridImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.locationTag}>
+                    <MaterialIcons name="location-on" size={12} color="white" />
+                    <Text style={styles.locationText}>1.2km</Text>
+                  </View>
+                  <Text style={styles.gridTitle}>Name of Rooftop</Text>
+                  <Text style={styles.gridSubtitle}>Location: Rio de Janeiro</Text>
+                </View>
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.suggestionsContainer}>
+            <Text style={styles.sectionTitle}>Grooftops you might like</Text>
+            <View style={styles.gridContainer}>
+              {[1, 2].map((_, index) => (
+                <View key={`suggestion-${index}`} style={styles.gridItem}>
+                  <Image 
+                    source={{ uri: rooftop.images[0] }}
+                    style={styles.gridImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.favoriteButton}>
+                    <Text style={styles.favoriteText}><Ionicons name="heart" size={10} color="yellow"/> soulmate</Text>
+                  </View>
+                  <Text style={styles.gridTitle}>Name of Rooftop</Text>
+                  <Text style={styles.gridSubtitle}>Location: Rio de Janeiro</Text>
+                </View>
+              ))}
+            </View>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -313,7 +354,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: colors.text.primary,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
   },
   description: {
     fontSize: 16,
@@ -441,5 +482,88 @@ const styles = StyleSheet.create({
   review: {
     fontSize: 16,
     color: colors.text.primary,
+  },
+  nearbyContainer: {
+    marginTop: spacing.xl,
+  },
+  suggestionsContainer: {
+    marginTop: spacing.xxl,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  viewTabs: {
+    flexDirection: 'row',
+    backgroundColor: colors.background.secondary,
+    borderRadius: 16,
+    padding: 2,
+  },
+  activeTab: {
+    fontSize: 12,
+    color: colors.text.primary,
+    backgroundColor: 'white',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 14,
+  },
+  inactiveTab: {
+    fontSize: 12,
+    color: colors.text.tertiary,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+  },
+  gridContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+  },
+  gridItem: {
+    flex: 1,
+  },
+  gridImage: {
+    width: '100%',
+    height: 150,
+    borderRadius: 12,
+  },
+  locationTag: {
+    position: 'absolute',
+    top: spacing.sm,
+    right: spacing.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 12,
+  },
+  locationText: {
+    color: 'white',
+    fontSize: 12,
+    marginLeft: 2
+  },
+  favoriteButton: {
+    position: 'absolute',
+    top: spacing.sm,
+    right: spacing.sm,
+    backgroundColor: '#FF00B8',
+    borderRadius: 20,
+    padding: spacing.xs,
+  },
+  favoriteText: {
+    fontSize: 10,
+    color: 'yellow',
+  },
+  gridTitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.text.primary,
+    marginTop: spacing.sm,
+  },
+  gridSubtitle: {
+    fontSize: 12,
+    color: colors.text.tertiary,
   },
 });
