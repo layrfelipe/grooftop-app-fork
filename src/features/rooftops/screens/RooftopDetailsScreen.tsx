@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions, FlatList } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Button } from '../../../components/Button';
@@ -9,6 +9,27 @@ import { rooftopService } from '../services/rooftop.service';
 import { Rooftop } from '../types/rooftop.types';
 import MapView, { Marker } from 'react-native-maps';
 import ReviewCard from '../../reviewDetailCard';
+
+const VIEW_ON_DATA = [
+  { id: '1', title: 'Lorem Ipsum' },
+  { id: '2', title: 'Dolor sit' },
+  { id: '3', title: 'Amet conqueous' },
+  { id: '4', title: 'Vivamus Magna' },
+  { id: '5', title: 'Sed Consequat' },
+  { id: '6', title: 'Mauris Placerat' },
+];
+
+const MOCK_ROOFTOPS = [
+  { id: '1', name: 'Sunset Lounge', location: 'Rio de Janeiro', distance: '1.2km' },
+  { id: '2', name: 'Sky Garden', location: 'Rio de Janeiro', distance: '1.5km' },
+  { id: '3', name: 'Cloud Bar', location: 'Rio de Janeiro', distance: '1.8km' },
+  { id: '4', name: 'Vista Heights', location: 'Rio de Janeiro', distance: '2.0km' },
+  { id: '5', name: 'Rooftop 360', location: 'Rio de Janeiro', distance: '2.2km' },
+  { id: '6', name: 'Urban Oasis', location: 'Rio de Janeiro', distance: '2.5km' },
+  { id: '7', name: 'Sky Deck', location: 'Rio de Janeiro', distance: '2.7km' },
+  { id: '8', name: 'The Summit', location: 'Rio de Janeiro', distance: '3.0km' },
+  { id: '9', name: 'Altitude Bar', location: 'Rio de Janeiro', distance: '3.2km' },
+];
 
 export const RooftopDetailsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -35,12 +56,12 @@ export const RooftopDetailsScreen = () => {
     }
   };
 
-  const handleBook = () => {
-    // TODO: Implement booking flow
+  const handleAddToMyTops = () => {
+    // TODO: Implement 'My Tops' flow
   };
 
-  const handleReview = () => {
-    router.push(`/(app)/(hasHeader)/rooftop/${id}/review`);
+  const handleBook = () => {
+    // TODO: Implement booking flow
   };
 
   if (isLoading) {
@@ -85,70 +106,29 @@ export const RooftopDetailsScreen = () => {
         </View>
 
         <View style={styles.imageContainer}>
-          {/* {rooftop.images.map((image, index) => (
-            <Image 
-              key={index}
-              source={{ uri: image }} 
-              style={styles.image}
-              resizeMode="cover"
-            />
-          ))} */}
-
-          <Image 
-            source={{ uri: rooftop.images[0] }} 
-            style={styles.image}
-            resizeMode="cover"
-          />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.carouselContent}
+            snapToInterval={Dimensions.get('window').width}
+          >
+            {[1, 2, 3, 4].map((_, index) => (
+              <View key={index} style={styles.carouselSlide}>
+                <Image 
+                  source={{ uri: rooftop.images[0] }} 
+                  style={styles.carouselImage}
+                  resizeMode="cover"
+                />
+              </View>
+            ))}
+          </ScrollView>
         </View>
 
         <View style={styles.content}>
-          {/* <View style={styles.detailsContainer}>
-            <View style={styles.detail}>
-              <MaterialIcons name="people" size={20} color={colors.text.primary} />
-              <Text style={styles.detailText}>
-                Up to {rooftop.capacity} people
-              </Text>
-            </View>
-            
-            <View style={styles.detail}>
-              <MaterialIcons name="attach-money" size={20} color={colors.text.secondary} />
-              <Text style={styles.detailText}>
-                ${rooftop.pricePerHour}/hour
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Description</Text>
-            <Text style={styles.description}>{rooftop.description}</Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Location</Text>
-            <View style={styles.detail}>
-              <MaterialIcons name="location-on" size={20} color={colors.text.primary} />
-              <Text style={styles.detailText}>{rooftop.city}</Text>
-            </View>
-          </View>
-
-          <View style={styles.actions}>
-            <Button 
-              title="Book now" 
-              onPress={handleBook}
-              variant="primary"
-            />
-            <View style={styles.spacing} />
-            <Button 
-              title="Write review" 
-              onPress={handleReview}
-              variant="secondary"
-            />
-          </View> */}
-
           <View style={styles.actionsContainer}>
             <Button 
               title="Add to My Tops" 
-              onPress={handleBook}
+              onPress={handleAddToMyTops}
               variant="primary"
               size='small'
               icon={<MaterialIcons name="favorite" size={16} color={colors.text.secondary} />}
@@ -156,7 +136,7 @@ export const RooftopDetailsScreen = () => {
 
             <Button 
               title="Book" 
-              onPress={handleReview}
+              onPress={handleBook}
               variant="secondary"
               size='small'
               icon={<MaterialIcons name="monetization-on" size={16} color={colors.text.secondary} />}
@@ -204,32 +184,24 @@ export const RooftopDetailsScreen = () => {
 
           <View style={styles.viewOnContainer}>
             <Text style={styles.viewOnTitle}>View on</Text>
-            <View style={styles.imagesViews}>
-              <View style={styles.viewItem}>
-                <Image 
-                  source={{ uri: rooftop.images[0] }} 
-                  style={styles.imageView}
-                  resizeMode="cover"
-                />
-                <Text style={styles.viewDescription}>Lorem Ipsum</Text>
-              </View>
-              <View style={styles.viewItem}>
-                <Image 
-                  source={{ uri: rooftop.images[0] }} 
-                  style={styles.imageView}
-                  resizeMode="cover"
-                />
-                <Text style={styles.viewDescription}>Dolor sit</Text>
-              </View>
-              <View style={styles.viewItem}>
-                <Image 
-                  source={{ uri: rooftop.images[0] }} 
-                  style={styles.imageView}
-                  resizeMode="cover"
-                />
-                <Text style={styles.viewDescription}>Amet conqueous</Text>
-              </View>
-            </View>
+            <FlatList
+              data={VIEW_ON_DATA}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              snapToInterval={Dimensions.get('window').width - (spacing.lg * 2)}
+              renderItem={({ item }) => (
+                <View style={styles.viewItem}>
+                  <Image 
+                    source={{ uri: rooftop.images[0] }} 
+                    style={styles.imageView}
+                    resizeMode="cover"
+                  />
+                  <Text style={styles.viewDescription}>{item.title}</Text>
+                </View>
+              )}
+              keyExtractor={item => item.id}
+              contentContainerStyle={styles.viewOnList}
+            />
           </View>
 
           <View style={styles.reviewsContainer}>
@@ -243,9 +215,12 @@ export const RooftopDetailsScreen = () => {
 
           <View style={styles.nearbyContainer}>
             <Text style={styles.sectionTitle}>Grooftops Nearby</Text>
-            <View style={styles.gridContainer}>
-              {[1, 2].map((_, index) => (
-                <View key={`nearby-${index}`} style={styles.gridItem}>
+            <FlatList
+              data={MOCK_ROOFTOPS}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <View style={styles.gridItem}>
                   <Image 
                     source={{ uri: rooftop.images[0] }}
                     style={styles.gridImage}
@@ -253,33 +228,42 @@ export const RooftopDetailsScreen = () => {
                   />
                   <View style={styles.locationTag}>
                     <MaterialIcons name="location-on" size={12} color="white" />
-                    <Text style={styles.locationText}>1.2km</Text>
+                    <Text style={styles.locationText}>{item.distance}</Text>
                   </View>
-                  <Text style={styles.gridTitle}>Name of Rooftop</Text>
-                  <Text style={styles.gridSubtitle}>Location: Rio de Janeiro</Text>
+                  <Text style={styles.gridTitle}>{item.name}</Text>
+                  <Text style={styles.gridSubtitle}>Location: {item.location}</Text>
                 </View>
-              ))}
-            </View>
+              )}
+              keyExtractor={item => `nearby-${item.id}`}
+              contentContainerStyle={styles.horizontalListContent}
+            />
           </View>
 
           <View style={styles.suggestionsContainer}>
             <Text style={styles.sectionTitle}>Grooftops you might like</Text>
-            <View style={styles.gridContainer}>
-              {[1, 2].map((_, index) => (
-                <View key={`suggestion-${index}`} style={styles.gridItem}>
+            <FlatList
+              data={MOCK_ROOFTOPS}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <View style={styles.gridItem}>
                   <Image 
                     source={{ uri: rooftop.images[0] }}
                     style={styles.gridImage}
                     resizeMode="cover"
                   />
                   <View style={styles.favoriteButton}>
-                    <Text style={styles.favoriteText}><Ionicons name="heart" size={10} color="yellow"/> soulmate</Text>
+                    <Text style={styles.favoriteText}>
+                      <Ionicons name="heart" size={10} color="yellow"/> soulmate
+                    </Text>
                   </View>
-                  <Text style={styles.gridTitle}>Name of Rooftop</Text>
-                  <Text style={styles.gridSubtitle}>Location: Rio de Janeiro</Text>
+                  <Text style={styles.gridTitle}>{item.name}</Text>
+                  <Text style={styles.gridSubtitle}>Location: {item.location}</Text>
                 </View>
-              ))}
-            </View>
+              )}
+              keyExtractor={item => `suggestion-${item.id}`}
+              contentContainerStyle={styles.horizontalListContent}
+            />
           </View>
         </View>
       </ScrollView>
@@ -324,14 +308,35 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     height: 250,
-    justifyContent: 'center',
+    width: '100%',
+  },
+  carouselContent: {
     alignItems: 'center',
+  },
+  carouselSlide: {
+    width: Dimensions.get('window').width,
     paddingHorizontal: spacing.lg,
   },
-  image: {
+  carouselImage: {
     width: '100%',
     height: 250,
     borderRadius: 12,
+  },
+  pagination: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: spacing.md,
+    alignSelf: 'center',
+  },
+  paginationDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    marginHorizontal: 4,
+  },
+  paginationDotActive: {
+    backgroundColor: 'white',
   },
   content: {
     padding: spacing.lg,
@@ -354,7 +359,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: colors.text.primary,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   description: {
     fontSize: 16,
@@ -448,13 +453,12 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     marginBottom: spacing.md,
   },
-  imagesViews: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: spacing.md,
+  viewOnList: {
+    paddingRight: spacing.lg,
   },
   viewItem: {
-    flex: 1,
+    width: (Dimensions.get('window').width - (spacing.lg * 4)) / 3,
+    marginRight: spacing.md,
   },
   imageView: {
     width: '100%',
@@ -488,6 +492,7 @@ const styles = StyleSheet.create({
   },
   suggestionsContainer: {
     marginTop: spacing.xxl,
+    marginBottom: spacing.xxl,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -521,7 +526,8 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   gridItem: {
-    flex: 1,
+    width: (Dimensions.get('window').width - spacing.lg * 3) / 2,
+    marginRight: spacing.md,
   },
   gridImage: {
     width: '100%',
@@ -565,5 +571,9 @@ const styles = StyleSheet.create({
   gridSubtitle: {
     fontSize: 12,
     color: colors.text.tertiary,
+  },
+  horizontalListContent: {
+    paddingRight: spacing.lg,
+    paddingTop: spacing.md,
   },
 });
