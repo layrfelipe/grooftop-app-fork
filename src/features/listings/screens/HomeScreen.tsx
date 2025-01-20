@@ -22,7 +22,7 @@ const HomeScreen = () => {
   const renderItem = ({ item }: { item: Listing }) => (
     <TouchableOpacity 
       style={styles.listingItem}
-      onPress={() => router.push(`/listing/${item.id}`)}
+      // onPress={() => router.push(`/listing/${item.id}`)}
     >
       <Image source={{ uri: item.image }} style={styles.listingImage} />
       <Text style={styles.listingTitle}>{item.title}</Text>

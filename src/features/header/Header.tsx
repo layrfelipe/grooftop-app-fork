@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     marginLeft: spacing.md,
-    padding: spacing.sm,
+    padding: spacing.md,
     borderRadius: 12,
   },
   menuOverlay: {

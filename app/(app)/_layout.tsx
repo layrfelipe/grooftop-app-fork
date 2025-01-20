@@ -19,6 +19,7 @@ export default function AppLayout() {
             color: colors.text.primary,
           },
           headerShadowVisible: false,
+          animation: 'none',
           contentStyle: {
             backgroundColor: colors.background.primary,
             paddingTop: spacing.sm,
@@ -34,27 +35,6 @@ export default function AppLayout() {
         <Stack.Screen
           name="(hasHeader)"
           options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="rooftop/[id]"
-          options={{
-            title: 'Rooftop details',
-            headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
-          }}
-        />
-        <Stack.Screen
-          name="rooftop/[id]/edit"
-          options={{
-            title: 'Edit rooftop',
-            headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
-          }}
-        />
-        <Stack.Screen
-          name="rooftop/[id]/review"
-          options={{
-            title: 'Write review',
-            headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
-          }}
         />
         <Stack.Screen
           name="booking/[id]"

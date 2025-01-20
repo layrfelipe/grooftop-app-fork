@@ -23,7 +23,7 @@ const MenuItem = ({ icon, title, subtitle, onPress, index, variant = 'default' }
     style={styles.menuItem}
     entering={FadeInDown.delay(index * 100)}
   >
-    <BlurView intensity={20} tint="dark" style={styles.menuItemContent}>
+    <BlurView intensity={15} tint="dark" style={styles.menuItemContent}>
       <View style={[styles.menuIcon, variant === 'danger' && styles.menuIconDanger]}>
         <Ionicons 
           name={icon} 
@@ -159,25 +159,23 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     marginBottom: spacing.sm,
-    backgroundColor: colors.background.secondary,
   },
   menuItemContent: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: spacing.lg,
-    backgroundColor: colors.primary,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   menuIcon: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: colors.background.tertiary,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: spacing.lg,
   },
   menuIconDanger: {
-    backgroundColor: colors.error + '20',
+    backgroundColor: 'rgba(239, 68, 68, 0.15)',
   },
   menuText: {
     flex: 1,
@@ -187,13 +185,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text.primary,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   menuTitleDanger: {
     color: colors.error,
   },
   menuSubtitle: {
     fontSize: 14,
-    color: colors.text.primary,
+    color: colors.text.tertiary,
   },
 }); 
