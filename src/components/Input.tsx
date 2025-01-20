@@ -92,7 +92,7 @@ export const Input = ({
             <MaterialIcons 
               name={isPasswordField ? (secureTextEntry ? 'visibility' : 'visibility-off') : rightIcon!} 
               size={20} 
-              color={colors.text.secondary}
+              color={colors.text.primary}
             />
           </Pressable>
         )}
@@ -124,11 +124,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.border.default,
     borderRadius: 12,
-    backgroundColor: colors.background.primary,
+    borderColor: '#cdcdcd',
+    backgroundColor: '#222',
     minHeight: 48,
-    shadowColor: colors.shadow.light,
+    shadowColor: colors.shadow.default,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,

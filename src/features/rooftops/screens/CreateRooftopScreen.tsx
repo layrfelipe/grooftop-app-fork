@@ -3,9 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
+  ScrollView
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Button } from '../../../components/Button';
@@ -20,6 +18,7 @@ export const CreateRooftopScreen = () => {
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('');
   const [pricePerHour, setPricePerHour] = useState('');
+  const [capacity, setCapacity] = useState('');
   const [images] = useState(['https://picsum.photos/800/600']);
 
   const handleCreate = async () => {
@@ -29,7 +28,8 @@ export const CreateRooftopScreen = () => {
         description,
         city,
         pricePerHour: Number(pricePerHour),
-        images,
+        capacity: Number(capacity),
+        images
       });
       router.back();
     } catch (error) {
@@ -38,24 +38,25 @@ export const CreateRooftopScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Create Rooftop</Text>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Add a rooftop</Text>
+      </View>
 
-        <ScrollView 
-          style={styles.content}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
+      <ScrollView 
+        style={styles.content}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.inputContainer}>
           <Input
             label="Title"
             value={title}
             onChangeText={setTitle}
             placeholder="Enter rooftop title"
           />
+        </View>
+        <View style={styles.inputContainer}>
           <Input
             label="Description"
             value={description}
@@ -64,12 +65,16 @@ export const CreateRooftopScreen = () => {
             multiline
             numberOfLines={4}
           />
+        </View>
+        <View style={styles.inputContainer}>
           <Input
             label="City"
             value={city}
             onChangeText={setCity}
             placeholder="Enter city"
           />
+        </View>
+        <View style={styles.inputContainer}>
           <Input
             label="Price per hour"
             value={pricePerHour}
@@ -77,36 +82,42 @@ export const CreateRooftopScreen = () => {
             placeholder="Enter price per hour"
             keyboardType="numeric"
           />
-          
-          <View style={styles.actions}>
-            <Button 
-              title="Create Rooftop" 
-              onPress={handleCreate}
-              disabled={!title || !description || !city || !pricePerHour}
-            />
-          </View>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+        </View>
+        <View style={styles.inputContainer}>
+          <Input
+            label="Capacity"
+            value={capacity}
+            onChangeText={setCapacity}
+            placeholder="Enter capacity"
+            keyboardType="numeric"
+          />
+        </View>
+
+        <View style={styles.actions}>
+          <Button 
+            title="Add rooftop" 
+            onPress={handleCreate}
+            disabled={!title || !description || !city || !pricePerHour || !capacity}
+            variant="warn"
+          />
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: colors.background.primary,
-  },
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
+    paddingTop: spacing.md
   },
   header: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
-    paddingBottom: spacing.lg,
+    paddingBottom: spacing.md,
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.text.primary,
   },
@@ -116,7 +127,10 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: spacing.lg,
   },
-  actions: {
-    marginTop: spacing.xl,
+  inputContainer: {
+    marginBottom: spacing.md,
   },
+  actions: {
+    marginTop: spacing.sm,
+  }
 }); 

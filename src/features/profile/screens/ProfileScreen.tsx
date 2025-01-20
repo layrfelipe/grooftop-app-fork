@@ -6,10 +6,8 @@ import {
   ScrollView,
   Pressable,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,7 +17,7 @@ import { spacing } from '../../../theme/spacing';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const MenuItem = ({ icon, title, subtitle, onPress, index, variant = 'default' }) => (
+const MenuItem = ({ icon, title, subtitle, onPress, index, variant = 'default' }: { icon: any, title: any, subtitle: any, onPress: any, index: any, variant: any }) => (
   <AnimatedPressable
     onPress={onPress}
     style={styles.menuItem}
@@ -40,7 +38,7 @@ const MenuItem = ({ icon, title, subtitle, onPress, index, variant = 'default' }
         ]}>{title}</Text>
         <Text style={styles.menuSubtitle}>{subtitle}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={20} color={colors.text.secondary} />
+      <Ionicons name="chevron-forward" size={20} color={colors.text.primary} />
     </BlurView>
   </AnimatedPressable>
 );
@@ -51,76 +49,75 @@ export const ProfileScreen = () => {
 
   const handleLogout = () => {
     logout();
-    router.replace('/login');
+    router.replace('/init');
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
       <View style={styles.container}>
-        <LinearGradient
-          colors={colors.background.gradient}
-          style={styles.gradient}
+        <ScrollView
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView
-            contentContainerStyle={styles.content}
-            showsVerticalScrollIndicator={false}
+          <Animated.View
+            style={styles.header}
+            entering={FadeInUp.duration(500)}
           >
-            <Animated.View
-              style={styles.header}
-              entering={FadeInUp.duration(500)}
-            >
-              <Text style={styles.greeting}>Welcome back,</Text>
-              <Text style={styles.name}>{user?.name || 'Guest'}</Text>
-            </Animated.View>
+            <Text style={styles.greeting}>Welcome back,</Text>
+            <Text style={styles.name}>{user?.name || 'Guest'}</Text>
+          </Animated.View>
 
-            <View style={styles.menu}>
-              <MenuItem
-                icon="person-outline"
-                title="Edit Profile"
-                subtitle="Update your personal information"
-                onPress={() => router.push('/(app)/profile/edit')}
-                index={0}
-              />
-              <MenuItem
-                icon="calendar-outline"
-                title="My Bookings"
-                subtitle="View your booking history"
-                onPress={() => router.push('/(app)/bookings')}
-                index={1}
-              />
-              <MenuItem
-                icon="heart-outline"
-                title="Favorites"
-                subtitle="Your saved rooftop spaces"
-                onPress={() => {}}
-                index={2}
-              />
-              <MenuItem
-                icon="settings-outline"
-                title="Settings"
-                subtitle="App preferences and account settings"
-                onPress={() => {}}
-                index={3}
-              />
-              <MenuItem
-                icon="help-circle-outline"
-                title="Help & Support"
-                subtitle="Get assistance and FAQs"
-                onPress={() => {}}
-                index={4}
-              />
-              <MenuItem
-                icon="log-out-outline"
-                title="Logout"
-                subtitle="Sign out of your account"
-                onPress={handleLogout}
-                index={5}
-                variant="danger"
-              />
-            </View>
-          </ScrollView>
-        </LinearGradient>
+          <View style={styles.menu}>
+            <MenuItem
+              icon="person-outline"
+              title="Edit Profile"
+              subtitle="Update your personal information"
+              onPress={() => router.push('/(app)/profile/edit')}
+              index={0}
+              variant="default"
+            />
+            <MenuItem
+              icon="calendar-outline"
+              title="My Bookings"
+              subtitle="View your booking history"
+              onPress={() => router.push('/(app)/(hasHeader)/bookings')}
+              index={1}
+              variant="default"
+            />
+            <MenuItem
+              icon="heart-outline"
+              title="Favorites"
+              subtitle="Your saved rooftop spaces"
+              onPress={() => {}}
+              index={2}
+              variant="default"
+            />
+            <MenuItem
+              icon="settings-outline"
+              title="Settings"
+              subtitle="App preferences and account settings"
+              onPress={() => {}}
+              index={3}
+              variant="default"
+            />
+            <MenuItem
+              icon="help-circle-outline"
+              title="Help & Support"
+              subtitle="Get help and see and FAQs"
+              onPress={() => {}}
+              index={4}
+              variant="default"
+            />
+            <MenuItem
+              icon="log-out-outline"
+              title="Logout"
+              subtitle="Sign out of your account"
+              onPress={handleLogout}
+              index={5}
+              variant="danger"
+            />
+          </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -139,15 +136,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: spacing.lg,
-    paddingTop: spacing.xl,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
   header: {
     marginBottom: spacing.xl,
   },
   greeting: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     marginBottom: spacing.xs,
   },
   name: {
@@ -162,20 +159,22 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     marginBottom: spacing.sm,
+    backgroundColor: colors.background.secondary,
   },
   menuItemContent: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: spacing.lg,
-    backgroundColor: colors.glass.background,
+    backgroundColor: colors.primary,
   },
   menuIcon: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.background.secondary,
+    backgroundColor: colors.background.tertiary,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: spacing.lg,
   },
   menuIconDanger: {
     backgroundColor: colors.error + '20',
@@ -195,6 +194,6 @@ const styles = StyleSheet.create({
   },
   menuSubtitle: {
     fontSize: 14,
-    color: colors.text.secondary,
+    color: colors.text.primary,
   },
 }); 

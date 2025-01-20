@@ -65,70 +65,77 @@ export const RooftopDetailsScreen = () => {
   }
 
   return (
-    <ScrollView style={styles.container} bounces={false}>
+    <View style={styles.container}>
       <ScrollView 
-        horizontal 
-        pagingEnabled 
-        showsHorizontalScrollIndicator={false}
-        style={styles.imageContainer}
+        style={styles.contentScrollView}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
       >
-        {rooftop.images.map((image, index) => (
-          <Image 
-            key={index}
-            source={{ uri: image }} 
-            style={styles.image}
-            resizeMode="cover"
-          />
-        ))}
+        <ScrollView 
+          horizontal 
+          pagingEnabled 
+          showsHorizontalScrollIndicator={false}
+          style={styles.imageContainer}
+        >
+          {rooftop.images.map((image, index) => (
+            <Image 
+              key={index}
+              source={{ uri: image }} 
+              style={styles.image}
+              resizeMode="cover"
+            />
+          ))}
+        </ScrollView>
+
+        <View style={styles.content}>
+          <Text style={styles.title}>{rooftop.title}</Text>
+          <Text style={styles.city}>{rooftop.city}</Text>
+
+          <View style={styles.detailsContainer}>
+            <View style={styles.detail}>
+              <MaterialIcons name="people" size={20} color={colors.text.primary} />
+              <Text style={styles.detailText}>
+                Up to {rooftop.capacity} people
+              </Text>
+            </View>
+            
+            <View style={styles.detail}>
+              <MaterialIcons name="attach-money" size={20} color={colors.text.secondary} />
+              <Text style={styles.detailText}>
+                ${rooftop.pricePerHour}/hour
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Description</Text>
+            <Text style={styles.description}>{rooftop.description}</Text>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Location</Text>
+            <View style={styles.detail}>
+              <MaterialIcons name="location-on" size={20} color={colors.text.primary} />
+              <Text style={styles.detailText}>{rooftop.city}</Text>
+            </View>
+          </View>
+
+          <View style={styles.actions}>
+            <Button 
+              title="Book now" 
+              onPress={handleBook}
+              variant="primary"
+            />
+            <View style={styles.spacing} />
+            <Button 
+              title="Write review" 
+              onPress={handleReview}
+              variant="secondary"
+            />
+          </View>
+        </View>
       </ScrollView>
-
-      <View style={styles.content}>
-        <Text style={styles.title}>{rooftop.title}</Text>
-        <Text style={styles.city}>{rooftop.city}</Text>
-
-        <View style={styles.detailsContainer}>
-          <View style={styles.detail}>
-            <MaterialIcons name="people" size={20} color={colors.text.secondary} />
-            <Text style={styles.detailText}>
-              Up to {rooftop.capacity} people
-            </Text>
-          </View>
-          
-          <View style={styles.detail}>
-            <MaterialIcons name="attach-money" size={20} color={colors.text.secondary} />
-            <Text style={styles.detailText}>
-              ${rooftop.pricePerHour}/hour
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Description</Text>
-          <Text style={styles.description}>{rooftop.description}</Text>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Location</Text>
-          <View style={styles.detail}>
-            <MaterialIcons name="location-on" size={20} color={colors.text.secondary} />
-            <Text style={styles.detailText}>{rooftop.city}</Text>
-          </View>
-        </View>
-
-        <View style={styles.actions}>
-          <Button 
-            title="Book Now" 
-            onPress={handleBook}
-          />
-          <View style={styles.spacing} />
-          <Button 
-            title="Write Review" 
-            onPress={handleReview}
-            variant="secondary"
-          />
-        </View>
-      </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -150,7 +157,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     height: 300,
-    backgroundColor: colors.background.primary,
   },
   image: {
     width,
@@ -168,7 +174,7 @@ const styles = StyleSheet.create({
   },
   city: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     marginBottom: spacing.md,
   },
   detailsContainer: {
@@ -179,7 +185,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: spacing.lg,
     borderWidth: 1,
-    borderColor: colors.border.default,
+    borderColor: colors.primary,
   },
   section: {
     marginBottom: spacing.lg,
@@ -192,7 +198,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
     lineHeight: 24,
   },
   detail: {
@@ -202,12 +208,16 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 16,
-    color: colors.text.secondary,
+    color: colors.text.primary,
   },
   actions: {
-    marginTop: spacing.xl,
+    marginTop: spacing.sm,
+    marginBottom: spacing.xxl,
   },
   spacing: {
     height: spacing.md,
+  },
+  contentScrollView: {
+    backgroundColor: colors.background.primary,
   },
 }); 

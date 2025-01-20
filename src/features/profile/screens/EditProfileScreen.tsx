@@ -67,38 +67,38 @@ export const EditProfileScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Edit Profile</Text>
-      </View>
-
       <View style={styles.content}>
-        <Input
-          label="Name"
-          value={name}
+        <View style={styles.inputContainer}>
+          <Input
+            label="Name"
+            value={name}
           onChangeText={(text) => {
             setName(text);
             setErrors(prev => ({ ...prev, name: undefined }));
           }}
           placeholder="Enter your name"
-          autoCapitalize="words"
-          error={errors.name}
-        />
+            autoCapitalize="words"
+            error={errors.name}
+          />
+        </View>
 
-        <Input
-          label="Avatar URL (optional)"
-          value={avatarUrl}
+        <View style={styles.inputContainer}>
+          <Input
+            label="Avatar URL (optional)"
+            value={avatarUrl}
           onChangeText={(text) => {
             setAvatarUrl(text);
             setErrors(prev => ({ ...prev, avatarUrl: undefined }));
           }}
           placeholder="Enter avatar URL"
-          keyboardType="url"
-          error={errors.avatarUrl}
-        />
+            keyboardType="url"
+            error={errors.avatarUrl}
+          />
+        </View>
 
         <View style={styles.actions}>
           <Button 
-            title="Save Changes" 
+            title="Save changes" 
             onPress={handleSave}
             loading={isLoading}
           />
@@ -122,8 +122,7 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: spacing.lg,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomWidth: 1
   },
   title: {
     fontSize: 24,
@@ -133,8 +132,11 @@ const styles = StyleSheet.create({
   content: {
     padding: spacing.lg,
   },
+  inputContainer: {
+    marginBottom: spacing.sm,
+  },
   actions: {
-    marginTop: spacing.xl,
+    marginTop: spacing.md,
   },
   spacing: {
     height: spacing.md,

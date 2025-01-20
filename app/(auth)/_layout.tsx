@@ -4,7 +4,7 @@ import { colors } from '../../src/theme/colors';
 
 export default function AuthLayout() {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
+    <View style={{ flex: 1, backgroundColor: colors.background.secondary }}>
       <Stack
         screenOptions={{
           headerStyle: {
@@ -17,6 +17,13 @@ export default function AuthLayout() {
           animation: 'fade',
           animationDuration: 200,
         }}>
+        <Stack.Screen
+          name="init"
+          options={{
+            title: 'Sign In',
+            headerShown: false,
+          }}
+        />
         <Stack.Screen
           name="login"
           options={{

@@ -1,16 +1,14 @@
 import React from 'react';
 import { Stack } from 'expo-router';
-import { Platform, StatusBar, View } from 'react-native';
+import { Platform, StatusBar, SafeAreaView } from 'react-native';
 import { colors } from '../../src/theme/colors';
+import { spacing } from '@/src/theme/spacing';
 
 export default function AppLayout() {
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background.primary }}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor={colors.background.primary}
-        translucent
-      />
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background.primary }}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.background.primary} />
+      
       <Stack
         screenOptions={{
           headerStyle: {
@@ -23,9 +21,8 @@ export default function AppLayout() {
           headerShadowVisible: false,
           contentStyle: {
             backgroundColor: colors.background.primary,
+            paddingTop: spacing.sm,
           },
-          animation: 'fade',
-          animationDuration: 200,
           ...Platform.select({
             android: {
               headerBackVisible: true,
@@ -35,45 +32,45 @@ export default function AppLayout() {
         }}
       >
         <Stack.Screen
-          name="(tabs)"
+          name="(hasHeader)"
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="rooftop/[id]"
           options={{
-            title: 'Rooftop Details',
+            title: 'Rooftop details',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
         <Stack.Screen
           name="rooftop/[id]/edit"
           options={{
-            title: 'Edit Rooftop',
+            title: 'Edit rooftop',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
         <Stack.Screen
           name="rooftop/[id]/review"
           options={{
-            title: 'Write Review',
+            title: 'Write review',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
         <Stack.Screen
           name="booking/[id]"
           options={{
-            title: 'Booking Details',
+            title: 'Booking details',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
         <Stack.Screen
           name="profile/edit"
           options={{
-            title: 'Edit Profile',
+            title: 'Edit profile',
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
       </Stack>
-    </View>
+    </SafeAreaView>
   );
 } 
