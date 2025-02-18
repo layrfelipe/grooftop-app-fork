@@ -3,7 +3,9 @@ import { rooftopService } from '../services/rooftop.service';
 import { Rooftop, RooftopFilters } from '../types/rooftop.types';
 
 interface RooftopState {
-  rooftops: Rooftop[];
+  // rooftops: Rooftop[];
+  rooftops: any[];
+
   isLoading: boolean;
   error: string | null;
   filters: RooftopFilters;

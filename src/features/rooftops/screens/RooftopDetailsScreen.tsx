@@ -47,10 +47,14 @@ export const RooftopDetailsScreen = () => {
       setIsLoading(true);
       setError(null);
       const data = await rooftopService.getRooftop(id);
+
+      if (!data || !data.images || data.images.length === 0) {
+        throw new Error('Invalid rooftop data');
+      }
       setRooftop(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load rooftop:', err);
-      setError('Failed to load rooftop details');
+      setError('Failed to load rooftop details: ' + err.message);
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +82,7 @@ export const RooftopDetailsScreen = () => {
         <Text style={styles.error}>{error || 'Rooftop not found'}</Text>
         <Button 
           title="Go Back" 
-          onPress={() => router.back()}
+          onPress={() => router.push('/')}
           variant="secondary"
         />
       </View>
@@ -121,6 +125,18 @@ export const RooftopDetailsScreen = () => {
                 />
               </View>
             ))}
+
+            {rooftop.images && rooftop.images.length > 0 ? (
+              <Image 
+                source={{ uri: rooftop.images[0] }} 
+                style={styles.carouselImage}
+                resizeMode="cover"
+              />
+            ) : (
+              <View style={styles.carouselImage}>
+                <Text>No image available</Text>
+              </View>
+            )}
           </ScrollView>
         </View>
 
