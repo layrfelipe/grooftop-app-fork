@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Grooftop",
-    "slug": "grooftop-app",
+    "slug": "grooftop-app-fork",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
@@ -18,9 +18,10 @@
       }
     },
     "android": {
-      "package": "com.grooftop.app",
+      "package": "com.grooftopFork.app",
       "adaptiveIcon": {
-        "backgroundColor": "#0F172A"
+        "backgroundColor": "#0F172A",
+        "foregroundImage": "./assets/images/splashscreen_logo.png"
       },
       "intentFilters": [
         {
@@ -28,7 +29,7 @@
           "autoVerify": true,
           "data": [
             {
-              "scheme": "com.grooftop.app",
+              "scheme": "com.grooftopFork.app",
               "host": "oauth2redirect"
             }
           ],
@@ -38,6 +39,11 @@
           ]
         }
       ]
+    },
+    "splash": {
+      "image": "./assets/images/splashscreen_logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
     },
     "plugins": [
       "expo-router"
@@ -51,12 +57,12 @@
         "origin": false
       },
       "eas": {
-        "projectId": "716fa185-d84a-40e8-9b79-50a13064ea68"
+        "projectId": "f925b256-57d4-408a-9ff4-fbd415b3fdf5"
       }
     },
     "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/716fa185-d84a-40e8-9b79-50a13064ea68"
+      "url": "https://u.expo.dev/f925b256-57d4-408a-9ff4-fbd415b3fdf5"
     }
   }
 }
