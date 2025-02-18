@@ -7,7 +7,7 @@ import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 import { rooftopService } from '../services/rooftop.service';
 import { Rooftop } from '../types/rooftop.types';
-import MapView, { Marker } from 'react-native-maps';
+// import MapView, { Marker } from 'react-native-maps';
 import ReviewCard from '../../reviewDetailCard';
 
 const VIEW_ON_DATA = [
@@ -162,7 +162,7 @@ export const RooftopDetailsScreen = () => {
 
           <View style={styles.mapContainer}>
             <Text style={styles.mapTitle}>Map</Text>
-            <MapView
+            {/* <MapView
               style={styles.map}
               initialRegion={{
                 latitude: -22.951804,
@@ -179,7 +179,7 @@ export const RooftopDetailsScreen = () => {
                 title={rooftop.title}
                 description={rooftop.city}
               />
-            </MapView>
+            </MapView> */}
           </View>
 
           <View style={styles.viewOnContainer}>
