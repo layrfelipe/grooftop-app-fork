@@ -50,6 +50,14 @@ export default function AppLayout() {
             headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
           }}
         />
+        <Stack.Screen
+          name="success/success"
+          options={{
+            title: 'Success',
+            headerShown: false,
+            headerBackTitle: Platform.OS === 'ios' ? 'Back' : undefined,
+          }}
+        />
       </Stack>
     </SafeAreaView>
   );

@@ -176,9 +176,9 @@ export const RooftopDetailsScreen = () => {
             <Text style={styles.aboutText}>{rooftop.description}</Text>
           </View>
 
-          <View style={styles.mapContainer}>
+          {/* <View style={styles.mapContainer}>
             <Text style={styles.mapTitle}>Map</Text>
-            {/* <MapView
+            <MapView
               style={styles.map}
               initialRegion={{
                 latitude: -22.951804,
@@ -195,8 +195,8 @@ export const RooftopDetailsScreen = () => {
                 title={rooftop.title}
                 description={rooftop.city}
               />
-            </MapView> */}
-          </View>
+            </MapView>
+          </View> */}
 
           <View style={styles.viewOnContainer}>
             <Text style={styles.viewOnTitle}>View on</Text>
