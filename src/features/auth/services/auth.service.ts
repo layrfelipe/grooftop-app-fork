@@ -40,7 +40,6 @@ export const authService = {
 
   getProfile: async (): Promise<UserProfile> => {
     const response = await api.get<UserProfile>('/users/me');
-    console.log('Get profile response:', response);
     return response.data;
   },
 

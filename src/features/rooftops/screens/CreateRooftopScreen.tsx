@@ -541,7 +541,6 @@ export const CreateRooftopScreen = () => {
             
             <TouchableOpacity 
               style={styles.uploadButton}
-              onPress={() => {}}
             >
               <Text style={styles.uploadButtonText}>Add photos or videos</Text>
             </TouchableOpacity>
@@ -552,7 +551,8 @@ export const CreateRooftopScreen = () => {
 
   const handleCreate = async () => {
     try {
-    } catch (error) {
+      router.push('/(app)/success/success');
+      } catch (error) {
       console.error('Failed to create rooftop:', error);
     }
   };

@@ -1,16 +1,13 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { spacing } from '../../../theme/spacing';
+import { colors } from '@/src/theme/colors';
 
 export default function RooftopSuccessScreen() {
   const router = useRouter();
 
   return (
     <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Text style={styles.logo}>∞</Text>
-      </View>
-      
       <Text style={styles.title}>
         Your rooftop has been successfully registered.
       </Text>
@@ -22,7 +19,7 @@ export default function RooftopSuccessScreen() {
       <TouchableOpacity 
         style={styles.viewSpaceButton}
         onPress={() => {
-          // router.push('/');
+          router.push('/spaces');
         }}
       >
         <Text style={styles.viewSpaceButtonText}>View your space</Text>
@@ -36,36 +33,40 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#5CFF9D',
+    backgroundColor: '#5EEBB4',
+    paddingHorizontal: spacing.xl,
   },
   logoContainer: {
-    marginBottom: spacing.xl,
+    marginBottom: spacing.xl * 2,
   },
   logo: {
-    fontSize: 48,
-    color: '#000',
+    width: 80,
+    height: 80,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     color: '#000',
     textAlign: 'center',
-    marginBottom: spacing.md,
-    paddingHorizontal: spacing.xl,
+    marginBottom: spacing.lg,
+    fontWeight: '600',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#000',
     textAlign: 'center',
-    marginBottom: spacing.xl,
+    marginBottom: spacing.xl * 2,
   },
   viewSpaceButton: {
-    backgroundColor: '#fff',
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.xl,
-    borderRadius: 8,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl * 2,
+    borderRadius: spacing.sm,
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: colors.text.primary,
   },
   viewSpaceButtonText: {
-    color: '#000',
+    color: colors.text.secondary,
     fontSize: 16,
+    fontWeight: '500',
   },
 }); 
