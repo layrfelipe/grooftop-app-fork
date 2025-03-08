@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import { Button } from '../../../components/Button';
 import { Input } from '../../../components/Input';
 import { colors } from '../../../theme/colors';
@@ -18,6 +18,17 @@ import { api } from '@/src/services/api';
 export const CreateRooftopScreen = () => {
   const router = useRouter();
 
+  // Metadata
+  const [availablePrivacyOptionsMetadata, setAvailablePrivacyOptionsMetadata] = useState<any>([]);
+  const [availableActivitiesMetadata, setAvailableActivitiesMetadata] = useState<any>([]);
+  const [availableRentalTypesOptionsMetadata, setAvailableRentalTypesOptionsMetadata] = useState<any>([]);
+  const [availableAccessibilityOptionsMetadata, setAvailableAccessibilityOptionsMetadata] = useState<any>([]);
+  const [availableRooftopFeaturesOptionsMetadata, setAvailableRooftopFeaturesOptionsMetadata] = useState<any>([]);
+  const [availableRooftopViewTypesMetadata, setAvailableRooftopViewTypesMetadata] = useState<any>([]);
+  const [availableGuidelinesOptionsMetadata, setAvailableGuidelinesOptionsMetadata] = useState<any>([]);
+  const [availableCancellationPoliciesOptionsMetadata, setAvailableCancellationPoliciesOptionsMetadata] = useState<any>([]);
+
+
   // Basic Info - Stage 1
   const [address, setAddress] = useState('');
   const [postalCode, setPostalCode] = useState('');
@@ -26,8 +37,8 @@ export const CreateRooftopScreen = () => {
   const [additionalInfo, setAdditionalInfo] = useState('');
 
   // Activities - Stage 2
-  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
-  const [spaceType, setSpaceType] = useState(''); // commercial, private, public
+  const [selectedPrivacyAndAccessOption, setSelectedPrivacyAndAccessOption] = useState<string>('');
+  const [selectedRooftopActivities, setSelectedRooftopActivities] = useState<string[]>([]);
 
   // Rental Type - Stage 3
   const [rentalType, setRentalType] = useState(''); // free, hourly, byPeriod
@@ -49,53 +60,45 @@ export const CreateRooftopScreen = () => {
 
   const [currentStage, setCurrentStage] = useState(1);
 
-  const [privacyOptionsMetadata, setPrivacyOptionsMetadata] = useState<any>([]);
-  const [availableActivitiesMetadata, setAvailableActivitiesMetadata] = useState<any>([]);
-  const [rentalTypesOptionsMetadata, setRentalTypesOptionsMetadata] = useState<any>([]);
-  const [accessibilityOptionsMetadata, setAccessibilityOptionsMetadata] = useState<any>([]);
-  const [rooftopFeaturesOptionsMetadata, setRooftopFeaturesOptionsMetadata] = useState<any>([]);
-  const [rooftopViewTypesMetadata, setRooftopViewTypesMetadata] = useState<any>([]);
-  const [guidelinesOptionsMetadata, setGuidelinesOptionsMetadata] = useState<any>([]);
-  const [cancellationPoliciesOptionsMetadata, setCancellationPoliciesOptionsMetadata] = useState<any>([]);
-
 
   useEffect(() => {
     api.getPrivacyOptionsAndAvailableActivitiesMetaDataFromBackend().then((res: any) => {
-      setPrivacyOptionsMetadata(res.data.privacyOptions);
+      setAvailablePrivacyOptionsMetadata(res.data.privacyOptions);
       setAvailableActivitiesMetadata(res.data.availableActivities);
       console.log("privacy options metadata and available activities metadata", res.data);
     });
 
     api.getRentalTypesOptionsMetaDataFromBackend().then((res: any) => {
       console.log("rental types options metadata", res.data);
-      setRentalTypesOptionsMetadata(res.data);
+      setAvailableRentalTypesOptionsMetadata(res.data);
     });
 
     api.getAccessibilityOptionsMetaDataFromBackend().then((res: any) => {
       console.log("accessibility options metadata", res.data);
-      setAccessibilityOptionsMetadata(res.data);
+      setAvailableAccessibilityOptionsMetadata(res.data);
     });
 
     api.getRooftopFeaturesOptionsMetaDataFromBackend().then((res: any) => {
       console.log("rooftop features options metadata", res.data);
-      setRooftopFeaturesOptionsMetadata(res.data);
+      setAvailableRooftopFeaturesOptionsMetadata(res.data);
     });
 
     api.getRooftopViewTypesMetaDataFromBackend().then((res: any) => {
       console.log("rooftop view types metadata", res.data);
-      setRooftopViewTypesMetadata(res.data);
+      setAvailableRooftopViewTypesMetadata(res.data);
     });
 
     api.getGuidelinesOptionsFromBackend().then((res: any) => {
       console.log("guidelines options metadata", res.data);
-      setGuidelinesOptionsMetadata(res.data);
+      setAvailableGuidelinesOptionsMetadata(res.data);
     });
 
     api.getCancellationPoliciesOptionsFromBackend().then((res: any) => {
       console.log("cancellation policies options metadata", res.data);
-      setCancellationPoliciesOptionsMetadata(res.data);
+      setAvailableCancellationPoliciesOptionsMetadata(res.data);
     });
   }, [])
+
 
   const handleNext = () => {
     if (currentStage < 7) {
@@ -172,12 +175,12 @@ export const CreateRooftopScreen = () => {
           return (
             <>
               <Text style={styles.sectionTitle}>Privacy & Access</Text>
-              {/* <View>
-                {privacyOptionsMetadata.map((option: any) => (
+              <View>
+                {availablePrivacyOptionsMetadata.map((option: any) => (
                   <CheckBox
                     title={option.name}
-                    checked={spaceType === option.name}
-                    onPress={() => setSpaceType(option.id)}
+                    checked={selectedPrivacyAndAccessOption === option.id}
+                    onPress={() => setSelectedPrivacyAndAccessOption(option.id)}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     checkedColor={colors.primary}
@@ -185,20 +188,20 @@ export const CreateRooftopScreen = () => {
                     textStyle={[styles.radioLabel, { color: colors.text.primary }]}
                   />
                 ))}
-              </View> */}
+              </View>
 
               <Text style={styles.sectionTitle}>Available Activities</Text>
-              {/* <View>
+              <View>
                 {availableActivitiesMetadata.map((activity: any) => (
                   <CheckBox
                     key={activity.id}
-                    title={activity}
-                    checked={selectedActivities.includes(activity)}
+                    title={activity.name}
+                    checked={selectedRooftopActivities.includes(activity.id)}
                     onPress={() => {
-                      if (selectedActivities.includes(activity)) {
-                        setSelectedActivities(selectedActivities.filter(a => a !== activity));
+                      if (selectedRooftopActivities.includes(activity.id)) {
+                        setSelectedRooftopActivities(selectedRooftopActivities.filter(a => a !== activity.id));
                       } else {
-                        setSelectedActivities([...selectedActivities, activity]);
+                        setSelectedRooftopActivities([...selectedRooftopActivities, activity.id]);
                       }
                     }}
                     checkedColor={colors.primary}
@@ -206,7 +209,7 @@ export const CreateRooftopScreen = () => {
                     textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
                   />
                 ))}
-              </View> */}
+              </View>
             </>
           );
 
@@ -216,110 +219,112 @@ export const CreateRooftopScreen = () => {
             <Text style={styles.sectionTitle}>Type of Rental</Text>
 
             <View>
-              {rentalTypesOptionsMetadata.map((option: any) => (
-                <CheckBox
-                  title={option.name}
-                  checked={rentalType === option.name}
-                  onPress={() => setRentalType(option.name)}
-                  checkedIcon="dot-circle-o"
-                  uncheckedIcon="circle-o"
-                  checkedColor={colors.primary}
-                  containerStyle={styles.radioContainer}
-                  textStyle={[styles.radioLabel, { color: '#fff' }]}
-                />
+              {availableRentalTypesOptionsMetadata.map((option: any) => (
+                <View>
+                  <CheckBox
+                    title={option.name}
+                    checked={rentalType === option.id}
+                    onPress={() => setRentalType(option.id)}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checkedColor={colors.primary}
+                    containerStyle={styles.radioContainer}
+                    textStyle={[styles.radioLabel, { color: '#fff' }]}
+                  />
+
+                  {/* FINISH THIS IN THE UI LATER */}
+                  {/* <View>
+                    <CheckBox
+                      title="Free"
+                      checked={rentalType === 'free'}
+                      onPress={() => setRentalType('free')}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor={colors.primary}
+                      containerStyle={styles.radioContainer}
+                      textStyle={[styles.radioLabel, { color: '#fff' }]}
+                    />
+                    
+                    {rentalType === 'free' && (
+                      <View style={styles.timeRangeContainer}>
+                        <Text style={styles.timeRangeLabel}>time range</Text>
+                        <Input
+                          value={timeRange}
+                          onChangeText={setTimeRange}
+                          placeholder="Select the time range (vamos colocar aqui de 0+4hs"
+                        />
+                      </View>
+                    )}
+
+                    <CheckBox
+                      title="Hourly"
+                      checked={rentalType === 'hourly'}
+                      onPress={() => setRentalType('hourly')}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor={colors.primary}
+                      containerStyle={styles.radioContainer}
+                      textStyle={[styles.radioLabel, { color: '#fff' }]}
+                    />
+
+                    {rentalType === 'hourly' && (
+                      <>
+                        <View style={styles.timeRangeContainer}>
+                          <Text style={styles.timeRangeLabel}>time range</Text>
+                          <Input
+                            value={timeRange}
+                            onChangeText={setTimeRange}
+                            placeholder="Select the time range (vamos colocar aqui de 0+4hs"
+                          />
+                        </View>
+                        <View style={styles.timeRangeContainer}>
+                          <Text style={styles.timeRangeLabel}>value</Text>
+                          <Input
+                            value={price}
+                            onChangeText={setPrice}
+                            placeholder="Enter the hourly rate"
+                            keyboardType="numeric"
+                          />
+                        </View>
+                      </>
+                    )}
+
+                    <CheckBox
+                      title="By Period"
+                      checked={rentalType === 'byPeriod'}
+                      onPress={() => setRentalType('byPeriod')}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor={colors.primary}
+                      containerStyle={styles.radioContainer}
+                      textStyle={[styles.radioLabel, { color: '#fff' }]}
+                    />
+
+                    {rentalType === 'byPeriod' && (
+                      <>
+                        <View style={styles.timeRangeContainer}>
+                          <Text style={styles.timeRangeLabel}>time range</Text>
+                          <Input
+                            value={timeRange}
+                            onChangeText={setTimeRange}
+                            placeholder="Select the time range (vamos colocar aqui de 0+4hs"
+                          />
+                        </View>
+                        <View style={styles.timeRangeContainer}>
+                          <Text style={styles.timeRangeLabel}>value</Text>
+                          <Input
+                            value={price}
+                            onChangeText={setPrice}
+                            placeholder="Enter the price for the 4-hour package"
+                            keyboardType="numeric"
+                          />
+                        </View>
+                      </>
+                    )}
+                  </View> */}
+                </View>
               ))}
             </View>
-            
-            
-            {/* <View>
-              <CheckBox
-                title="Free"
-                checked={rentalType === 'free'}
-                onPress={() => setRentalType('free')}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor={colors.primary}
-                containerStyle={styles.radioContainer}
-                textStyle={[styles.radioLabel, { color: '#fff' }]}
-              />
-              
-              {rentalType === 'free' && (
-                <View style={styles.timeRangeContainer}>
-                  <Text style={styles.timeRangeLabel}>time range</Text>
-                  <Input
-                    value={timeRange}
-                    onChangeText={setTimeRange}
-                    placeholder="Select the time range (vamos colocar aqui de 0+4hs"
-                  />
-                </View>
-              )}
-
-              <CheckBox
-                title="Hourly"
-                checked={rentalType === 'hourly'}
-                onPress={() => setRentalType('hourly')}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor={colors.primary}
-                containerStyle={styles.radioContainer}
-                textStyle={[styles.radioLabel, { color: '#fff' }]}
-              />
-
-              {rentalType === 'hourly' && (
-                <>
-                  <View style={styles.timeRangeContainer}>
-                    <Text style={styles.timeRangeLabel}>time range</Text>
-                    <Input
-                      value={timeRange}
-                      onChangeText={setTimeRange}
-                      placeholder="Select the time range (vamos colocar aqui de 0+4hs"
-                    />
-                  </View>
-                  <View style={styles.timeRangeContainer}>
-                    <Text style={styles.timeRangeLabel}>value</Text>
-                    <Input
-                      value={price}
-                      onChangeText={setPrice}
-                      placeholder="Enter the hourly rate"
-                      keyboardType="numeric"
-                    />
-                  </View>
-                </>
-              )}
-
-              <CheckBox
-                title="By Period"
-                checked={rentalType === 'byPeriod'}
-                onPress={() => setRentalType('byPeriod')}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor={colors.primary}
-                containerStyle={styles.radioContainer}
-                textStyle={[styles.radioLabel, { color: '#fff' }]}
-              />
-
-              {rentalType === 'byPeriod' && (
-                <>
-                  <View style={styles.timeRangeContainer}>
-                    <Text style={styles.timeRangeLabel}>time range</Text>
-                    <Input
-                      value={timeRange}
-                      onChangeText={setTimeRange}
-                      placeholder="Select the time range (vamos colocar aqui de 0+4hs"
-                    />
-                  </View>
-                  <View style={styles.timeRangeContainer}>
-                    <Text style={styles.timeRangeLabel}>value</Text>
-                    <Input
-                      value={price}
-                      onChangeText={setPrice}
-                      placeholder="Enter the price for the 4-hour package"
-                      keyboardType="numeric"
-                    />
-                  </View>
-                </>
-              )}
-            </View> */}
           </>
         );
 
