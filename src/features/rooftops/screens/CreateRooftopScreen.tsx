@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
 import { CheckBox } from '@rneui/base';
 import { Picker } from '@react-native-picker/picker';
+import { api } from '@/src/services/api';
 
 export const CreateRooftopScreen = () => {
   const router = useRouter();
@@ -47,6 +48,54 @@ export const CreateRooftopScreen = () => {
   const [cancellationPolicy, setCancellationPolicy] = useState('');
 
   const [currentStage, setCurrentStage] = useState(1);
+
+  const [privacyOptionsMetadata, setPrivacyOptionsMetadata] = useState<any>([]);
+  const [availableActivitiesMetadata, setAvailableActivitiesMetadata] = useState<any>([]);
+  const [rentalTypesOptionsMetadata, setRentalTypesOptionsMetadata] = useState<any>([]);
+  const [accessibilityOptionsMetadata, setAccessibilityOptionsMetadata] = useState<any>([]);
+  const [rooftopFeaturesOptionsMetadata, setRooftopFeaturesOptionsMetadata] = useState<any>([]);
+  const [rooftopViewTypesMetadata, setRooftopViewTypesMetadata] = useState<any>([]);
+  const [guidelinesOptionsMetadata, setGuidelinesOptionsMetadata] = useState<any>([]);
+  const [cancellationPoliciesOptionsMetadata, setCancellationPoliciesOptionsMetadata] = useState<any>([]);
+
+
+  useEffect(() => {
+    api.getPrivacyOptionsAndAvailableActivitiesMetaDataFromBackend().then((res: any) => {
+      setPrivacyOptionsMetadata(res.data.privacyOptions);
+      setAvailableActivitiesMetadata(res.data.availableActivities);
+      console.log("privacy options metadata and available activities metadata", res.data);
+    });
+
+    api.getRentalTypesOptionsMetaDataFromBackend().then((res: any) => {
+      console.log("rental types options metadata", res.data);
+      setRentalTypesOptionsMetadata(res.data);
+    });
+
+    api.getAccessibilityOptionsMetaDataFromBackend().then((res: any) => {
+      console.log("accessibility options metadata", res.data);
+      setAccessibilityOptionsMetadata(res.data);
+    });
+
+    api.getRooftopFeaturesOptionsMetaDataFromBackend().then((res: any) => {
+      console.log("rooftop features options metadata", res.data);
+      setRooftopFeaturesOptionsMetadata(res.data);
+    });
+
+    api.getRooftopViewTypesMetaDataFromBackend().then((res: any) => {
+      console.log("rooftop view types metadata", res.data);
+      setRooftopViewTypesMetadata(res.data);
+    });
+
+    api.getGuidelinesOptionsFromBackend().then((res: any) => {
+      console.log("guidelines options metadata", res.data);
+      setGuidelinesOptionsMetadata(res.data);
+    });
+
+    api.getCancellationPoliciesOptionsFromBackend().then((res: any) => {
+      console.log("cancellation policies options metadata", res.data);
+      setCancellationPoliciesOptionsMetadata(res.data);
+    });
+  }, [])
 
   const handleNext = () => {
     if (currentStage < 7) {
@@ -120,64 +169,47 @@ export const CreateRooftopScreen = () => {
         );
       
         case 2:
-        return (
-          <>
-            <Text style={styles.sectionTitle}>Privacy & Access</Text>
-            <View>
-              <CheckBox
-                title="Commercial"
-                checked={spaceType === 'commercial'}
-                onPress={() => setSpaceType('commercial')}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor={colors.primary}
-                containerStyle={styles.radioContainer}
-                textStyle={[styles.radioLabel, { color: colors.text.primary }]}
-              />
-              <CheckBox
-                title="Private"
-                checked={spaceType === 'private'}
-                onPress={() => setSpaceType('private')}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor={colors.primary}
-                containerStyle={styles.radioContainer}
-                textStyle={[styles.radioLabel, { color: colors.text.primary }]}
-              />
-              <CheckBox
-                title="Public Space"
-                checked={spaceType === 'public'}
-                onPress={() => setSpaceType('public')}
-                checkedIcon="dot-circle-o"
-                uncheckedIcon="circle-o"
-                checkedColor={colors.primary}
-                containerStyle={styles.radioContainer}
-                textStyle={[styles.radioLabel, { color: colors.text.primary }]}
-              />
-            </View>
+          return (
+            <>
+              <Text style={styles.sectionTitle}>Privacy & Access</Text>
+              <View>
+                {privacyOptionsMetadata.map((option: any) => (
+                  <CheckBox
+                    title={option.name}
+                    checked={spaceType === option.name}
+                    onPress={() => setSpaceType(option.id)}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checkedColor={colors.primary}
+                    containerStyle={styles.radioContainer}
+                    textStyle={[styles.radioLabel, { color: colors.text.primary }]}
+                  />
+                ))}
 
-            <Text style={styles.sectionTitle}>Available Activities</Text>
-            <View>
-              {['Visitation', 'Events', 'Custom Event', 'Photoshoot or Film Set', 'Birthday Party', 'Music', 'Event', 'Theater', 'Pop-up Store', 'Conference', 'Corporate Events', 'Art Exhibition', 'Religious Event'].map((activity) => (
-                <CheckBox
-                  key={activity}
-                  title={activity}
-                  checked={selectedActivities.includes(activity)}
-                  onPress={() => {
-                    if (selectedActivities.includes(activity)) {
-                      setSelectedActivities(selectedActivities.filter(a => a !== activity));
-                    } else {
-                      setSelectedActivities([...selectedActivities, activity]);
-                    }
-                  }}
-                  checkedColor={colors.primary}
-                  containerStyle={styles.checkboxContainer}
-                  textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
-                />
-              ))}
-            </View>
-          </>
-        );
+              </View>
+
+              <Text style={styles.sectionTitle}>Available Activities</Text>
+              <View>
+                {availableActivitiesMetadata.map((activity: any) => (
+                  <CheckBox
+                    key={activity.id}
+                    title={activity}
+                    checked={selectedActivities.includes(activity)}
+                    onPress={() => {
+                      if (selectedActivities.includes(activity)) {
+                        setSelectedActivities(selectedActivities.filter(a => a !== activity));
+                      } else {
+                        setSelectedActivities([...selectedActivities, activity]);
+                      }
+                    }}
+                    checkedColor={colors.primary}
+                    containerStyle={styles.checkboxContainer}
+                    textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
+                  />
+                ))}
+              </View>
+            </>
+          );
 
       case 3:
         return (

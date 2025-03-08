@@ -118,6 +118,35 @@ class Api {
       throw error;
     }
   }
+
+  // SPECIFIC ENDPOINTS
+  async getPrivacyOptionsAndAvailableActivitiesMetaDataFromBackend() {
+    return await this.get('/metadata/activities');
+  }
+
+  async getRentalTypesOptionsMetaDataFromBackend() {
+    return await this.get('/metadata/rental-types');
+  }
+
+  async getAccessibilityOptionsMetaDataFromBackend() {
+    return await this.get('/metadata/accessibility');
+  }
+
+  async getRooftopFeaturesOptionsMetaDataFromBackend() {
+    return await this.get('/metadata/features');
+  }
+
+  async getRooftopViewTypesMetaDataFromBackend() {
+    return await this.get('/metadata/view-types');
+  }
+
+  async getGuidelinesOptionsFromBackend() {
+    return await this.get('/metadata/guidelines');
+  }
+
+  async getCancellationPoliciesOptionsFromBackend() {
+    return await this.get('/metadata/cancellation-policies');
+  }
 }
 
 export const api = new Api(); 
