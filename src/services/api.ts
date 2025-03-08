@@ -121,7 +121,12 @@ class Api {
 
   // SPECIFIC ENDPOINTS
   async getPrivacyOptionsAndAvailableActivitiesMetaDataFromBackend() {
-    return await this.get('/metadata/activities');
+    const availableActivities = await this.get('/metadata/activities');
+    const privacyOptions = await this.get('/metadata/privacy');
+    return {
+      availableActivities,
+      privacyOptions
+    };
   }
 
   async getRentalTypesOptionsMetaDataFromBackend() {

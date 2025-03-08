@@ -62,41 +62,49 @@ export const CreateRooftopScreen = () => {
 
 
   useEffect(() => {
-    api.getPrivacyOptionsAndAvailableActivitiesMetaDataFromBackend().then((res: any) => {
-      setAvailablePrivacyOptionsMetadata(res.data.privacyOptions);
-      setAvailableActivitiesMetadata(res.data.availableActivities);
-      console.log("privacy options metadata and available activities metadata", res.data);
+    api.getPrivacyOptionsAndAvailableActivitiesMetaDataFromBackend().then((data: any) => {
+      setAvailablePrivacyOptionsMetadata(data.privacyOptions.data);
+      setAvailableActivitiesMetadata(data.availableActivities.data);
     });
 
     api.getRentalTypesOptionsMetaDataFromBackend().then((res: any) => {
-      console.log("rental types options metadata", res.data);
       setAvailableRentalTypesOptionsMetadata(res.data);
     });
 
-    api.getAccessibilityOptionsMetaDataFromBackend().then((res: any) => {
-      console.log("accessibility options metadata", res.data);
-      setAvailableAccessibilityOptionsMetadata(res.data);
-    });
+    // api.getAccessibilityOptionsMetaDataFromBackend().then((res: any) => {
+    //   console.log("accessibility options metadata")
+    //   console.log(res.data)
+    //   console.log()
+    //   setAvailableAccessibilityOptionsMetadata(res.data);
+    // });
 
-    api.getRooftopFeaturesOptionsMetaDataFromBackend().then((res: any) => {
-      console.log("rooftop features options metadata", res.data);
-      setAvailableRooftopFeaturesOptionsMetadata(res.data);
-    });
+    // api.getRooftopFeaturesOptionsMetaDataFromBackend().then((res: any) => {
+    //   console.log("rooftop features options metadata")
+    //   console.log(res.data)
+    //   console.log()
+    //   setAvailableRooftopFeaturesOptionsMetadata(res.data);
+    // });
 
-    api.getRooftopViewTypesMetaDataFromBackend().then((res: any) => {
-      console.log("rooftop view types metadata", res.data);
-      setAvailableRooftopViewTypesMetadata(res.data);
-    });
+    // api.getRooftopViewTypesMetaDataFromBackend().then((res: any) => {
+    //   console.log("rooftop view types metadata")
+    //   console.log(res.data)
+    //   console.log()
+    //   setAvailableRooftopViewTypesMetadata(res.data);
+    // });
 
-    api.getGuidelinesOptionsFromBackend().then((res: any) => {
-      console.log("guidelines options metadata", res.data);
-      setAvailableGuidelinesOptionsMetadata(res.data);
-    });
+    // api.getGuidelinesOptionsFromBackend().then((res: any) => {
+    //   console.log("guidelines options metadata")
+    //   console.log(res.data)
+    //   console.log()
+    //   setAvailableGuidelinesOptionsMetadata(res.data);
+    // });
 
-    api.getCancellationPoliciesOptionsFromBackend().then((res: any) => {
-      console.log("cancellation policies options metadata", res.data);
-      setAvailableCancellationPoliciesOptionsMetadata(res.data);
-    });
+    // api.getCancellationPoliciesOptionsFromBackend().then((res: any) => {
+    //   console.log("cancellation policies options metadata")
+    //   console.log(res.data)
+    //   console.log()
+    //   setAvailableCancellationPoliciesOptionsMetadata(res.data);
+    // });
   }, [])
 
 
@@ -223,29 +231,18 @@ export const CreateRooftopScreen = () => {
                 <View>
                   <CheckBox
                     title={option.name}
-                    checked={rentalType === option.id}
-                    onPress={() => setRentalType(option.id)}
+                    checked={rentalType === option.name}
+                    onPress={() => setRentalType(option.name)}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     checkedColor={colors.primary}
                     containerStyle={styles.radioContainer}
                     textStyle={[styles.radioLabel, { color: '#fff' }]}
                   />
+              
 
-                  {/* FINISH THIS IN THE UI LATER */}
                   {/* <View>
-                    <CheckBox
-                      title="Free"
-                      checked={rentalType === 'free'}
-                      onPress={() => setRentalType('free')}
-                      checkedIcon="dot-circle-o"
-                      uncheckedIcon="circle-o"
-                      checkedColor={colors.primary}
-                      containerStyle={styles.radioContainer}
-                      textStyle={[styles.radioLabel, { color: '#fff' }]}
-                    />
-                    
-                    {rentalType === 'free' && (
+                    {rentalType === 'Free' && (
                       <View style={styles.timeRangeContainer}>
                         <Text style={styles.timeRangeLabel}>time range</Text>
                         <Input
