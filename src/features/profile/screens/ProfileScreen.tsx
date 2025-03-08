@@ -88,7 +88,7 @@ export const ProfileScreen = () => {
               icon="heart-outline"
               title="Favorites"
               subtitle="Your saved rooftop spaces"
-              onPress={() => {}}
+              onPress={() => router.push('/(app)/(hasHeader)/spaces')}
               index={2}
               variant="default"
             />

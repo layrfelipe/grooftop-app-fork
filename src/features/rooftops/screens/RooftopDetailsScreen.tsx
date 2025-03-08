@@ -9,6 +9,7 @@ import { rooftopService } from '../services/rooftop.service';
 import { Rooftop } from '../types/rooftop.types';
 // import MapView, { Marker } from 'react-native-maps';
 import ReviewCard from '../../reviewDetailCard';
+import { useBookmarkStore } from '../store/bookmark.store';
 
 const VIEW_ON_DATA = [
   { id: '1', title: 'Lorem Ipsum' },
@@ -37,9 +38,12 @@ export const RooftopDetailsScreen = () => {
   const [rooftop, setRooftop] = useState<Rooftop | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { addBookmark, removeBookmark, isBookmarked, fetchBookmarks } = useBookmarkStore();
+  const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
 
   useEffect(() => {
     loadRooftop();
+    fetchBookmarks();
   }, [id]);
 
   const loadRooftop = async () => {
@@ -60,8 +64,22 @@ export const RooftopDetailsScreen = () => {
     }
   };
 
-  const handleAddToMyTops = () => {
-    // TODO: Implement 'My Tops' flow
+  const handleAddToMyTops = async () => {
+    if (!rooftop) return;
+    
+    try {
+      setIsBookmarkLoading(true);
+      
+      if (isBookmarked(rooftop.id)) {
+        await removeBookmark(rooftop.id);
+      } else {
+        await addBookmark(rooftop.id);
+      }
+    } catch (err: any) {
+      console.error('Failed to update bookmark:', err);
+    } finally {
+      setIsBookmarkLoading(false);
+    }
   };
 
   const handleBook = () => {
@@ -141,21 +159,18 @@ export const RooftopDetailsScreen = () => {
         </View>
 
         <View style={styles.content}>
-          <View style={styles.actionsContainer}>
-            <Button 
-              title="Add to My Tops" 
+          <View style={styles.actionButtons}>
+            <Button
+              title={isBookmarked(rooftop?.id || '') ? "Remove from My Tops" : "Add to My Tops"}
               onPress={handleAddToMyTops}
-              variant="primary"
-              size='small'
-              icon={<MaterialIcons name="favorite" size={16} color={colors.text.secondary} />}
-            />
-
-            <Button 
-              title="Book" 
-              onPress={handleBook}
               variant="secondary"
-              size='small'
-              icon={<MaterialIcons name="monetization-on" size={16} color={colors.text.secondary} />}
+              loading={isBookmarkLoading}
+              icon={<Ionicons name={isBookmarked(rooftop?.id || '') ? "heart" : "heart-outline"} size={20} color={colors.text.primary} />}
+            />
+            <Button
+              title="Book Now"
+              onPress={handleBook}
+              variant="primary"
             />
           </View>
 
@@ -591,5 +606,11 @@ const styles = StyleSheet.create({
   horizontalListContent: {
     paddingRight: spacing.lg,
     paddingTop: spacing.md,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+    marginBottom: spacing.xl,
   },
 });
