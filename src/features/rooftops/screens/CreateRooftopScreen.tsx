@@ -172,7 +172,7 @@ export const CreateRooftopScreen = () => {
           return (
             <>
               <Text style={styles.sectionTitle}>Privacy & Access</Text>
-              <View>
+              {/* <View>
                 {privacyOptionsMetadata.map((option: any) => (
                   <CheckBox
                     title={option.name}
@@ -185,11 +185,10 @@ export const CreateRooftopScreen = () => {
                     textStyle={[styles.radioLabel, { color: colors.text.primary }]}
                   />
                 ))}
-
-              </View>
+              </View> */}
 
               <Text style={styles.sectionTitle}>Available Activities</Text>
-              <View>
+              {/* <View>
                 {availableActivitiesMetadata.map((activity: any) => (
                   <CheckBox
                     key={activity.id}
@@ -207,7 +206,7 @@ export const CreateRooftopScreen = () => {
                     textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
                   />
                 ))}
-              </View>
+              </View> */}
             </>
           );
 
@@ -215,7 +214,24 @@ export const CreateRooftopScreen = () => {
         return (
           <>
             <Text style={styles.sectionTitle}>Type of Rental</Text>
+
             <View>
+              {rentalTypesOptionsMetadata.map((option: any) => (
+                <CheckBox
+                  title={option.name}
+                  checked={rentalType === option.name}
+                  onPress={() => setRentalType(option.name)}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor={colors.primary}
+                  containerStyle={styles.radioContainer}
+                  textStyle={[styles.radioLabel, { color: '#fff' }]}
+                />
+              ))}
+            </View>
+            
+            
+            {/* <View>
               <CheckBox
                 title="Free"
                 checked={rentalType === 'free'}
@@ -303,7 +319,7 @@ export const CreateRooftopScreen = () => {
                   </View>
                 </>
               )}
-            </View>
+            </View> */}
           </>
         );
 
