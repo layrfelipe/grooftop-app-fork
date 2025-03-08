@@ -7,6 +7,8 @@ import {
   Pressable,
   Image,
   FlatList,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useRooftopStore } from '../store/rooftop.store';
@@ -20,18 +22,28 @@ import { Rooftop } from '../types/rooftop.types';
 
 export const HomeScreen = () => {
   const router = useRouter();
-  const { rooftops, fetchRooftops, setFilters } = useRooftopStore();
+  const { rooftops, fetchRooftops, setFilters, isLoading } = useRooftopStore();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchRooftops();
   }, [fetchRooftops]);
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchRooftops();
+    setRefreshing(false);
+  };
 
   const handleSearch = (text: string) => {
     setFilters({ city: text });
   };
 
   const handleRooftopPress = (id: string) => {
-    router.push(`/rooftop/${id}`);
+    router.push({
+      pathname: '/(app)/(hasHeader)/rooftop/[id]',
+      params: { id }
+    });
   };
 
   const renderStars = () => (
@@ -99,9 +111,23 @@ export const HomeScreen = () => {
   );
 
   return (
+    <>
+      {isLoading && !refreshing && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      )}
       <ScrollView 
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            colors={[colors.primary]}
+            tintColor={colors.primary}
+          />
+        }
       >
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>People's TOPs</Text>
@@ -138,6 +164,7 @@ export const HomeScreen = () => {
           ))}
         </View>
       </ScrollView>
+    </>
   );
 };
 
@@ -249,5 +276,16 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.5,
     shadowRadius: 1,
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    zIndex: 1,
   },
 }); 

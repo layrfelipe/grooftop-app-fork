@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, ActivityIndicator, Dimensions, FlatList, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Button } from '../../../components/Button';
@@ -10,6 +10,8 @@ import { Rooftop } from '../types/rooftop.types';
 // import MapView, { Marker } from 'react-native-maps';
 import ReviewCard from '../../reviewDetailCard';
 import { useBookmarkStore } from '../store/bookmark.store';
+import { useReviewStore } from '../../reviews/store/review.store';
+import { useAuthStore } from '../../auth/store/auth.store';
 
 const VIEW_ON_DATA = [
   { id: '1', title: 'Lorem Ipsum' },
@@ -40,10 +42,21 @@ export const RooftopDetailsScreen = () => {
   const [error, setError] = useState<string | null>(null);
   const { addBookmark, removeBookmark, isBookmarked, fetchBookmarks } = useBookmarkStore();
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
+  const { reviews, fetchRooftopReviews, getAverageRating, isLoading: isReviewsLoading } = useReviewStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     loadRooftop();
     fetchBookmarks();
+    if (id) {
+      fetchRooftopReviews(id);
+    }
+
+    // Cleanup function
+    return () => {
+      // Clear reviews when navigating away
+      useReviewStore.getState().clearReviews();
+    };
   }, [id]);
 
   const loadRooftop = async () => {
@@ -236,12 +249,36 @@ export const RooftopDetailsScreen = () => {
           </View>
 
           <View style={styles.reviewsContainer}>
-            <Text style={styles.reviewsTitle}>Reviews</Text>
-            <View style={styles.reviews}>
-              <ReviewCard />
-              <ReviewCard />
-              <ReviewCard />
+            <View style={styles.reviewsHeader}>
+              <Text style={styles.reviewsTitle}>Reviews</Text>
+              <View style={styles.ratingInfo}>
+                <Text style={styles.averageRating}>{getAverageRating()}</Text>
+                <View style={styles.starsContainer}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <MaterialIcons 
+                      key={star} 
+                      name="star" 
+                      size={16} 
+                      color={star <= getAverageRating() ? "#FFD700" : "#CCCCCC"} 
+                      style={styles.star}
+                    />
+                  ))}
+                </View>
+                <Text style={styles.reviewCount}>({reviews.length} reviews)</Text>
+              </View>
             </View>
+            
+            {isReviewsLoading ? (
+              <ActivityIndicator size="small" color={colors.primary} style={styles.reviewsLoading} />
+            ) : reviews.length > 0 ? (
+              <View style={styles.reviews}>
+                {reviews.map(review => (
+                  <ReviewCard key={review.id} review={review} />
+                ))}
+              </View>
+            ) : (
+              <Text style={styles.noReviews}>No reviews yet. Be the first to review!</Text>
+            )}
           </View>
 
           <View style={styles.nearbyContainer}>
@@ -503,20 +540,51 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   reviewsContainer: {
-    marginTop: spacing.xxl,
+    padding: spacing.lg,
+    marginTop: spacing.md,
   },
-  reviewsTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text.primary,
+  reviewsHeader: {
     marginBottom: spacing.md,
   },
-  reviews: {
-    flexDirection: 'column',
-  },
-  review: {
-    fontSize: 16,
+  reviewsTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
     color: colors.text.primary,
+    marginBottom: spacing.sm,
+  },
+  ratingInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  averageRating: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.text.primary,
+    marginRight: spacing.sm,
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    marginRight: spacing.sm,
+  },
+  star: {
+    marginRight: 2,
+  },
+  reviewCount: {
+    fontSize: 14,
+    color: colors.text.tertiary,
+  },
+  reviews: {
+    marginTop: spacing.md,
+  },
+  reviewsLoading: {
+    marginTop: spacing.lg,
+  },
+  noReviews: {
+    marginTop: spacing.lg,
+    fontSize: 14,
+    color: colors.text.tertiary,
+    textAlign: 'center',
   },
   nearbyContainer: {
     marginTop: spacing.xl,
@@ -612,5 +680,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: spacing.md,
     marginBottom: spacing.xl,
+  },
+  reviewButtonContainer: {
+    marginBottom: spacing.md,
+  },
+  reviewNote: {
+    fontSize: 12,
+    color: colors.text.tertiary,
+    marginTop: spacing.xs,
   },
 });
