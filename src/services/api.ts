@@ -152,6 +152,10 @@ class Api {
   async getCancellationPoliciesOptionsFromBackend() {
     return await this.get('/metadata/cancellation-policies');
   }
+
+  async getExperiencesTypesOptionsFromBackend() {
+    return await this.get('/metadata/experiences-types');
+  }
 }
 
 export const api = new Api(); 

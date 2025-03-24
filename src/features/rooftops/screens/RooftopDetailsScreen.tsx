@@ -19,19 +19,6 @@ const VIEW_ON_DATA = [
   { id: '3', title: 'Amet conqueous' },
   { id: '4', title: 'Vivamus Magna' },
   { id: '5', title: 'Sed Consequat' },
-  { id: '6', title: 'Mauris Placerat' },
-];
-
-const MOCK_ROOFTOPS = [
-  { id: '1', name: 'Sunset Lounge', location: 'Rio de Janeiro', distance: '1.2km' },
-  { id: '2', name: 'Sky Garden', location: 'Rio de Janeiro', distance: '1.5km' },
-  { id: '3', name: 'Cloud Bar', location: 'Rio de Janeiro', distance: '1.8km' },
-  { id: '4', name: 'Vista Heights', location: 'Rio de Janeiro', distance: '2.0km' },
-  { id: '5', name: 'Rooftop 360', location: 'Rio de Janeiro', distance: '2.2km' },
-  { id: '6', name: 'Urban Oasis', location: 'Rio de Janeiro', distance: '2.5km' },
-  { id: '7', name: 'Sky Deck', location: 'Rio de Janeiro', distance: '2.7km' },
-  { id: '8', name: 'The Summit', location: 'Rio de Janeiro', distance: '3.0km' },
-  { id: '9', name: 'Altitude Bar', location: 'Rio de Janeiro', distance: '3.2km' },
 ];
 
 export const RooftopDetailsScreen = () => {
@@ -44,6 +31,9 @@ export const RooftopDetailsScreen = () => {
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
   const { reviews, fetchRooftopReviews, getAverageRating, isLoading: isReviewsLoading } = useReviewStore();
   const { user } = useAuthStore();
+  const [nearbyRooftops, setNearbyRooftops] = useState<any>([]);
+  const [recommendedRooftops, setRecommendedRooftops] = useState<any>([]);
+  const [isNearbyLoading, setIsNearbyLoading] = useState(false);
 
   useEffect(() => {
     loadRooftop();
@@ -51,6 +41,7 @@ export const RooftopDetailsScreen = () => {
     if (id) {
       fetchRooftopReviews(id);
     }
+    loadNearbyAndRecommended();
 
     // Cleanup function
     return () => {
@@ -77,6 +68,26 @@ export const RooftopDetailsScreen = () => {
     }
   };
 
+  const loadNearbyAndRecommended = async () => {
+    try {
+      setIsNearbyLoading(true);
+      
+      // Fetch nearby rooftops using default coordinates
+      const nearbyData = await rooftopService.getNearbyRooftops();
+      setNearbyRooftops(nearbyData);
+
+      // Fetch recommended rooftops if user is logged in
+      if (user) {
+        const recommendedData = await rooftopService.getRecommendedRooftops();
+        setRecommendedRooftops(recommendedData);
+      }
+    } catch (error) {
+      console.error('Error loading nearby/recommended rooftops:', error);
+    } finally {
+      setIsNearbyLoading(false);
+    }
+  };
+
   const handleAddToMyTops = async () => {
     if (!rooftop) return;
     
@@ -97,6 +108,7 @@ export const RooftopDetailsScreen = () => {
 
   const handleBook = () => {
     // TODO: Implement booking flow
+    alert('TO-DO: Finish booking flow');
   };
 
   if (isLoading) {
@@ -127,64 +139,46 @@ export const RooftopDetailsScreen = () => {
         showsVerticalScrollIndicator={false}
         bounces={false}
       >
-        <View style={styles.rooftopBasicInfo}>
-          <Text style={styles.rooftopTitle}>{rooftop.title}</Text>
-          {/* TODO: Add height as API's response */}
-          <Text style={styles.rooftopCity}>Location: {rooftop.city}, Height: 1000m</Text>
-          <Text style={styles.rooftopRating}>
-            <Ionicons name="star" size={16} color={'yellow'} />
-            <Ionicons name="star" size={16} color={'yellow'} />
-            <Ionicons name="star" size={16} color={'yellow'} />
-            <Ionicons name="star" size={16} color={'yellow'} />
-            <Ionicons name="star" size={16} color={'yellow'}/>
-          </Text>
-        </View>
 
-        <View style={styles.imageContainer}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.carouselContent}
-            snapToInterval={Dimensions.get('window').width}
-          >
-            {[1, 2, 3, 4].map((_, index) => (
-              <View key={index} style={styles.carouselSlide}>
-                <Image 
-                  source={{ uri: rooftop.images[0] }} 
-                  style={styles.carouselImage}
-                  resizeMode="cover"
-                />
-              </View>
-            ))}
-
-            {rooftop.images && rooftop.images.length > 0 ? (
-              <Image 
-                source={{ uri: rooftop.images[0] }} 
-                style={styles.carouselImage}
-                resizeMode="cover"
-              />
-            ) : (
-              <View style={styles.carouselImage}>
-                <Text>No image available</Text>
-              </View>
-            )}
-          </ScrollView>
+        <View style={styles.rooftopImageContainer}>
+          <Image 
+            source={{ uri: rooftop.images[0] }} 
+            style={styles.rooftopImage}
+            resizeMode="cover"
+          />
         </View>
 
         <View style={styles.content}>
           <View style={styles.actionButtons}>
             <Button
-              title={isBookmarked(rooftop?.id || '') ? "Remove from My Tops" : "Add to My Tops"}
+              title={isBookmarked(rooftop?.id || '') ? "Remove from My Favs" : "Add to My Favs"}
               onPress={handleAddToMyTops}
-              variant="secondary"
+              variant="outlineColored"
               loading={isBookmarkLoading}
-              icon={<Ionicons name={isBookmarked(rooftop?.id || '') ? "heart" : "heart-outline"} size={20} color={colors.text.primary} />}
+              size="small"
+              icon={<Ionicons name={isBookmarked(rooftop?.id || '') ? "heart" : "heart-outline"} size={20} color={colors.primary} />}
             />
-            <Button
-              title="Book Now"
-              onPress={handleBook}
-              variant="primary"
-            />
+          </View>
+
+          <View style={styles.rooftopMainInfoContainer}>
+            <Text style={styles.rooftopTitle}>{rooftop.title}</Text>
+            <Text style={styles.rooftopLocationDescription}>Rooftop privativo localizado em ...</Text>
+            <Text style={styles.rooftopSecondaryInfo}>120 guests | Pool | Jacuzzi</Text>
+          </View>
+
+          <View style={styles.rooftopOwnerInfoContainer}>
+            <View style={styles.rooftopOwnerImageContainer}>
+              <Image 
+                source={{ 
+                  uri: 'https://i.pravatar.cc/145'
+                }} 
+                style={styles.rooftopOwnerImage} 
+              />
+            </View>
+            <View style={styles.rooftopOwnerTextContainer}>
+              <Text style={styles.rooftopOwnerName}>Host: João da Silva</Text>
+              <Text style={styles.rooftopOwnerDescription}>1 year hosting</Text>
+            </View>
           </View>
 
           <View style={styles.vibesContainer}>
@@ -226,8 +220,37 @@ export const RooftopDetailsScreen = () => {
             </MapView>
           </View> */}
 
-          <View style={styles.viewOnContainer}>
-            <Text style={styles.viewOnTitle}>View on</Text>
+          <View style={styles.facilitiesContainer}>
+            <Text style={styles.facilitiesTitle}>Facilities</Text>
+            <View style={styles.facilities}>
+              <Text style={styles.facility}>pet friendly</Text>
+              <Text style={styles.facility}>child friendly</Text>
+              <Text style={styles.facility}>swimming pool</Text>
+              <Text style={styles.facility}>sanitary</Text>
+              <Text style={styles.facility}>seating</Text>
+              <Text style={styles.facility}>BYOB</Text>
+              <Text style={styles.facility}>BYOM</Text>
+              <Text style={styles.facility}>parking</Text>
+              <Text style={styles.facility}>bike friendly</Text>
+              <Text style={styles.facility}>pwd friendly</Text>
+              <Text style={styles.facility}>elevator</Text>
+            </View>
+          </View>
+
+          <View style={styles.rulesContainer}>
+            <View style={styles.rulesHeader}>
+              <MaterialIcons name="warning" size={24} color={colors.primary} />
+              <Text style={styles.rulesTitle}>Rules</Text>
+            </View>
+            <View style={styles.rules}>
+              <Text style={styles.rule}>No outside alcohol</Text>
+              <Text style={styles.rule}>Live events allowed</Text>
+              <Text style={styles.rule}>No smoking indoors</Text>
+            </View>
+          </View>
+
+          <View style={styles.viewOfContainer}>
+            <Text style={styles.viewOfTitle}>View of</Text>
             <FlatList
               data={VIEW_ON_DATA}
               horizontal
@@ -244,7 +267,7 @@ export const RooftopDetailsScreen = () => {
                 </View>
               )}
               keyExtractor={item => item.id}
-              contentContainerStyle={styles.viewOnList}
+              contentContainerStyle={styles.viewOfList}
             />
           </View>
 
@@ -283,58 +306,88 @@ export const RooftopDetailsScreen = () => {
 
           <View style={styles.nearbyContainer}>
             <Text style={styles.sectionTitle}>Grooftops Nearby</Text>
-            <FlatList
-              data={MOCK_ROOFTOPS}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item }) => (
-                <View style={styles.gridItem}>
-                  <Image 
-                    source={{ uri: rooftop.images[0] }}
-                    style={styles.gridImage}
-                    resizeMode="cover"
-                  />
-                  <View style={styles.locationTag}>
-                    <MaterialIcons name="location-on" size={12} color="white" />
-                    <Text style={styles.locationText}>{item.distance}</Text>
-                  </View>
-                  <Text style={styles.gridTitle}>{item.name}</Text>
-                  <Text style={styles.gridSubtitle}>Location: {item.location}</Text>
-                </View>
-              )}
-              keyExtractor={item => `nearby-${item.id}`}
-              contentContainerStyle={styles.horizontalListContent}
-            />
+            {isNearbyLoading ? (
+              <ActivityIndicator size="small" color={colors.primary} />
+            ) : (
+              <FlatList
+                data={nearbyRooftops}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }: any) => (
+                  <Pressable 
+                    style={styles.gridItem}
+                    onPress={() => router.push(`/rooftop/${item.id}`)}
+                  >
+                    <Image 
+                      source={{ uri: item.images[0] }}
+                      style={styles.gridImage}
+                      resizeMode="cover"
+                    />
+                    <View style={styles.locationTag}>
+                      <MaterialIcons name="location-on" size={12} color="white" />
+                      <Text style={styles.locationText}>{item.distance || '< 5km'}km</Text>
+                    </View>
+                    <Text style={styles.gridTitle}>{item.title}</Text>
+                    <Text style={styles.gridSubtitle}>{item.city}</Text>
+                  </Pressable>
+                )}
+                keyExtractor={item => `nearby-${item.id}`}
+                contentContainerStyle={styles.horizontalListContent}
+              />
+            )}
           </View>
 
           <View style={styles.suggestionsContainer}>
             <Text style={styles.sectionTitle}>Grooftops you might like</Text>
-            <FlatList
-              data={MOCK_ROOFTOPS}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item }) => (
-                <View style={styles.gridItem}>
-                  <Image 
-                    source={{ uri: rooftop.images[0] }}
-                    style={styles.gridImage}
-                    resizeMode="cover"
-                  />
-                  <View style={styles.favoriteButton}>
-                    <Text style={styles.favoriteText}>
-                      <Ionicons name="heart" size={10} color="yellow"/> soulmate
-                    </Text>
-                  </View>
-                  <Text style={styles.gridTitle}>{item.name}</Text>
-                  <Text style={styles.gridSubtitle}>Location: {item.location}</Text>
-                </View>
-              )}
-              keyExtractor={item => `suggestion-${item.id}`}
-              contentContainerStyle={styles.horizontalListContent}
-            />
+            {user ? (
+              <FlatList
+                data={recommendedRooftops}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }: any) => (
+                  <Pressable 
+                    style={styles.gridItem}
+                    onPress={() => router.push(`/rooftop/${item.id}`)}
+                  >
+                    <Image 
+                      source={{ uri: item.images[0] }}
+                      style={styles.gridImage}
+                      resizeMode="cover"
+                    />
+                    <View style={styles.favoriteButton}>
+                      <Text style={styles.favoriteText}>
+                        <Ionicons name="heart" size={10} color="yellow"/> soulmate
+                      </Text>
+                    </View>
+                    <Text style={styles.gridTitle}>{item.title}</Text>
+                    <Text style={styles.gridSubtitle}>{item.city}</Text>
+                  </Pressable>
+                )}
+                keyExtractor={item => `suggestion-${item.id}`}
+                contentContainerStyle={styles.horizontalListContent}
+              />
+            ) : (
+              <Text style={styles.error}>Please log in to see recommended rooftops</Text>
+            )}
           </View>
         </View>
       </ScrollView>
+
+      <View style={styles.callToActionRowContainer}>
+        <View style={styles.bookingConditions}>
+          <Text style={styles.conditionsText}>R$10.000,00</Text>
+          <Text style={styles.conditionsText}>até 12 horas de evento</Text>
+        </View>
+
+        <View style={styles.bookingButton}>
+          <Button
+            title="Check availability"
+            onPress={handleBook}
+            variant="cta"
+            size="small"
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -343,125 +396,89 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.primary,
-    paddingTop: spacing.md,
+    width: '100%',
   },
   centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: spacing.lg,
   },
   error: {
     color: colors.error,
     marginBottom: spacing.md,
     textAlign: 'center',
   },
-  rooftopBasicInfo: {
-    paddingHorizontal: spacing.lg,
-    flex: 1,
-  },
-  rooftopTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.primary,
-  },
-  rooftopCity: {
-    fontSize: 12,
-    color: colors.text.primary,
-    marginTop: spacing.xs
-  },
-  rooftopRating: {
-    fontSize: 12,
-    marginVertical: spacing.md,
-  },
-  imageContainer: {
-    height: 250,
-    width: '100%',
-  },
-  carouselContent: {
-    alignItems: 'center',
-  },
-  carouselSlide: {
-    width: Dimensions.get('window').width,
-    paddingHorizontal: spacing.lg,
-  },
-  carouselImage: {
-    width: '100%',
-    height: 250,
-    borderRadius: 12,
-  },
-  pagination: {
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: spacing.md,
-    alignSelf: 'center',
-  },
-  paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    marginHorizontal: 4,
-  },
-  paginationDotActive: {
-    backgroundColor: 'white',
+  contentScrollView: {
+    backgroundColor: colors.background.primary,
   },
   content: {
     padding: spacing.lg,
     backgroundColor: colors.background.primary,
   },
-  detailsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: colors.background.secondary,
-    padding: spacing.md,
-    borderRadius: 12,
-    marginBottom: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.primary,
+  rooftopImageContainer: {
+    width: '100%',
+    height: 250
   },
-  section: {
-    marginBottom: spacing.lg,
+  rooftopImage: {
+    width: '100%',
+    height: '100%'
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.sm,
-  },
-  description: {
-    fontSize: 16,
-    color: colors.text.primary,
-    lineHeight: 24,
-  },
-  detail: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-  detailText: {
-    fontSize: 16,
-    color: colors.text.primary,
-  },
-  actions: {
-    marginTop: spacing.sm,
-    marginBottom: spacing.xxl,
-  },
-  spacing: {
-    height: spacing.md,
-  },
-  contentScrollView: {
-    backgroundColor: colors.background.primary,
-  },
-
-
-  actionsContainer: {
+  actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: spacing.md,
+    marginBottom: spacing.xl,
+  },
+  rooftopMainInfoContainer: {},
+  rooftopTitle: {
+    fontSize: 20,
+    color: colors.primary,
+    fontWeight: 'bold',
+  },
+  rooftopLocationDescription: {
+    fontSize: 12,
+    color: colors.text.primary,
+    marginTop: spacing.xs,
+    fontWeight: 'bold',
+  },
+  rooftopSecondaryInfo: {
+    fontSize: 12,
+    color: colors.text.tertiary,
+    marginTop: spacing.xs,
+  },
+  rooftopOwnerInfoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: spacing.md,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: colors.text.dark,
+    paddingVertical: spacing.sm,
+    marginTop: spacing.lg
+  },
+  rooftopOwnerImageContainer: {
+    marginRight: spacing.md,
+  },
+  rooftopOwnerImage: {
+    width: 48,
+    height: 48,
+    borderRadius: 24
+  },
+  rooftopOwnerTextContainer: {
+    flex: 1,
+  },
+  rooftopOwnerName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginBottom: spacing.xs,
+  },
+  rooftopOwnerDescription: {
+    fontSize: 12,
+    color: colors.text.primary
   },
   vibesContainer: {
-    marginTop: spacing.xl,
+    marginTop: spacing.lg
   },
   vibesTitle: {
     fontSize: 18,
@@ -498,30 +515,70 @@ const styles = StyleSheet.create({
     color: colors.text.tertiary,
     lineHeight: 24,
   },
-  mapContainer: {
+  facilitiesContainer: {
+    marginTop: spacing.xl
+  },
+  facilitiesTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text.primary,
+    marginBottom: spacing.md,
+  },
+  facilities: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  facility: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    backgroundColor: 'white',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 12,
+    marginBottom: spacing.sm,
+    marginRight: spacing.xs,
+  },
+  rulesContainer: {
+    marginTop: spacing.xl
+  },
+  rulesHeader: {
+    flexDirection: 'row',
+    marginBottom: spacing.md,
+  },
+  rulesTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.text.primary,
+    marginLeft: spacing.sm,
+  },
+  rules: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+  },
+  rule: {
+    fontSize: 12,
+    color: colors.text.primary,
+    backgroundColor: 'transparent',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: 6,
+    marginBottom: spacing.sm,
+    marginRight: spacing.xs,
+    borderWidth: 1,
+    borderColor: colors.text.primary,
+  },
+  viewOfContainer: {
     marginTop: spacing.xl,
   },
-  mapTitle: {
+  viewOfTitle: {
     fontSize: 18,
     fontWeight: '600',
     color: colors.text.primary,
     marginBottom: spacing.md,
   },
-  map: {
-    width: '100%',
-    height: 200,
-    borderRadius: 12,
-  },
-  viewOnContainer: {
-    marginTop: spacing.xxl,
-  },
-  viewOnTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: colors.text.primary,
-    marginBottom: spacing.md,
-  },
-  viewOnList: {
+  viewOfList: {
     paddingRight: spacing.lg,
   },
   viewItem: {
@@ -540,11 +597,10 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   reviewsContainer: {
-    padding: spacing.lg,
-    marginTop: spacing.md,
+    marginTop: spacing.xl,
   },
   reviewsHeader: {
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   reviewsTitle: {
     fontSize: 20,
@@ -575,10 +631,10 @@ const styles = StyleSheet.create({
     color: colors.text.tertiary,
   },
   reviews: {
-    marginTop: spacing.md,
+    marginTop: spacing.sm,
   },
   reviewsLoading: {
-    marginTop: spacing.lg,
+    marginTop: spacing.sm,
   },
   noReviews: {
     marginTop: spacing.lg,
@@ -593,36 +649,11 @@ const styles = StyleSheet.create({
     marginTop: spacing.xxl,
     marginBottom: spacing.xxl,
   },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: spacing.md,
-  },
-  viewTabs: {
-    flexDirection: 'row',
-    backgroundColor: colors.background.secondary,
-    borderRadius: 16,
-    padding: 2,
-  },
-  activeTab: {
-    fontSize: 12,
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
     color: colors.text.primary,
-    backgroundColor: 'white',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: 14,
-  },
-  inactiveTab: {
-    fontSize: 12,
-    color: colors.text.tertiary,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: spacing.md,
+    marginBottom: spacing.sm,
   },
   gridItem: {
     width: (Dimensions.get('window').width - spacing.lg * 3) / 2,
@@ -675,18 +706,22 @@ const styles = StyleSheet.create({
     paddingRight: spacing.lg,
     paddingTop: spacing.md,
   },
-  actionButtons: {
+  callToActionRowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: spacing.md,
-    marginBottom: spacing.xl,
+    backgroundColor: colors.tertiary,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    alignItems: 'center',
   },
-  reviewButtonContainer: {
-    marginBottom: spacing.md,
+  bookingConditions: {
+    flex: 1,
   },
-  reviewNote: {
-    fontSize: 12,
-    color: colors.text.tertiary,
-    marginTop: spacing.xs,
+  conditionsText: {
+    fontSize: 14,
+    color: colors.text.primary,
+  },
+  bookingButton: {
+    flex: 1,
   },
 });

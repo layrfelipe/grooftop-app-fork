@@ -28,13 +28,11 @@ export interface UserProfile {
 export const authService = {
   register: async (data: RegisterDto): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/auth/register', data);
-    console.log('Register response:', response);
     return response.data;
   },
 
   login: async (data: LoginDto): Promise<AuthResponse> => {
     const response = await api.post<AuthResponse>('/auth/login', data);
-    console.log('Login response:', response);
     return response.data;
   },
 
@@ -45,7 +43,6 @@ export const authService = {
 
   updateProfile: async (data: { name?: string; avatarUrl?: string }): Promise<UserProfile> => {
     const response = await api.patch<UserProfile>('/users/me', data);
-    console.log('Update profile response:', response);
     return response.data;
   },
 }; 
