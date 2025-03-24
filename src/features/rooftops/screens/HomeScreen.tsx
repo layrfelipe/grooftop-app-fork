@@ -15,23 +15,25 @@ import { useRooftopStore } from '../store/rooftop.store';
 import { RooftopCard } from '../components/RooftopCard';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
-import { Header } from '../../header/Header';
 import { MaterialIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Rooftop } from '../types/rooftop.types';
+import { useMetadataStore } from '../store/metadata.store';
 
 export const HomeScreen = () => {
   const router = useRouter();
-  const { rooftops, fetchRooftops, setFilters, isLoading } = useRooftopStore();
+  const { rooftops, fetchRooftops, setFilters, isLoading: rooftopsLoading } = useRooftopStore();
+  const { experiences, fetchExperiences, isLoading: experiencesLoading } = useMetadataStore();
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchRooftops();
-  }, [fetchRooftops]);
+    fetchExperiences();
+  }, [fetchRooftops, fetchExperiences]);
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await fetchRooftops();
+    await fetchRooftops()
+    await fetchExperiences()
     setRefreshing(false);
   };
 
@@ -41,7 +43,7 @@ export const HomeScreen = () => {
 
   const handleRooftopPress = (id: string) => {
     router.push({
-      pathname: '/(app)/(hasHeader)/rooftop/[id]',
+      pathname: '/(app)/rooftop/[id]',
       params: { id }
     });
   };
@@ -61,58 +63,52 @@ export const HomeScreen = () => {
   );
 
   const renderTopRooftop = ({ item }: { item: Rooftop }) => (
-    <Pressable 
-      style={styles.topRooftopCard}
-      onPress={() => handleRooftopPress(item.id)}
-    >
-      <Image 
-        source={{ uri: item.images[0] }}
-        style={styles.topRooftopImage}
-        resizeMode="cover"
-      />
-      <LinearGradient
-        colors={['transparent', 'rgba(0,0,0,0.8)']}
-        style={styles.topRooftopGradient}
+    <Pressable style={styles.topRooftopCardWrapper} onPress={() => handleRooftopPress(item.id)}>
+      <View
+        style={styles.topRooftopCard}
       >
-        <View style={styles.topRooftopContent}>
-          <View>
-            <Text style={styles.topRooftopTitle}>{item.title}</Text>
-            <Text style={styles.topRooftopLocation}>
-              <MaterialIcons name="location-on" size={12} color={colors.text.primary} />
-              {item.city}
-            </Text>
+        <Image 
+          source={{ uri: item.images[0] }}
+          style={styles.topRooftopImage}
+          resizeMode="cover"
+        />
+      </View>
+      <View style={styles.topRooftopContent}>
+        <View>
+          <Text style={styles.topRooftopTitle}>{item.title}</Text>
+          <View style={styles.topRooftopLocation}>
+            <MaterialIcons name="location-on" size={12} color={colors.text.primary}/>
+            <Text style={styles.topRooftopLocationText}>{item.city}</Text>
           </View>
+        </View>
+        <View style={styles.starsContainer}>
           {renderStars()}
         </View>
-      </LinearGradient>
+      </View>
     </Pressable>
   );
 
-  const renderExperienceCard = ({ item }: { item: Rooftop }) => (
+  const renderExperienceCard = ({ item }: { item: any }) => (
     <Pressable 
       style={styles.experienceCard}
-      onPress={() => handleRooftopPress(item.id)}
+      onPress={() => {}}
     >
-      <Image 
-        source={{ uri: item.images[0] }}
-        style={styles.experienceImage}
-        resizeMode="cover"
-      />
-      <LinearGradient
-        colors={['transparent', 'rgba(0,0,0,0.7)']}
-        style={styles.experienceGradient}
-      >
-        <View style={styles.experienceTitleContainer}>
-          <Text style={styles.experienceTitle}>{item.title}</Text>
-          <Text style={styles.experienceSubtitle}>{item.city}</Text>
-        </View>
-      </LinearGradient>
+      <View style={styles.experienceImageContainer}>
+        <Image 
+          source={{ uri: item.image }}
+          style={styles.experienceImage}
+          resizeMode="cover"
+        />
+      </View>
+      <View style={styles.experienceTitleContainer}>
+        <Text style={styles.experienceTitle}>{item.name}</Text>
+      </View>
     </Pressable>
   );
 
   return (
     <>
-      {isLoading && !refreshing && (
+      {(rooftopsLoading || experiencesLoading) && !refreshing && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
         </View>
@@ -145,7 +141,7 @@ export const HomeScreen = () => {
           <Text style={styles.sectionTitle}>Choose your experience</Text>
           <FlatList
             horizontal
-            data={rooftops.slice(0, 5)}
+            data={experiences}
             renderItem={renderExperienceCard}
             keyExtractor={(item) => item.id}
             showsHorizontalScrollIndicator={false}
@@ -154,14 +150,23 @@ export const HomeScreen = () => {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Other rooftops</Text>
-          {rooftops.map((rooftop) => (
-            <RooftopCard 
-              key={rooftop.id} 
-              rooftop={rooftop} 
-              onPress={() => handleRooftopPress(rooftop.id)}
+          <Text style={styles.sectionTitle}>Other Grooftops</Text>
+          <View style={styles.gridContainer}>
+            <FlatList
+              data={rooftops}
+              renderItem={({ item }: any) => (
+                <RooftopCard 
+                  rooftop={item} 
+                  onPress={() => handleRooftopPress(item.id)}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+              numColumns={2}
+              scrollEnabled={false}
+              showsVerticalScrollIndicator={false}
+              columnWrapperStyle={styles.rooftopGridRow}
             />
-          ))}
+          </View>
         </View>
       </ScrollView>
     </>
@@ -169,6 +174,20 @@ export const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  // Loading overlay
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    zIndex: 1,
+  },
+
+  // Main container styles
   scrollContainer: {
     flex: 1,
     backgroundColor: colors.background.primary,
@@ -179,6 +198,8 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: spacing.lg,
   },
+
+  // Section common styles
   section: {
     padding: spacing.lg,
   },
@@ -188,31 +209,46 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     marginBottom: spacing.md,
   },
+
+  // Star rating styles
+  starsContainer: {
+    flexDirection: 'row'
+  },
+  star: {
+    marginRight: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 1,
+  },
+
+  // Top Rooftops section
   topRooftopsContainer: {
     paddingRight: spacing.lg,
   },
+  topRooftopCardWrapper: {
+    width: 280,
+    marginRight: spacing.md,
+  },
   topRooftopCard: {
     width: 280,
-    height: 180,
-    marginRight: spacing.md,
-    borderRadius: 16,
+    height: 200,
     overflow: 'hidden',
+    borderRadius: 16,
   },
   topRooftopImage: {
     width: '100%',
     height: '100%',
   },
-  topRooftopGradient: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: spacing.md,
-  },
   topRooftopContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
+    marginTop: spacing.sm,
+    maxWidth: 280
   },
   topRooftopTitle: {
     fontSize: 16,
@@ -226,66 +262,48 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  topRooftopLocationText: {
+    fontSize: 12,
+    color: colors.text.primary,
+    marginLeft: spacing.xs,
+  },
+
+  // Experience section
   experiencesContainer: {
     paddingRight: spacing.lg,
   },
   experienceCard: {
-    width: 150,
-    height: 100,
-    marginRight: spacing.md,
-    borderRadius: 16,
+    width: 180,
+    marginRight: spacing.md
+  },
+  experienceImageContainer: {
+    width: 180,
     overflow: 'hidden',
+    borderRadius: 16,
+    maxWidth: 180,
+    maxHeight: 120
   },
   experienceImage: {
-    width: '100%',
-    height: '100%',
-  },
-  experienceGradient: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '50%',
-    justifyContent: 'flex-end',
-    padding: spacing.md,
+    width: 180,
+    height: 120,
   },
   experienceTitleContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   experienceTitle: {
     fontSize: 14,
     fontWeight: 'bold',
     color: colors.text.primary,
-    marginBottom: 2,
+    marginVertical: spacing.xs,
+    marginTop: spacing.sm
   },
-  experienceSubtitle: {
-    fontSize: 12,
-    color: colors.text.primary,
-    opacity: 0.8,
+
+  // Other rooftops section
+  gridContainer: {
+    marginTop: spacing.sm
   },
-  starsContainer: {
-    flexDirection: 'row',
-    marginLeft: spacing.md,
-  },
-  star: {
-    marginRight: 2,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 1,
-  },
-  loadingContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    zIndex: 1,
+  rooftopGridRow: {
+    justifyContent: 'space-between',
+    marginBottom: spacing.lg
   },
 }); 

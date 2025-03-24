@@ -1,6 +1,12 @@
 import { api } from '../../../services/api';
 import { Rooftop, CreateRooftopDto, UpdateRooftopDto, RooftopFilters } from '../types/rooftop.types';
 
+const DEFAULT_COORDINATES = {
+  latitude: -22.9068,  // Rio de Janeiro coordinates
+  longitude: -43.1729,
+  radius: 1000
+};
+
 export const rooftopService = {
   getRooftops: async (filters?: RooftopFilters): Promise<Rooftop[]> => {
     const params = new URLSearchParams();
@@ -29,4 +35,30 @@ export const rooftopService = {
   deleteRooftop: async (id: string): Promise<void> => {
     await api.delete(`/rooftops/${id}`);
   },
+
+  async getNearbyRooftops() {
+    try {
+      const params = new URLSearchParams({
+        latitude: DEFAULT_COORDINATES.latitude.toString(),
+        longitude: DEFAULT_COORDINATES.longitude.toString(),
+        radius: DEFAULT_COORDINATES.radius.toString(),
+      });
+
+      const response = await api.get(`/rooftops/nearby?${params}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching nearby rooftops:', error);
+      throw error;
+    }
+  },
+
+  async getRecommendedRooftops() {
+    try {
+      const response = await api.get('/rooftops/recommended');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching recommended rooftops:', error);
+      throw error;
+    }
+  }
 }; 
