@@ -231,6 +231,7 @@ export const CreateRooftopScreen = () => {
               {availableRentalTypesOptionsMetadata.map((option: any) => (
                 <View>
                   <CheckBox
+                    key={option.id}
                     title={option.name}
                     checked={rentalType === option.name}
                     onPress={() => setRentalType(option.name)}

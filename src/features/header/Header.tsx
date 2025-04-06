@@ -7,6 +7,7 @@ import {
   Text,
   Pressable,
   TextInput,
+  ScrollView,
 } from 'react-native';
 import { colors } from '../../theme/colors';
 import { spacing } from '../../theme/spacing';
@@ -47,7 +48,7 @@ export const Header = ({ onSearch }: HeaderProps) => {
       </View>
 
       {menuVisible && (
-        <View style={styles.menuOverlay}>
+        <ScrollView style={styles.menuOverlay} showsVerticalScrollIndicator={false}>
           <View style={styles.searchContainer}>
             {
               !advancedSearchVisible && (
@@ -77,7 +78,9 @@ export const Header = ({ onSearch }: HeaderProps) => {
             
             {advancedSearchVisible && (
               <View style={styles.advancedSearch}>
-                <Text style={styles.advancedSearchTitle}>advanced search</Text>
+                <TouchableOpacity style={styles.backButton} onPress={() => setAdvancedSearchVisible(false)}>
+                  <Text style={styles.backButtonText}>go back to simple search</Text>
+                </TouchableOpacity>
                 
                 <View style={styles.filterSection}>
                   <Text style={styles.filterLabel}>Location</Text>
@@ -147,7 +150,7 @@ export const Header = ({ onSearch }: HeaderProps) => {
             )}
           </View>
 
-          <View style={styles.menuContent}>
+          {!advancedSearchVisible && <View style={styles.menuContent}>
             <View>
               <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/') }}>
                 <Text style={styles.menuItemText}>Home</Text>
@@ -165,8 +168,8 @@ export const Header = ({ onSearch }: HeaderProps) => {
                 <Text style={styles.menuItemText}>Account</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </View>
+          </View>}
+        </ScrollView>
       )}
     </>
   );
@@ -253,16 +256,25 @@ const styles = StyleSheet.create({
   },
   advancedSearch: {
     marginTop: spacing.md,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
-  advancedSearchTitle: {
+  backButton: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    marginBottom: spacing.lg,
+    padding: spacing.sm
+  },
+  backButtonText: {
     color: colors.primary,
     fontSize: 16,
-    marginBottom: spacing.md,
     fontWeight: 'bold',
   },
   filterSection: {
-    marginBottom: spacing.md,
-    marginTop: spacing.md,
+    marginBottom: spacing.lg,
   },
   filterLabel: {
     color: '#fff',
@@ -283,7 +295,7 @@ const styles = StyleSheet.create({
   optionRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing.xs,
+    gap: spacing.md,
   },
   optionButton: {
     backgroundColor: '#fff',
@@ -299,7 +311,7 @@ const styles = StyleSheet.create({
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: spacing.xs,
+    gap: spacing.md,
   },
   tagButton: {
     backgroundColor: '#fff',

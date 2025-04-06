@@ -119,6 +119,7 @@ export const RooftopDetailsScreen = () => {
 
   const handleDialogNext = () => {
     handleCloseDialog();
+    router.push('/bookings');
   };
 
   if (isLoading) {
@@ -404,6 +405,7 @@ export const RooftopDetailsScreen = () => {
         onClose={handleCloseDialog}
         onNext={handleDialogNext}
         rooftop={{
+          id: rooftop?.id || '',
           title: rooftop?.title || '',
           host: rooftop?.owner?.name || '',
           price: rooftop?.pricePerHour ? rooftop.pricePerHour * 12 : 12500, // 12 hours default duration
