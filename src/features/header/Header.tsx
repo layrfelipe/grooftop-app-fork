@@ -164,6 +164,9 @@ export const Header = ({ onSearch }: HeaderProps) => {
               <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/spaces') }}>
                 <Text style={styles.menuItemText}>My spaces</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/favs') }}>
+                <Text style={styles.menuItemText}>My favs</Text>
+              </TouchableOpacity>
               <TouchableOpacity style={styles.menuItem} onPress={() => { setMenuVisible(false); router.push('/profile') }}>
                 <Text style={styles.menuItemText}>Account</Text>
               </TouchableOpacity>

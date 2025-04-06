@@ -13,10 +13,17 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
-import { useMySpacesStore } from '../store/my-spaces.store';
+import { useBookmarkStore } from '../store/bookmark.store';
+import { Bookmark } from '../services/bookmark.service';
 import { Rooftop } from '../types/rooftop.types';
 
-const RooftopCard = ({ rooftop, onPress }: { rooftop: Rooftop, onPress: () => void }) => {
+const BookmarkCard = ({ bookmark, onPress }: { bookmark: Bookmark, onPress: () => void }) => {
+  const rooftop = bookmark.rooftop;
+  
+  if (!rooftop) {
+    return null;
+  }
+  
   return (
     <Pressable style={styles.card} onPress={onPress}>
       <Image 
@@ -34,9 +41,7 @@ const RooftopCard = ({ rooftop, onPress }: { rooftop: Rooftop, onPress: () => vo
           </View>
           <View style={styles.cardDetail}>
             <Ionicons name="cash-outline" size={16} color={colors.text.tertiary} />
-            <Text style={styles.cardDetailText}>
-              {rooftop.pricePerHour === 0 ? 'Free' : `$${rooftop.pricePerHour}/hour`}
-            </Text>
+            <Text style={styles.cardDetailText}>${rooftop.pricePerHour}/hour</Text>
           </View>
         </View>
       </View>
@@ -44,18 +49,18 @@ const RooftopCard = ({ rooftop, onPress }: { rooftop: Rooftop, onPress: () => vo
   );
 };
 
-export const MySpacesScreen = () => {
+export const MyFavsScreen = () => {
   const router = useRouter();
-  const { spaces, fetchMySpaces, isLoading, error } = useMySpacesStore();
+  const { bookmarks, fetchBookmarks, isLoading, error } = useBookmarkStore();
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    fetchMySpaces();
+    fetchBookmarks();
   }, []);
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    await fetchMySpaces();
+    await fetchBookmarks();
     setRefreshing(false);
   };
 
@@ -73,7 +78,7 @@ export const MySpacesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>My Spaces</Text>
+      <Text style={styles.title}>My Favs</Text>
       
       {error && (
         <View style={styles.errorContainer}>
@@ -81,25 +86,25 @@ export const MySpacesScreen = () => {
         </View>
       )}
       
-      {spaces.length === 0 ? (
+      {bookmarks.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Ionicons name="business-outline" size={64} color={colors.text.tertiary} />
-          <Text style={styles.emptyText}>You don't have any spaces yet</Text>
+          <Ionicons name="heart-outline" size={64} color={colors.text.tertiary} />
+          <Text style={styles.emptyText}>You haven't saved any rooftops yet</Text>
           <Pressable 
-            style={styles.createButton}
-            onPress={() => router.push('/rooftop/create' as any)}
+            style={styles.exploreButton}
+            onPress={() => router.push('/')}
           >
-            <Text style={styles.createButtonText}>Create a Space</Text>
+            <Text style={styles.exploreButtonText}>Explore Rooftops</Text>
           </Pressable>
         </View>
       ) : (
         <FlatList
-          data={spaces}
+          data={bookmarks}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <RooftopCard 
-              rooftop={item} 
-              onPress={() => handleRooftopPress(item.id)}
+            <BookmarkCard 
+              bookmark={item} 
+              onPress={() => handleRooftopPress(item.rooftopId)}
             />
           )}
           contentContainerStyle={styles.list}
@@ -157,13 +162,13 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
     textAlign: 'center',
   },
-  createButton: {
+  exploreButton: {
     backgroundColor: colors.primary,
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.lg,
     borderRadius: 8,
   },
-  createButtonText: {
+  exploreButtonText: {
     color: colors.text.secondary,
     fontWeight: 'bold',
   },
@@ -207,4 +212,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.text.tertiary,
   },
-}); 
+});

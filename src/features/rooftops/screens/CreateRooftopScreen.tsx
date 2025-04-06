@@ -5,8 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Button } from '../../../components/Button';
 import { Input } from '../../../components/Input';
 import { colors } from '../../../theme/colors';
@@ -14,20 +17,29 @@ import { spacing } from '../../../theme/spacing';
 import { CheckBox } from '@rneui/base';
 import { Picker } from '@react-native-picker/picker';
 import { api } from '@/src/services/api';
+import { rooftopService } from '../services/rooftop.service';
+import { CreateRooftopDto } from '../types/rooftop.types';
+
+// Define stage enum for better readability
+enum RooftopCreationStage {
+  ADDRESS = 'ADDRESS',
+  PRIVACY_AND_ACTIVITIES = 'PRIVACY_AND_ACTIVITIES',
+  RENTAL_TYPE = 'RENTAL_TYPE',
+  GUEST_FLOW_AND_ACCESS = 'GUEST_FLOW_AND_ACCESS',
+  FEATURES_AND_VIEWS = 'FEATURES_AND_VIEWS',
+  GUIDELINES = 'GUIDELINES',
+  PHOTOS_AND_FINAL_DETAILS = 'PHOTOS_AND_FINAL_DETAILS',
+}
 
 export const CreateRooftopScreen = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentStage, setCurrentStage] = useState<RooftopCreationStage>(RooftopCreationStage.ADDRESS);
 
   // Metadata
   const [availablePrivacyOptionsMetadata, setAvailablePrivacyOptionsMetadata] = useState<any>([]);
   const [availableActivitiesMetadata, setAvailableActivitiesMetadata] = useState<any>([]);
   const [availableRentalTypesOptionsMetadata, setAvailableRentalTypesOptionsMetadata] = useState<any>([]);
-  const [availableAccessibilityOptionsMetadata, setAvailableAccessibilityOptionsMetadata] = useState<any>([]);
-  const [availableRooftopFeaturesOptionsMetadata, setAvailableRooftopFeaturesOptionsMetadata] = useState<any>([]);
-  const [availableRooftopViewTypesMetadata, setAvailableRooftopViewTypesMetadata] = useState<any>([]);
-  const [availableGuidelinesOptionsMetadata, setAvailableGuidelinesOptionsMetadata] = useState<any>([]);
-  const [availableCancellationPoliciesOptionsMetadata, setAvailableCancellationPoliciesOptionsMetadata] = useState<any>([]);
-
 
   // Basic Info - Stage 1
   const [address, setAddress] = useState('');
@@ -41,9 +53,10 @@ export const CreateRooftopScreen = () => {
   const [selectedRooftopActivities, setSelectedRooftopActivities] = useState<string[]>([]);
 
   // Rental Type - Stage 3
-  const [rentalType, setRentalType] = useState(''); // free, hourly, byPeriod
+  const [rentalType, setRentalType] = useState('');
   const [timeRange, setTimeRange] = useState('');
   const [price, setPrice] = useState('');
+  const [periodDuration, setPeriodDuration] = useState('');
 
   // Guest Flow & Access - Stage 4
   const [maxGuests, setMaxGuests] = useState('');
@@ -51,82 +64,65 @@ export const CreateRooftopScreen = () => {
   const [amenities, setAmenities] = useState<string[]>([]);
 
   // Photos & Final Details - Stage 5
-  const [images, setImages] = useState(['https://picsum.photos/800/600']);
+  const [images, setImages] = useState<string[]>([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
   // Guidelines - Stage 6
   const [cancellationPolicy, setCancellationPolicy] = useState('');
 
-  const [currentStage, setCurrentStage] = useState(1);
-
-
+  // Fetch metadata on component mount
   useEffect(() => {
-    api.getPrivacyOptionsAndAvailableActivitiesMetaDataFromBackend().then((data: any) => {
-      setAvailablePrivacyOptionsMetadata(data.privacyOptions.data);
-      setAvailableActivitiesMetadata(data.availableActivities.data);
-    });
+    const fetchMetadata = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Fetch privacy options and activities
+        const privacyAndActivitiesData = await api.getPrivacyOptionsAndAvailableActivitiesMetaDataFromBackend();
+        setAvailablePrivacyOptionsMetadata(privacyAndActivitiesData.privacyOptions.data);
+        setAvailableActivitiesMetadata(privacyAndActivitiesData.availableActivities.data);
+        
+        // Fetch rental types
+        const rentalTypesData = await api.getRentalTypesOptionsMetaDataFromBackend();
+        setAvailableRentalTypesOptionsMetadata(rentalTypesData.data);
+      } catch (error) {
+        console.error('Error fetching metadata:', error);
+        Alert.alert('Error', 'Failed to load form data. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    api.getRentalTypesOptionsMetaDataFromBackend().then((res: any) => {
-      setAvailableRentalTypesOptionsMetadata(res.data);
-    });
+    fetchMetadata();
+  }, []);
 
-    // api.getAccessibilityOptionsMetaDataFromBackend().then((res: any) => {
-    //   console.log("accessibility options metadata")
-    //   console.log(res.data)
-    //   console.log()
-    //   setAvailableAccessibilityOptionsMetadata(res.data);
-    // });
-
-    // api.getRooftopFeaturesOptionsMetaDataFromBackend().then((res: any) => {
-    //   console.log("rooftop features options metadata")
-    //   console.log(res.data)
-    //   console.log()
-    //   setAvailableRooftopFeaturesOptionsMetadata(res.data);
-    // });
-
-    // api.getRooftopViewTypesMetaDataFromBackend().then((res: any) => {
-    //   console.log("rooftop view types metadata")
-    //   console.log(res.data)
-    //   console.log()
-    //   setAvailableRooftopViewTypesMetadata(res.data);
-    // });
-
-    // api.getGuidelinesOptionsFromBackend().then((res: any) => {
-    //   console.log("guidelines options metadata")
-    //   console.log(res.data)
-    //   console.log()
-    //   setAvailableGuidelinesOptionsMetadata(res.data);
-    // });
-
-    // api.getCancellationPoliciesOptionsFromBackend().then((res: any) => {
-    //   console.log("cancellation policies options metadata")
-    //   console.log(res.data)
-    //   console.log()
-    //   setAvailableCancellationPoliciesOptionsMetadata(res.data);
-    // });
-  }, [])
-
-
+  // Navigation handlers
   const handleNext = () => {
-    if (currentStage < 7) {
-      setCurrentStage(currentStage + 1);
+    const stages = Object.values(RooftopCreationStage);
+    const currentIndex = stages.indexOf(currentStage);
+    
+    if (currentIndex < stages.length - 1) {
+      setCurrentStage(stages[currentIndex + 1]);
     } else {
       handleCreate();
     }
   };
 
   const handleBack = () => {
-    if (currentStage > 1) {
-      setCurrentStage(currentStage - 1);
+    const stages = Object.values(RooftopCreationStage);
+    const currentIndex = stages.indexOf(currentStage);
+    
+    if (currentIndex > 0) {
+      setCurrentStage(stages[currentIndex - 1]);
     } else {
       router.back();
     }
   };
 
+  // Render content based on current stage
   const renderStageContent = () => {
     switch (currentStage) {
-      case 1:
+      case RooftopCreationStage.ADDRESS:
         return (
           <>
             <Text style={styles.addressSectionTitle}>Address</Text>
@@ -144,7 +140,7 @@ export const CreateRooftopScreen = () => {
                 <Input
                   label="State"
                   value={state}
-                onChangeText={setState}
+                  onChangeText={setState}
                   placeholder="Select your state"
                 />
               </View>
@@ -179,59 +175,58 @@ export const CreateRooftopScreen = () => {
           </>
         );
       
-        case 2:
-          return (
-            <>
-              <Text style={styles.sectionTitle}>Privacy & Access</Text>
-              <View>
-                {availablePrivacyOptionsMetadata.map((option: any) => (
-                  <CheckBox
-                    key={option.id}
-                    title={option.name}
-                    checked={selectedPrivacyAndAccessOption === option.id}
-                    onPress={() => setSelectedPrivacyAndAccessOption(option.id)}
-                    checkedIcon="dot-circle-o"
-                    uncheckedIcon="circle-o"
-                    checkedColor={colors.primary}
-                    containerStyle={styles.radioContainer}
-                    textStyle={[styles.radioLabel, { color: colors.text.primary }]}
-                  />
-                ))}
-              </View>
+      case RooftopCreationStage.PRIVACY_AND_ACTIVITIES:
+        return (
+          <>
+            <Text style={styles.sectionTitle}>Privacy & Access</Text>
+            <View>
+              {availablePrivacyOptionsMetadata.map((option: any) => (
+                <CheckBox
+                  key={option.id}
+                  title={option.name}
+                  checked={selectedPrivacyAndAccessOption === option.id}
+                  onPress={() => setSelectedPrivacyAndAccessOption(option.id)}
+                  checkedIcon="dot-circle-o"
+                  uncheckedIcon="circle-o"
+                  checkedColor={colors.primary}
+                  containerStyle={styles.radioContainer}
+                  textStyle={[styles.radioLabel, { color: colors.text.primary }]}
+                />
+              ))}
+            </View>
 
-              <Text style={styles.sectionTitle}>Available Activities</Text>
-              <View>
-                {availableActivitiesMetadata.map((activity: any) => (
-                  <CheckBox
-                    key={activity.id}
-                    title={activity.name}
-                    checked={selectedRooftopActivities.includes(activity.id)}
-                    onPress={() => {
-                      if (selectedRooftopActivities.includes(activity.id)) {
-                        setSelectedRooftopActivities(selectedRooftopActivities.filter(a => a !== activity.id));
-                      } else {
-                        setSelectedRooftopActivities([...selectedRooftopActivities, activity.id]);
-                      }
-                    }}
-                    checkedColor={colors.primary}
-                    containerStyle={styles.checkboxContainer}
-                    textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
-                  />
-                ))}
-              </View>
-            </>
-          );
+            <Text style={styles.sectionTitle}>Available Activities</Text>
+            <View>
+              {availableActivitiesMetadata.map((activity: any) => (
+                <CheckBox
+                  key={activity.id}
+                  title={activity.name}
+                  checked={selectedRooftopActivities.includes(activity.id)}
+                  onPress={() => {
+                    if (selectedRooftopActivities.includes(activity.id)) {
+                      setSelectedRooftopActivities(selectedRooftopActivities.filter(a => a !== activity.id));
+                    } else {
+                      setSelectedRooftopActivities([...selectedRooftopActivities, activity.id]);
+                    }
+                  }}
+                  checkedColor={colors.primary}
+                  containerStyle={styles.checkboxContainer}
+                  textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
+                />
+              ))}
+            </View>
+          </>
+        );
 
-      case 3:
+      case RooftopCreationStage.RENTAL_TYPE:
         return (
           <>
             <Text style={styles.sectionTitle}>Type of Rental</Text>
 
             <View>
               {availableRentalTypesOptionsMetadata.map((option: any) => (
-                <View>
+                <View key={option.id}>
                   <CheckBox
-                    key={option.id}
                     title={option.name}
                     checked={rentalType === option.name}
                     onPress={() => setRentalType(option.name)}
@@ -239,95 +234,75 @@ export const CreateRooftopScreen = () => {
                     uncheckedIcon="circle-o"
                     checkedColor={colors.primary}
                     containerStyle={styles.radioContainer}
-                    textStyle={[styles.radioLabel, { color: '#fff' }]}
+                    textStyle={[styles.radioLabel, { color: colors.text.primary }]}
                   />
-              
-
-                  {/* <View>
-                    {rentalType === 'Free' && (
-                      <View style={styles.timeRangeContainer}>
-                        <Text style={styles.timeRangeLabel}>time range</Text>
-                        <Input
-                          value={timeRange}
-                          onChangeText={setTimeRange}
-                          placeholder="Select the time range (vamos colocar aqui de 0+4hs"
-                        />
-                      </View>
-                    )}
-
-                    <CheckBox
-                      title="Hourly"
-                      checked={rentalType === 'hourly'}
-                      onPress={() => setRentalType('hourly')}
-                      checkedIcon="dot-circle-o"
-                      uncheckedIcon="circle-o"
-                      checkedColor={colors.primary}
-                      containerStyle={styles.radioContainer}
-                      textStyle={[styles.radioLabel, { color: '#fff' }]}
-                    />
-
-                    {rentalType === 'hourly' && (
-                      <>
-                        <View style={styles.timeRangeContainer}>
-                          <Text style={styles.timeRangeLabel}>time range</Text>
-                          <Input
-                            value={timeRange}
-                            onChangeText={setTimeRange}
-                            placeholder="Select the time range (vamos colocar aqui de 0+4hs"
-                          />
-                        </View>
-                        <View style={styles.timeRangeContainer}>
-                          <Text style={styles.timeRangeLabel}>value</Text>
-                          <Input
-                            value={price}
-                            onChangeText={setPrice}
-                            placeholder="Enter the hourly rate"
-                            keyboardType="numeric"
-                          />
-                        </View>
-                      </>
-                    )}
-
-                    <CheckBox
-                      title="By Period"
-                      checked={rentalType === 'byPeriod'}
-                      onPress={() => setRentalType('byPeriod')}
-                      checkedIcon="dot-circle-o"
-                      uncheckedIcon="circle-o"
-                      checkedColor={colors.primary}
-                      containerStyle={styles.radioContainer}
-                      textStyle={[styles.radioLabel, { color: '#fff' }]}
-                    />
-
-                    {rentalType === 'byPeriod' && (
-                      <>
-                        <View style={styles.timeRangeContainer}>
-                          <Text style={styles.timeRangeLabel}>time range</Text>
-                          <Input
-                            value={timeRange}
-                            onChangeText={setTimeRange}
-                            placeholder="Select the time range (vamos colocar aqui de 0+4hs"
-                          />
-                        </View>
-                        <View style={styles.timeRangeContainer}>
-                          <Text style={styles.timeRangeLabel}>value</Text>
-                          <Input
-                            value={price}
-                            onChangeText={setPrice}
-                            placeholder="Enter the price for the 4-hour package"
-                            keyboardType="numeric"
-                          />
-                        </View>
-                      </>
-                    )}
-                  </View> */}
                 </View>
               ))}
             </View>
+
+            {rentalType === 'Hourly' && (
+              <>
+                <Text style={[styles.fieldLabel, styles.spacingTop]}>Hourly Rate</Text>
+                <Input
+                  value={price}
+                  onChangeText={setPrice}
+                  placeholder="Enter price per hour"
+                  keyboardType="numeric"
+                />
+              </>
+            )}
+
+            {rentalType === 'By period' && (
+              <>
+                <Text style={[styles.fieldLabel, styles.spacingTop]}>Period Duration</Text>
+                <View style={styles.selectContainer}>
+                  <Picker
+                    selectedValue={periodDuration}
+                    onValueChange={(itemValue) => setPeriodDuration(itemValue)}
+                    style={styles.picker}
+                    dropdownIconColor={colors.text.primary}
+                    mode="dropdown"
+                  >
+                    <Picker.Item 
+                      label="Select period duration" 
+                      value="" 
+                      style={[styles.pickerItem, { color: '#666' }]} 
+                      color="#666"
+                    />
+                    {[
+                      {id: '4hours', name: '4 hours'},
+                      {id: '6hours', name: '6 hours'},
+                      {id: '8hours', name: '8 hours'},
+                      {id: '12hours', name: '12 hours'},
+                      {id: '24hours', name: '24 hours'},
+                      {id: '48hours', name: '48 hours'},
+                      {id: '72hours', name: '72 hours'},
+                      {id: '1week', name: '1 week'}
+                    ].map((period) => (
+                      <Picker.Item 
+                        key={period.id}
+                        label={period.name} 
+                        value={period.id}
+                        style={styles.pickerItem}
+                        color={colors.text.primary}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+
+                <Text style={[styles.fieldLabel, styles.spacingTop]}>Period Price</Text>
+                <Input
+                  value={price}
+                  onChangeText={setPrice}
+                  placeholder="Enter price for the selected period"
+                  keyboardType="numeric"
+                />
+              </>
+            )}
           </>
         );
 
-      case 4:
+      case RooftopCreationStage.GUEST_FLOW_AND_ACCESS:
         return (
           <>
             <Text style={styles.sectionTitle}>Guest Flow & Access</Text>
@@ -353,7 +328,7 @@ export const CreateRooftopScreen = () => {
               }}
               checkedColor={colors.primary}
               containerStyle={styles.checkboxContainer}
-              textStyle={[styles.checkboxLabel, { color: '#fff' }]}
+              textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
             />
 
             {amenities.includes('parking') && (
@@ -380,7 +355,7 @@ export const CreateRooftopScreen = () => {
               }}
               checkedColor={colors.primary}
               containerStyle={styles.checkboxContainer}
-              textStyle={[styles.checkboxLabel, { color: '#fff' }]}
+              textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
             />
 
             <Text style={[styles.fieldLabel, styles.spacingTop]}>Accessibility</Text>
@@ -405,132 +380,132 @@ export const CreateRooftopScreen = () => {
                 }}
                 checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
-                textStyle={[styles.checkboxLabel, { color: '#fff' }]}
+                textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
               />
             ))}
           </>
         );
 
-      case 5:
+      case RooftopCreationStage.FEATURES_AND_VIEWS:
         return (
           <>
             <Text style={styles.sectionTitle}>Features & Views</Text>
             
             <Text style={styles.categoryTitle}>Service</Text>
             {[
-              'Bar',
-              'Restaurant',
-              'Coffee shop',
-              'Food help',
-              'Catering service',
-              'BBQ area',
-              'Cocktail service',
-              'Free wi-fi',
-              'Live music',
-              'DJ available'
+              {id: 'bar', name: 'Bar'},
+              {id: 'restaurant', name: 'Restaurant'},
+              {id: 'coffeeShop', name: 'Coffee shop'},
+              {id: 'foodHelp', name: 'Food help'},
+              {id: 'cateringService', name: 'Catering service'},
+              {id: 'bbqArea', name: 'BBQ area'},
+              {id: 'cocktailService', name: 'Cocktail service'},
+              {id: 'freeWifi', name: 'Free wi-fi'},
+              {id: 'liveMusic', name: 'Live music'},
+              {id: 'djAvailable', name: 'DJ available'}
             ].map((service) => (
               <CheckBox
-                key={service}
-                title={service}
-                checked={amenities.includes(service)}
+                key={service.id}
+                title={service.name}
+                checked={amenities.includes(service.id)}
                 onPress={() => {
-                  if (amenities.includes(service)) {
-                    setAmenities(amenities.filter(a => a !== service));
+                  if (amenities.includes(service.id)) {
+                    setAmenities(amenities.filter(a => a !== service.id));
                   } else {
-                    setAmenities([...amenities, service]);
+                    setAmenities([...amenities, service.id]);
                   }
                 }}
                 checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
-                textStyle={[styles.checkboxLabel, { color: '#fff' }]}
+                textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
               />
             ))}
 
             <Text style={[styles.categoryTitle, styles.spacingTop]}>Facilities</Text>
             {[
-              'Pool',
-              'Shower',
-              'Jacuzzi',
-              'Air conditioning',
-              'Chairs',
-              'Benches',
-              'Covered Area',
-              'Bathroom'
+              {id: 'pool', name: 'Pool'},
+              {id: 'shower', name: 'Shower'},
+              {id: 'jacuzzi', name: 'Jacuzzi'},
+              {id: 'airConditioning', name: 'Air conditioning'},
+              {id: 'chairs', name: 'Chairs'},
+              {id: 'benches', name: 'Benches'},
+              {id: 'coveredArea', name: 'Covered Area'},
+              {id: 'bathroom', name: 'Bathroom'}
             ].map((facility) => (
               <CheckBox
-                key={facility}
-                title={facility}
-                checked={amenities.includes(facility)}
+                key={facility.id}
+                title={facility.name}
+                checked={amenities.includes(facility.id)}
                 onPress={() => {
-                  if (amenities.includes(facility)) {
-                    setAmenities(amenities.filter(a => a !== facility));
+                  if (amenities.includes(facility.id)) {
+                    setAmenities(amenities.filter(a => a !== facility.id));
                   } else {
-                    setAmenities([...amenities, facility]);
+                    setAmenities([...amenities, facility.id]);
                   }
                 }}
                 checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
-                textStyle={[styles.checkboxLabel, { color: '#fff' }]}
+                textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
               />
             ))}
 
             <Text style={[styles.categoryTitle, styles.spacingTop]}>View Types</Text>
             {[
-              'Skyline',
-              'Lake',
-              'River',
-              'Beach',
-              'Forest',
-              'Urban view',
-              'Panoramic view',
-              'City lights at night'
+              {id: 'skyline', name: 'Skyline'},
+              {id: 'lake', name: 'Lake'},
+              {id: 'river', name: 'River'},
+              {id: 'beach', name: 'Beach'},
+              {id: 'forest', name: 'Forest'},
+              {id: 'urbanView', name: 'Urban view'},
+              {id: 'panoramicView', name: 'Panoramic view'},
+              {id: 'cityLightsAtNight', name: 'City lights at night'}
             ].map((view) => (
               <CheckBox
-                key={view}
-                title={view}
-                checked={amenities.includes(view)}
+                key={view.id}
+                title={view.name}
+                checked={amenities.includes(view.id)}
                 onPress={() => {
-                  if (amenities.includes(view)) {
-                    setAmenities(amenities.filter(a => a !== view));
+                  if (amenities.includes(view.id)) {
+                    setAmenities(amenities.filter(a => a !== view.id));
                   } else {
-                    setAmenities([...amenities, view]);
+                    setAmenities([...amenities, view.id]);
                   }
                 }}
                 checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
-                textStyle={[styles.checkboxLabel, { color: '#fff' }]}
+                textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
               />
             ))}
           </>
         );
 
-      case 6:
+      case RooftopCreationStage.GUIDELINES:
         return (
           <>
             <Text style={styles.sectionTitle}>Guidelines</Text>
             
             <Text style={styles.categoryTitle}>Rules</Text>
             {[
-              'Alcohol allowed',
-              'No outside alcohol',
-              'No smoking indoors',
-              'Live events allowed',
-              'No loud noise',
-              'Age restrictions',
-              'Mandatory closing time',
-              'Pet Friendly',
-              'No fireworks',
-              'ID required for entry'
+              {id: 'alcoholAllowed', name: 'Alcohol allowed'},
+              {id: 'noOutsideAlcohol', name: 'No outside alcohol'},
+              {id: 'noSmokingIndoors', name: 'No smoking indoors'},
+              {id: 'liveEventsAllowed', name: 'Live events allowed'},
+              {id: 'noLoudNoise', name: 'No loud noise'},
+              {id: 'ageRestrictions', name: 'Age restrictions'},
+              {id: 'mandatoryClosingTime', name: 'Mandatory closing time'},
+              {id: 'petFriendly', name: 'Pet Friendly'},
+              {id: 'noFireworks', name: 'No fireworks'},
+              {id: 'idRequiredForEntry', name: 'ID required for entry'}
             ].map((rule) => (
               <CheckBox
-                key={rule}
-                title={rule}
-                checked={amenities.includes(rule)}
+                key={rule.id}
+                title={rule.name}
+                checked={amenities.includes(rule.id)}
                 onPress={() => {
-                  if (amenities.includes(rule)) {
-                    setAmenities(amenities.filter(a => a !== rule));
+                  if (amenities.includes(rule.id)) {
+                    setAmenities(amenities.filter(a => a !== rule.id));
                   } else {
-                    setAmenities([...amenities, rule]);
+                    setAmenities([...amenities, rule.id]);
                   }
                 }}
                 checkedColor={colors.primary}
@@ -563,19 +538,19 @@ export const CreateRooftopScreen = () => {
                   color="#666"
                 />
                 {[
-                  'Free cancellation up to 7 days before the event',
-                  'Partial refund before cancellation',
-                  'No cancellation allowed',
-                  'Cancellation fee of 5%',
-                  'Rescheduling allowed with advance notice',
-                  'Cancellation available only in case of emergency',
-                  'No refund after 2 days before the event',
-                  'Full refund if canceled within 24 hours'
+                  {id: 'freeCancellationUpTo7Days', name: 'Free cancellation up to 7 days before the event'},
+                  {id: 'partialRefundBeforeCancellation', name: 'Partial refund before cancellation'},
+                  {id: 'noCancellationAllowed', name: 'No cancellation allowed'},
+                  {id: 'cancellationFeeOf5', name: 'Cancellation fee of 5%'},
+                  {id: 'reschedulingAllowedWithAdvanceNotice', name: 'Rescheduling allowed with advance notice'},
+                  {id: 'cancellationAvailableOnlyInCaseOfEmergency', name: 'Cancellation available only in case of emergency'},
+                  {id: 'noRefundAfter2Days', name: 'No refund after 2 days before the event'},
+                  {id: 'fullRefundIfCanceledWithin24Hours', name: 'Full refund if canceled within 24 hours'}
                 ].map((policy) => (
                   <Picker.Item 
-                    key={policy}
-                    label={policy} 
-                    value={policy}
+                    key={policy.id}
+                    label={policy.name} 
+                    value={policy.id}
                     style={styles.pickerItem}
                     color={colors.text.primary}
                   />
@@ -585,36 +560,131 @@ export const CreateRooftopScreen = () => {
           </>
         );
 
-      case 7:
+      case RooftopCreationStage.PHOTOS_AND_FINAL_DETAILS:
         return (
           <>
-            <Text style={styles.sectionTitle}>Pictures & Videos</Text>
-            <Text style={styles.subtitle}>Select videos or photos</Text>
+            <Text style={styles.sectionTitle}>Photos & Final Details</Text>
+            
+            <View style={styles.inputContainer}>
+              <Input
+                label="Title"
+                value={title}
+                onChangeText={setTitle}
+                placeholder="Enter a title for your rooftop"
+              />
+            </View>
+            
+            <View style={styles.inputContainer}>
+              <Input
+                label="Description"
+                value={description}
+                onChangeText={setDescription}
+                placeholder="Describe your rooftop"
+                multiline
+                numberOfLines={4}
+              />
+            </View>
+            
+            <Text style={styles.subtitle}>Add photos of your rooftop</Text>
             
             <TouchableOpacity 
               style={styles.uploadButton}
+              onPress={() => {
+                // This will be implemented in the image upload feature
+                Alert.alert('Coming Soon', 'Image upload functionality will be implemented soon.');
+              }}
             >
-              <Text style={styles.uploadButtonText}>Add photos or videos</Text>
+              <Text style={styles.uploadButtonText}>Add photos</Text>
             </TouchableOpacity>
+            
+            {images.length > 0 && (
+              <View style={styles.imagePreviewContainer}>
+                {images.map((image, index) => (
+                  <Image 
+                    key={index}
+                    source={{ uri: image }}
+                    style={styles.imagePreview}
+                  />
+                ))}
+              </View>
+            )}
           </>
         );
     }
   };
 
+  // Create rooftop and navigate to success screen
   const handleCreate = async () => {
     try {
-      router.push('/(app)/success/success');
-      } catch (error) {
+      setIsLoading(true);
+      // Validate required fields
+      if (!title || !description || !city || !maxGuests || (rentalType !== 'Free' && !price)) {
+        Alert.alert('Missing Information', 'Please fill in all required fields.');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Prepare data for API
+      const rooftopData: CreateRooftopDto = {
+        title,
+        description,
+        city,
+        capacity: parseInt(maxGuests, 10),
+        pricePerHour: rentalType === 'Free' ? 0 : parseFloat(price),
+        images: images.length > 0 ? images : ['https://picsum.photos/800/600'], // Default image if none provided
+      };
+      
+      // Send request to create rooftop
+      const response = await rooftopService.createRooftop(rooftopData);
+      
+      // Navigate to success screen
+      router.push('/success/success');
+    } catch (error) {
       console.error('Failed to create rooftop:', error);
+      Alert.alert('Error', 'Failed to create rooftop. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  // Get stage title for display
+  const getStageTitle = () => {
+    switch (currentStage) {
+      case RooftopCreationStage.ADDRESS:
+        return 'Address';
+      case RooftopCreationStage.PRIVACY_AND_ACTIVITIES:
+        return 'Privacy & Activities';
+      case RooftopCreationStage.RENTAL_TYPE:
+        return 'Rental Type';
+      case RooftopCreationStage.GUEST_FLOW_AND_ACCESS:
+        return 'Guest Flow & Access';
+      case RooftopCreationStage.FEATURES_AND_VIEWS:
+        return 'Features & Views';
+      case RooftopCreationStage.GUIDELINES:
+        return 'Guidelines';
+      case RooftopCreationStage.PHOTOS_AND_FINAL_DETAILS:
+        return 'Photos & Final Details';
+      default:
+        return '';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={styles.loadingText}>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Register your rooftop</Text>
+        <Text style={styles.stageTitle}>{getStageTitle()}</Text>
         <View style={styles.progressIndicator}>
-          {[1, 2, 3, 4, 5, 6, 7].map((stage) => (
+          {Object.values(RooftopCreationStage).map((stage, index) => (
             <View
               key={stage}
               style={[
@@ -633,20 +703,18 @@ export const CreateRooftopScreen = () => {
       >
         {renderStageContent()}
 
-        {currentStage !== 8 && (
-          <View style={styles.actions}>
-            <Button
-              title="Back"
-              onPress={handleBack}
-              variant="secondary"
-            />
+        <View style={styles.actions}>
           <Button
-            title="Next"
-            onPress={handleNext}
-            variant="warn"
+            title="Back"
+            onPress={handleBack}
+            variant="secondary"
           />
-          </View>
-        )}
+          <Button
+            title={currentStage === RooftopCreationStage.PHOTOS_AND_FINAL_DETAILS ? "Create" : "Next"}
+            onPress={handleNext}
+            variant="primary"
+          />
+        </View>
       </ScrollView>
     </View>
   );
@@ -658,19 +726,36 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.primary,
     paddingTop: spacing.md
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.background.primary,
+  },
+  loadingText: {
+    marginTop: spacing.md,
+    color: colors.text.primary,
+    fontSize: 16,
+  },
   header: {
     paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.lg
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.text.primary,
   },
+  stageTitle: {
+    fontSize: 18,
+    color: colors.primary,
+  },
   content: {
     flex: 1,
   },
   scrollContent: {
     padding: spacing.lg,
+    paddingTop: 0
   },
   progressIndicator: {
     flexDirection: 'row',
@@ -687,7 +772,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
   },
   progressDotActive: {
-    backgroundColor: '#FF00FF',
+    backgroundColor: colors.primary
   },
   actions: {
     marginTop: spacing.lg,
@@ -753,13 +838,13 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   timeRangeLabel: {
-    color: '#fff',
+    color: colors.text.primary,
     fontSize: 14,
     marginBottom: spacing.xs,
   },
   darkInput: {
     backgroundColor: '#333',
-    color: '#fff',
+    color: colors.text.primary,
     borderRadius: 8,
     padding: spacing.sm,
     fontSize: 16,
@@ -767,7 +852,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: 16,
-    color: '#fff',
+    color: colors.text.primary,
     marginBottom: spacing.xs,
   },
   spacingTop: {
@@ -775,12 +860,12 @@ const styles = StyleSheet.create({
   },
   categoryTitle: {
     fontSize: 16,
-    color: '#FFFF00', // Yellow color as shown in the image
+    color: colors.primary,
     marginBottom: spacing.sm,
     marginTop: spacing.md,
   },
   addRuleText: {
-    color: '#FFFF00',
+    color: colors.primary,
     fontSize: 14,
     marginTop: spacing.sm,
     marginBottom: spacing.md,
@@ -801,7 +886,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: '#FFFF00', // Yellow color as shown in the image
+    color: colors.primary,
     marginBottom: spacing.md,
   },
   uploadButton: {
@@ -815,5 +900,17 @@ const styles = StyleSheet.create({
   uploadButtonText: {
     color: colors.text.primary,
     fontSize: 16,
+  },
+  imagePreviewContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: spacing.md,
+  },
+  imagePreview: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    marginRight: spacing.sm,
+    marginBottom: spacing.sm,
   },
 }); 

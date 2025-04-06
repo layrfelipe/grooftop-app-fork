@@ -1,5 +1,6 @@
 export interface RooftopOwner {
   name: string;
+  createdAt: string;
 }
 
 export interface Rooftop {

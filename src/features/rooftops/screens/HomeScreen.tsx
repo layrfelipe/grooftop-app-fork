@@ -42,10 +42,7 @@ export const HomeScreen = () => {
   };
 
   const handleRooftopPress = (id: string) => {
-    router.push({
-      pathname: '/(app)/rooftop/[id]',
-      params: { id }
-    });
+    router.push(`/rooftop/${id}`);
   };
 
   const renderStars = () => (

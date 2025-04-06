@@ -241,9 +241,11 @@
         )}
 
         {selectedDate && isAvailable && (
-          <View style={styles.availabilityContainer}>
-            <Text style={styles.availabilityText}>Yay! Your date is available!</Text>
-          </View>
+            <Button
+              title="Yay! Your date is available!"
+              onPress={handleNext}
+              variant="secondaryOutline"
+            />
         )}
       </>
     );
@@ -368,7 +370,7 @@
           <Button
             title={getButtonTitle('confirmation')}
             onPress={handleNext}
-            variant="cta"
+            variant="primary"
           />
         </View>
       </View>
@@ -384,7 +386,7 @@
                 <Button
                   title={getButtonTitle('date')}
                   onPress={handleNext}
-                  variant="cta"
+                  variant="primary"
                   disabled={!selectedDate || !isAvailable}
                 />
               </View>
@@ -398,7 +400,7 @@
                 <Button
                   title={getButtonTitle('details')}
                   onPress={handleNext}
-                  variant="cta"
+                  variant="primary"
                 />
               </View>
             </>
@@ -411,7 +413,7 @@
                 <Button
                   title={getButtonTitle('payment')}
                   onPress={handleNext}
-                  variant="cta"
+                  variant="primary"
                 />
               </View>
             </>
@@ -524,14 +526,6 @@
     calendarContainer: {
       width: '100%',
     },
-    availabilityContainer: {
-      borderWidth: 1,
-      borderColor: colors.primary,
-      borderRadius: 25,
-      paddingVertical: spacing.sm,
-      paddingHorizontal: spacing.lg,
-      alignSelf: 'center',
-    },
     availabilityText: {
       color: colors.primary,
       fontSize: 14,
@@ -605,7 +599,7 @@
     cardPreview: {
       width: '100%',
       aspectRatio: 1.586,
-      backgroundColor: colors.secondary,
+      backgroundColor: colors.tertiary,
       borderRadius: 16,
       padding: spacing.lg,
       justifyContent: 'space-between',

@@ -13,6 +13,7 @@ import { useBookmarkStore } from '../store/bookmark.store';
 import { useReviewStore } from '../../reviews/store/review.store';
 import { useAuthStore } from '../../auth/store/auth.store';
 import DateAvailabilityDialog from '../components/DateAvailabilityDialog';
+import { authService } from '../../auth/services/auth.service';
 
 const VIEW_ON_DATA = [
   { id: '1', title: 'Lorem Ipsum' },
@@ -31,7 +32,7 @@ export const RooftopDetailsScreen = () => {
   const { addBookmark, removeBookmark, isBookmarked, fetchBookmarks } = useBookmarkStore();
   const [isBookmarkLoading, setIsBookmarkLoading] = useState(false);
   const { reviews, fetchRooftopReviews, getAverageRating, isLoading: isReviewsLoading } = useReviewStore();
-  const { user } = useAuthStore();
+  const { user} = useAuthStore();
   const [nearbyRooftops, setNearbyRooftops] = useState<any>([]);
   const [recommendedRooftops, setRecommendedRooftops] = useState<any>([]);
   const [isNearbyLoading, setIsNearbyLoading] = useState(false);
@@ -61,7 +62,6 @@ export const RooftopDetailsScreen = () => {
       if (!data || !data.images || data.images.length === 0) {
         throw new Error('Invalid rooftop data');
       }
-
       setRooftop(data);
     } catch (err: any) {
       console.error('Failed to load rooftop:', err);
@@ -187,8 +187,10 @@ export const RooftopDetailsScreen = () => {
               />
             </View>
             <View style={styles.rooftopOwnerTextContainer}>
-              <Text style={styles.rooftopOwnerName}>Host: João da Silva</Text>
-              <Text style={styles.rooftopOwnerDescription}>1 year hosting</Text>
+              <Text style={styles.rooftopOwnerName}>Host: {rooftop.owner.name}</Text>
+              {user && (
+                <Text style={styles.rooftopOwnerDescription}>Hosting since {new Date(user.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</Text>
+              )}
             </View>
           </View>
 

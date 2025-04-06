@@ -60,10 +60,7 @@ export const ReviewScreen = () => {
                 <View style={styles.reviewActions}>
                   <Pressable 
                     style={styles.actionButton}
-                    onPress={() => router.push({
-                      pathname: '/(app)/(hasHeader)/reviews/edit',
-                      params: { reviewId: review.id }
-                    })}
+                    onPress={() => router.push(`/reviews/edit?reviewId=${review.id}`)}
                   >
                     <Ionicons name="pencil" size={18} color={colors.text.tertiary} />
                     <Text style={styles.actionText}>Edit</Text>

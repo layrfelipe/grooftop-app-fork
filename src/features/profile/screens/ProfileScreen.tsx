@@ -93,11 +93,19 @@ export const ProfileScreen = () => {
               variant="default"
             />
             <MenuItem
+              icon="heart-outline"
+              title="Favorites"
+              subtitle="Your favorite rooftops"
+              onPress={() => router.push('/(app)/(hasHeader)/favs')}
+              index={3}
+              variant="default"
+            />
+            <MenuItem
               icon="star-outline"
               title="My Reviews"
               subtitle="Manage your rooftop reviews"
               onPress={() => router.push('/(app)/(hasHeader)/reviews')}
-              index={3}
+              index={4}
               variant="default"
             />
             <MenuItem
@@ -105,7 +113,7 @@ export const ProfileScreen = () => {
               title="Settings"
               subtitle="App preferences and account settings"
               onPress={() => {}}
-              index={4}
+              index={5}
               variant="default"
             />
             <MenuItem
@@ -113,7 +121,7 @@ export const ProfileScreen = () => {
               title="Help & Support"
               subtitle="Get help and see and FAQs"
               onPress={() => {}}
-              index={5}
+              index={6}
               variant="default"
             />
             <MenuItem
@@ -121,7 +129,7 @@ export const ProfileScreen = () => {
               title="Logout"
               subtitle="Sign out of your account"
               onPress={handleLogout}
-              index={6}
+              index={7}
               variant="danger"
             />
           </View>
