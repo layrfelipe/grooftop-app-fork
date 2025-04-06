@@ -12,6 +12,7 @@ import ReviewCard from '../../reviewDetailCard';
 import { useBookmarkStore } from '../store/bookmark.store';
 import { useReviewStore } from '../../reviews/store/review.store';
 import { useAuthStore } from '../../auth/store/auth.store';
+import DateAvailabilityDialog from '../components/DateAvailabilityDialog';
 
 const VIEW_ON_DATA = [
   { id: '1', title: 'Lorem Ipsum' },
@@ -34,6 +35,7 @@ export const RooftopDetailsScreen = () => {
   const [nearbyRooftops, setNearbyRooftops] = useState<any>([]);
   const [recommendedRooftops, setRecommendedRooftops] = useState<any>([]);
   const [isNearbyLoading, setIsNearbyLoading] = useState(false);
+  const [isDateDialogVisible, setIsDateDialogVisible] = useState(false);
 
   useEffect(() => {
     loadRooftop();
@@ -59,6 +61,7 @@ export const RooftopDetailsScreen = () => {
       if (!data || !data.images || data.images.length === 0) {
         throw new Error('Invalid rooftop data');
       }
+
       setRooftop(data);
     } catch (err: any) {
       console.error('Failed to load rooftop:', err);
@@ -107,8 +110,15 @@ export const RooftopDetailsScreen = () => {
   };
 
   const handleBook = () => {
-    // TODO: Implement booking flow
-    alert('TO-DO: Finish booking flow');
+    setIsDateDialogVisible(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDateDialogVisible(false);
+  };
+
+  const handleDialogNext = () => {
+    handleCloseDialog();
   };
 
   if (isLoading) {
@@ -388,6 +398,19 @@ export const RooftopDetailsScreen = () => {
           />
         </View>
       </View>
+
+      <DateAvailabilityDialog 
+        visible={isDateDialogVisible}
+        onClose={handleCloseDialog}
+        onNext={handleDialogNext}
+        rooftop={{
+          title: rooftop?.title || '',
+          host: rooftop?.owner?.name || '',
+          price: rooftop?.pricePerHour ? rooftop.pricePerHour * 12 : 12500, // 12 hours default duration
+          image: rooftop?.images?.[0],
+          rating: getAverageRating()
+        }}
+      />
     </View>
   );
 };
@@ -436,15 +459,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   rooftopLocationDescription: {
-    fontSize: 12,
+    fontSize: 14,
     color: colors.text.primary,
     marginTop: spacing.xs,
     fontWeight: 'bold',
   },
   rooftopSecondaryInfo: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.text.tertiary,
-    marginTop: spacing.xs,
+    marginTop: spacing.sm,
   },
   rooftopOwnerInfoContainer: {
     flexDirection: 'row',

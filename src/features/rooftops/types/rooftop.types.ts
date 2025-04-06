@@ -1,3 +1,7 @@
+export interface RooftopOwner {
+  name: string;
+}
+
 export interface Rooftop {
   id: string;
   title: string;
@@ -7,6 +11,9 @@ export interface Rooftop {
   pricePerHour: number;
   images: string[];
   ownerId: string;
+  owner: RooftopOwner;
+  cancellationPolicyId: string | null;
+  privacyPolicyId: string | null;
   createdAt: string;
   updatedAt: string;
 }

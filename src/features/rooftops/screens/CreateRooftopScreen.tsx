@@ -186,6 +186,7 @@ export const CreateRooftopScreen = () => {
               <View>
                 {availablePrivacyOptionsMetadata.map((option: any) => (
                   <CheckBox
+                    key={option.id}
                     title={option.name}
                     checked={selectedPrivacyAndAccessOption === option.id}
                     onPress={() => setSelectedPrivacyAndAccessOption(option.id)}
