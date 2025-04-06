@@ -11,7 +11,7 @@ import { Button } from '../../../components/Button';
 import { Input } from '../../../components/Input';
 import { colors } from '../../../theme/colors';
 import { spacing } from '../../../theme/spacing';
-import { CustomCheckbox } from '../../../components/CustomCheckbox';
+import { CheckBox } from '@rneui/base';
 import { Picker } from '@react-native-picker/picker';
 import { api } from '@/src/services/api';
 
@@ -185,12 +185,14 @@ export const CreateRooftopScreen = () => {
               <Text style={styles.sectionTitle}>Privacy & Access</Text>
               <View>
                 {availablePrivacyOptionsMetadata.map((option: any) => (
-                  <CustomCheckbox
+                  <CheckBox
                     key={option.id}
                     title={option.name}
                     checked={selectedPrivacyAndAccessOption === option.id}
                     onPress={() => setSelectedPrivacyAndAccessOption(option.id)}
-                    isRadio={true}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checkedColor={colors.primary}
                     containerStyle={styles.radioContainer}
                     textStyle={[styles.radioLabel, { color: colors.text.primary }]}
                   />
@@ -200,7 +202,7 @@ export const CreateRooftopScreen = () => {
               <Text style={styles.sectionTitle}>Available Activities</Text>
               <View>
                 {availableActivitiesMetadata.map((activity: any) => (
-                  <CustomCheckbox
+                  <CheckBox
                     key={activity.id}
                     title={activity.name}
                     checked={selectedRooftopActivities.includes(activity.id)}
@@ -211,6 +213,7 @@ export const CreateRooftopScreen = () => {
                         setSelectedRooftopActivities([...selectedRooftopActivities, activity.id]);
                       }
                     }}
+                    checkedColor={colors.primary}
                     containerStyle={styles.checkboxContainer}
                     textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
                   />
@@ -227,43 +230,98 @@ export const CreateRooftopScreen = () => {
             <View>
               {availableRentalTypesOptionsMetadata.map((option: any) => (
                 <View>
-                  <CustomCheckbox
+                  <CheckBox
                     title={option.name}
                     checked={rentalType === option.name}
-                    onPress={() => {
-                      setRentalType(option.name);
-                      setTimeRange('');
-                      setPrice('');
-                    }}
+                    onPress={() => setRentalType(option.name)}
+                    checkedIcon="dot-circle-o"
+                    uncheckedIcon="circle-o"
+                    checkedColor={colors.primary}
                     containerStyle={styles.radioContainer}
-                    textStyle={[styles.radioLabel, { color: colors.text.primary }]}
+                    textStyle={[styles.radioLabel, { color: '#fff' }]}
                   />
+              
+
+                  {/* <View>
+                    {rentalType === 'Free' && (
+                      <View style={styles.timeRangeContainer}>
+                        <Text style={styles.timeRangeLabel}>time range</Text>
+                        <Input
+                          value={timeRange}
+                          onChangeText={setTimeRange}
+                          placeholder="Select the time range (vamos colocar aqui de 0+4hs"
+                        />
+                      </View>
+                    )}
+
+                    <CheckBox
+                      title="Hourly"
+                      checked={rentalType === 'hourly'}
+                      onPress={() => setRentalType('hourly')}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor={colors.primary}
+                      containerStyle={styles.radioContainer}
+                      textStyle={[styles.radioLabel, { color: '#fff' }]}
+                    />
+
+                    {rentalType === 'hourly' && (
+                      <>
+                        <View style={styles.timeRangeContainer}>
+                          <Text style={styles.timeRangeLabel}>time range</Text>
+                          <Input
+                            value={timeRange}
+                            onChangeText={setTimeRange}
+                            placeholder="Select the time range (vamos colocar aqui de 0+4hs"
+                          />
+                        </View>
+                        <View style={styles.timeRangeContainer}>
+                          <Text style={styles.timeRangeLabel}>value</Text>
+                          <Input
+                            value={price}
+                            onChangeText={setPrice}
+                            placeholder="Enter the hourly rate"
+                            keyboardType="numeric"
+                          />
+                        </View>
+                      </>
+                    )}
+
+                    <CheckBox
+                      title="By Period"
+                      checked={rentalType === 'byPeriod'}
+                      onPress={() => setRentalType('byPeriod')}
+                      checkedIcon="dot-circle-o"
+                      uncheckedIcon="circle-o"
+                      checkedColor={colors.primary}
+                      containerStyle={styles.radioContainer}
+                      textStyle={[styles.radioLabel, { color: '#fff' }]}
+                    />
+
+                    {rentalType === 'byPeriod' && (
+                      <>
+                        <View style={styles.timeRangeContainer}>
+                          <Text style={styles.timeRangeLabel}>time range</Text>
+                          <Input
+                            value={timeRange}
+                            onChangeText={setTimeRange}
+                            placeholder="Select the time range (vamos colocar aqui de 0+4hs"
+                          />
+                        </View>
+                        <View style={styles.timeRangeContainer}>
+                          <Text style={styles.timeRangeLabel}>value</Text>
+                          <Input
+                            value={price}
+                            onChangeText={setPrice}
+                            placeholder="Enter the price for the 4-hour package"
+                            keyboardType="numeric"
+                          />
+                        </View>
+                      </>
+                    )}
+                  </View> */}
                 </View>
               ))}
-
-              <CustomCheckbox
-                title="Hourly"
-                checked={rentalType === 'hourly'}
-                onPress={() => {
-                  setRentalType('hourly');
-                  setTimeRange('');
-                  setPrice('');
-                }}
-                containerStyle={styles.radioContainer}
-                textStyle={[styles.radioLabel, { color: colors.text.primary }]}
-              />
-
-              <CustomCheckbox
-                title="By Period"
-                checked={rentalType === 'byPeriod'}
-                onPress={() => {
-                  setRentalType('byPeriod');
-                  setTimeRange('');
-                  setPrice('');
-                }}
-                containerStyle={styles.radioContainer}
-                textStyle={[styles.radioLabel, { color: colors.text.primary }]}
-              />
             </View>
           </>
         );
@@ -282,7 +340,7 @@ export const CreateRooftopScreen = () => {
             />
 
             <Text style={[styles.fieldLabel, styles.spacingTop]}>Parking</Text>
-            <CustomCheckbox
+            <CheckBox
               title="Parking for vehicles"
               checked={amenities.includes('parking')}
               onPress={() => {
@@ -292,8 +350,9 @@ export const CreateRooftopScreen = () => {
                   setAmenities([...amenities, 'parking']);
                 }
               }}
+              checkedColor={colors.primary}
               containerStyle={styles.checkboxContainer}
-              textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
+              textStyle={[styles.checkboxLabel, { color: '#fff' }]}
             />
 
             {amenities.includes('parking') && (
@@ -308,7 +367,7 @@ export const CreateRooftopScreen = () => {
               </>
             )}
 
-            <CustomCheckbox
+            <CheckBox
               title="Nearby parking"
               checked={amenities.includes('nearbyParking')}
               onPress={() => {
@@ -318,8 +377,9 @@ export const CreateRooftopScreen = () => {
                   setAmenities([...amenities, 'nearbyParking']);
                 }
               }}
+              checkedColor={colors.primary}
               containerStyle={styles.checkboxContainer}
-              textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
+              textStyle={[styles.checkboxLabel, { color: '#fff' }]}
             />
 
             <Text style={[styles.fieldLabel, styles.spacingTop]}>Accessibility</Text>
@@ -329,8 +389,9 @@ export const CreateRooftopScreen = () => {
               { id: 'wideAisles', label: 'Wide aisles for easy movement' },
               { id: 'brailleSigns', label: 'Braille signs' },
               { id: 'visualSoundIndicators', label: 'Visual/sound indicators' },
+              { id: 'reservedSeating', label: 'Reserved seating' }
             ].map((item) => (
-              <CustomCheckbox
+              <CheckBox
                 key={item.id}
                 title={item.label}
                 checked={amenities.includes(item.id)}
@@ -341,8 +402,9 @@ export const CreateRooftopScreen = () => {
                     setAmenities([...amenities, item.id]);
                   }
                 }}
+                checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
-                textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
+                textStyle={[styles.checkboxLabel, { color: '#fff' }]}
               />
             ))}
           </>
@@ -366,7 +428,7 @@ export const CreateRooftopScreen = () => {
               'Live music',
               'DJ available'
             ].map((service) => (
-              <CustomCheckbox
+              <CheckBox
                 key={service}
                 title={service}
                 checked={amenities.includes(service)}
@@ -377,8 +439,9 @@ export const CreateRooftopScreen = () => {
                     setAmenities([...amenities, service]);
                   }
                 }}
+                checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
-                textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
+                textStyle={[styles.checkboxLabel, { color: '#fff' }]}
               />
             ))}
 
@@ -393,7 +456,7 @@ export const CreateRooftopScreen = () => {
               'Covered Area',
               'Bathroom'
             ].map((facility) => (
-              <CustomCheckbox
+              <CheckBox
                 key={facility}
                 title={facility}
                 checked={amenities.includes(facility)}
@@ -404,8 +467,9 @@ export const CreateRooftopScreen = () => {
                     setAmenities([...amenities, facility]);
                   }
                 }}
+                checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
-                textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
+                textStyle={[styles.checkboxLabel, { color: '#fff' }]}
               />
             ))}
 
@@ -420,7 +484,7 @@ export const CreateRooftopScreen = () => {
               'Panoramic view',
               'City lights at night'
             ].map((view) => (
-              <CustomCheckbox
+              <CheckBox
                 key={view}
                 title={view}
                 checked={amenities.includes(view)}
@@ -431,8 +495,9 @@ export const CreateRooftopScreen = () => {
                     setAmenities([...amenities, view]);
                   }
                 }}
+                checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
-                textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
+                textStyle={[styles.checkboxLabel, { color: '#fff' }]}
               />
             ))}
           </>
@@ -456,7 +521,7 @@ export const CreateRooftopScreen = () => {
               'No fireworks',
               'ID required for entry'
             ].map((rule) => (
-              <CustomCheckbox
+              <CheckBox
                 key={rule}
                 title={rule}
                 checked={amenities.includes(rule)}
@@ -467,6 +532,7 @@ export const CreateRooftopScreen = () => {
                     setAmenities([...amenities, rule]);
                   }
                 }}
+                checkedColor={colors.primary}
                 containerStyle={styles.checkboxContainer}
                 textStyle={[styles.checkboxLabel, { color: colors.text.primary }]}
               />
@@ -547,12 +613,12 @@ export const CreateRooftopScreen = () => {
       <View style={styles.header}>
         <Text style={styles.title}>Register your rooftop</Text>
         <View style={styles.progressIndicator}>
-          {[{stage: 1, id: 1}, {stage: 2, id: 2}, {stage: 3, id: 3}, {stage: 4, id: 4}, {stage: 5, id: 5}, {stage: 6, id: 6}, {stage: 7, id: 7}].map((stage) => (
+          {[1, 2, 3, 4, 5, 6, 7].map((stage) => (
             <View
-              key={stage.id}
+              key={stage}
               style={[
                 styles.progressDot,
-                currentStage === stage.stage && styles.progressDotActive,
+                currentStage === stage && styles.progressDotActive,
               ]}
             />
           ))}
