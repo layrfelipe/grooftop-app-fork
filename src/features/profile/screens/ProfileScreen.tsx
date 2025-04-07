@@ -86,7 +86,7 @@ export const ProfileScreen = () => {
             />
             <MenuItem
               icon="heart-outline"
-              title="Favorites"
+              title="My Spaces"
               subtitle="Your saved rooftop spaces"
               onPress={() => router.push('/(app)/(hasHeader)/spaces')}
               index={2}
@@ -94,7 +94,7 @@ export const ProfileScreen = () => {
             />
             <MenuItem
               icon="heart-outline"
-              title="Favorites"
+              title="My Favorites"
               subtitle="Your favorite rooftops"
               onPress={() => router.push('/(app)/(hasHeader)/favs')}
               index={3}
