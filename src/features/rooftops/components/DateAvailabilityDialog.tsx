@@ -176,7 +176,7 @@
       <>
         <View style={styles.header}>
           <Pressable onPress={onClose} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color={colors.text.primary} />
+            <Ionicons name="arrow-back" size={30} color={colors.text.primary} />
           </Pressable>
           <View style={styles.headerTextContainer}>
             <Text style={styles.modalTitle}>Select date and time</Text>
@@ -252,7 +252,12 @@
 
     const renderReservationDetails = () => (
       <View style={styles.detailsContainer}>
-        <Text style={styles.dialogTitle}>Review your reservation details</Text>
+        <View style={styles.header}>
+          <Pressable onPress={() => setCurrentStep('date')} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={30} color={colors.text.primary} />
+          </Pressable>
+          <Text style={styles.dialogTitle}>Review your reservation details</Text>
+        </View>
 
         <View style={styles.rooftopCardDetailsWrapper}>
           <View style={styles.rooftopInfoRow}>
@@ -295,7 +300,12 @@
 
     const renderPayment = () => (
       <View style={styles.detailsContainer}>
-        <Text style={styles.dialogTitle}>Fill in your credit card details</Text>
+        <View style={styles.header}>
+          <Pressable onPress={() => setCurrentStep('details')} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={30} color={colors.text.primary} />
+          </Pressable>
+          <Text style={styles.dialogTitle}>Fill in your credit card details</Text>
+        </View>
 
         <View style={styles.cardPreviewWrapper}>
           <View style={styles.cardPreview}>
@@ -503,16 +513,14 @@
     },
     header: {
       flexDirection: 'row',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       marginBottom: spacing.xl,
     },
     backButton: {
-      padding: spacing.sm,
       marginRight: spacing.sm,
     },
     headerTextContainer: {
-      flex: 1,
-      marginLeft: spacing.md,
+      marginLeft: spacing.sm,
     },
     modalTitle: {
       fontSize: 20,

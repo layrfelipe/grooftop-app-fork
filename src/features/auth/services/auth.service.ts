@@ -23,6 +23,7 @@ export interface UserProfile {
   avatarUrl?: string;
   createdAt: string;
   updatedAt: string;
+  rooftops: any[];
 }
 
 export const authService = {

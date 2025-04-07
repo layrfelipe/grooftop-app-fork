@@ -53,10 +53,10 @@ export const BookingsScreen = () => {
 
   const getStatusColor = (status: Booking['status']) => {
     switch (status) {
-      case 'CONFIRMED': return colors.primary;
-      case 'PENDING': return colors.google;
+      case 'CONFIRMED': return colors.secondary;
+      case 'PENDING': return colors.primary;
       case 'CANCELLED': return colors.error;
-      default: return colors.text.tertiary;
+      default: return colors.error;
     }
   };
 

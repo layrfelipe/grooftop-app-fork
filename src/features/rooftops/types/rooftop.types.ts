@@ -1,5 +1,7 @@
 export interface RooftopOwner {
+  id: string;
   name: string;
+  avatarUrl: string;
   createdAt: string;
 }
 

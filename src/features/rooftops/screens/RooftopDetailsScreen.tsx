@@ -173,15 +173,15 @@ export const RooftopDetailsScreen = () => {
 
           <View style={styles.rooftopMainInfoContainer}>
             <Text style={styles.rooftopTitle}>{rooftop.title}</Text>
-            <Text style={styles.rooftopLocationDescription}>Rooftop privativo localizado em ...</Text>
-            <Text style={styles.rooftopSecondaryInfo}>120 guests | Pool | Jacuzzi</Text>
+            <Text style={styles.rooftopLocationDescription}>Rooftop privativo localizado em {rooftop.city}</Text>
+            <Text style={styles.rooftopSecondaryInfo}>{rooftop.capacity} guests</Text>
           </View>
 
           <View style={styles.rooftopOwnerInfoContainer}>
             <View style={styles.rooftopOwnerImageContainer}>
               <Image 
                 source={{ 
-                  uri: 'https://i.pravatar.cc/145'
+                  uri: rooftop.owner.avatarUrl
                 }} 
                 style={styles.rooftopOwnerImage} 
               />
